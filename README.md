@@ -21,6 +21,6 @@ curl -s -H "Content-Type: application/json" -X POST -d @query.json "127.0.0.1:50
 - https://zenn.dev/tatsuyasusukida/articles/gcp-text-to-speech
 
 ## Development Plan
-- Alexa Skill が一番手っ取り早い
-- それかsonosのapiを使う
-- podcastのようなものを作れるのであればそれが二番目（スマホonly）
+- sonosのapiを使う
+- rssや音声への変換は事前にしておけば良い
+- コンテンツ配信にウェブサーバーを立てる
