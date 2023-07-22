@@ -17,3 +17,6 @@ managerコンテナが、API Gateway (Proxy)的な役割も受け持つ
 
 ## Memo
 - 単に rss を一つずつ流すのではなく、文脈でグルーピングしたい
+- PWA でいけないか
+  - server(mac) ... fetch rss feed and convert to audio file
+  - client(ios) ... subscribe 
