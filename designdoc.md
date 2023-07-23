@@ -19,4 +19,7 @@ managerコンテナが、API Gateway (Proxy)的な役割も受け持つ
 - 単に rss を一つずつ流すのではなく、文脈でグルーピングしたい
 - PWA でいけないか
   - server(mac) ... fetch rss feed and convert to audio file
-  - client(ios) ... subscribe 
+  - client(ios)
+- バックグラウンド同期はiosが対応していないらしい
+- push通知もファイル送信は難しいように見える
+- assetsをキャッシュさせて、特定時間に fetch するよう組むか。。
