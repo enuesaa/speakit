@@ -2,24 +2,19 @@
 
 ## Apps
 ### Containers
-- manager (golang)
-- voicevox
-- speaker (python using soco)
+- api (golang)
+- voicevox api
+- web (nextjs) ... 作り込まない
 
 ### API Gateway
 managerコンテナが、API Gateway (Proxy)的な役割も受け持つ
 - POST /api/load ... fetch rss feed and request to convert
 - GET /api/jobs
-- POST /api/speak ... python sonos api
-- POST /api/next ... python sonos api
-- POST /api/pause ... python sonos api
+- POST /api/speak
+- POST /api/next
+- POST /api/pause
 - GET /contents/{id}.wav ... wav file
 
 ## Memo
 - 単に rss を一つずつ流すのではなく、文脈でグルーピングしたい
-- PWA でいけないか
-  - server(mac) ... fetch rss feed and convert to audio file
-  - client(ios)
-- バックグラウンド同期はiosが対応していないらしい
-- push通知もファイル送信は難しいように見える
-- assetsをキャッシュさせて、特定時間に fetch するよう組むか。。
+- Macでサーバーを立て、Logitech Spotlight と組み合わせる
