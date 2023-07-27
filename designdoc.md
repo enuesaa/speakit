@@ -4,7 +4,7 @@
 ### Containers
 - api (golang)
 - voicevox api
-- web (nextjs) ... or tauri
+- web (nextjs)
 
 ### API Gateway
 managerコンテナが、API Gateway (Proxy)的な役割も受け持つ
@@ -18,9 +18,3 @@ managerコンテナが、API Gateway (Proxy)的な役割も受け持つ
 ## Memo
 - 単に rss を一つずつ流すのではなく、文脈でグルーピングしたい
 - サーバーを立てる
-- ブラウザで Logitech Spotlight のキーを取れないかもしれないので tauri みたいなのにしてもいいかも
-
-## Development Plan
-- Logitech Spotlight の検証（キーを取れるか）
-- なんかキーを判定するツールないかな
-- Bluetooth
