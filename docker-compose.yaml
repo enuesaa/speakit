@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./apps:/app/apps
+      - ./:/app
+    tty: true
+    links:
+      - voicevox
+
+  voicevox:
+    image: voicevox/voicevox_engine
+    ports:
+      - 50021:50021
+    tty: true
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    volumes:
+      - ./apps/web:/app
+      - node_modules:/app/node_modules
+    command: yarn dev
+    tty: true
+
+volumes:
+  # to ignore dir.
+  apps:
+  node_modules:

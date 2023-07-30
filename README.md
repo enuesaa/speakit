@@ -7,13 +7,6 @@
 ## Memo
 音声を流すには
 ### Voicevox
+- https://voicevox.hiroshiba.jp/
 - https://github.com/VOICEVOX/voicevox_engine
 - https://qiita.com/mikito/items/21aa74c3850a70c647f7
-
-see https://github.com/VOICEVOX/voicevox_engine
-```bash
-echo -n "こんにちは" > text.txt
-
-curl -s -X POST "127.0.0.1:50021/audio_query?speaker=1" --get --data-urlencode text@text.txt > query.json
-curl -s -H "Content-Type: application/json" -X POST -d @query.json "127.0.0.1:50021/synthesis?speaker=1" > audio.wav
-```
