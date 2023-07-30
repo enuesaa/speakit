@@ -1,8 +1,15 @@
+import { useEventListener } from 'usehooks-ts'
 
 export default function Page() {
 
-  // 右矢印が押された時.. API を呼ぶ
-  // 左矢印が押された時.. API を呼ぶ
+  useEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+      console.log('right')
+    }
+    if (e.key === 'ArrowLeft') {
+      console.log('left')
+    }
+  });
 
   return (
     <div style={{ color: '#fafafa' }}>
