@@ -38,8 +38,3 @@ next-env.d.ts
 
 # IDE
 .vscode
-
-# pwa
-**/public/workbox-*.js
-**/public/sw.js
-**/public/worker-*.js
