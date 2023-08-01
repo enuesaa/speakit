@@ -1,17 +1,21 @@
 # designdoc
-### API Gateway
-managerコンテナが、API Gateway (Proxy)的な役割も受け持つ
-- POST /api/load ... fetch rss feed and request to convert
-- GET /api/jobs
+## URL体系
+APIが主軸で、
+管理画面もある、と言う形にしたい
 
-- GET /api/contents ... 一覧
-- GET /api/contents/{id}
-- GET /api/contents/{id}/wav ... wav file
+- GET /feeds ... feed list
+- GET /feeds/{id}
+- POST /feeds
+- DELETE /feeds/{id}
 
-## Memo
+- POST /jobs ... fetch rss feed and request to convert. 202 を返したい
+- GET /jobs/{id}
+
+- GET /contents ... 一覧
+- GET /contents/{id}
+- GET /contents/{id}/wav ... wav file
+
+- GET /latests
+
+## Development Plan
 - 単に rss を一つずつ流すのではなく、文脈でグルーピングしたい
-- サーバーを立てる
-
-### Logitech Spotlight 
-- スリープ状態のmacを起動できた
-- キーボードショートカットを指定できた
