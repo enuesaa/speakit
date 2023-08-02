@@ -9,13 +9,22 @@ APIが主軸で、
 - DELETE /feeds/{id}
 
 - POST /jobs ... fetch rss feed and request to convert. 202 を返したい
+- GET /jobs
 - GET /jobs/{id}
 
 - GET /contents ... 一覧
-- GET /contents/{id}
-- GET /contents/{id}/wav ... wav file
+- GET /contents/{id} ... asset id を返す
 
-- GET /latests
+- GET /assets/{id}  ... wav file
+
+## 画面
+- GET /admin
+- GET /admin/feeds
+- GET /admin/player
+  - start
+  - next
+  - prev
+  - stop
 
 ## Development Plan
 - 単に rss を一つずつ流すのではなく、文脈でグルーピングしたい

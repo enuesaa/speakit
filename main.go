@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/mmcdole/gofeed"
 	"github.com/gofiber/fiber/v2"
+	"github.com/mmcdole/gofeed"
 )
 
 func main() {
