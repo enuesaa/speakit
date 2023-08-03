@@ -1,8 +1,10 @@
 # designdoc
-## URL体系
-APIが主軸で、
-管理画面もある、と言う形にしたい
 
+## Go app
+Perform like API Gateway
+URLのマッピングはGoのAppでいろいろ変えられるイメージ
+
+## URL体系
 - GET /feeds ... feed list
 - GET /feeds/{id}
 - POST /feeds
@@ -17,10 +19,9 @@ APIが主軸で、
 
 - GET /assets/{id}  ... wav file
 
-## 画面
-- GET /admin
-- GET /admin/feeds
-- GET /admin/player
+- GET /  ... admin
+- GET /feeds
+- GET /player
   - start
   - next
   - prev
