@@ -4,5 +4,5 @@
 # editor
 .vscode
 
-apps/voicevox/*
-!apps/voicevox/.gitkeep
+voicevox/*
+!voicevox/.gitkeep
