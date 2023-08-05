@@ -1,3 +1,9 @@
-# speakit-web
-## Links
-- https://zenn.dev/tns_00/articles/next-pwa-install
+# my-nextjs-template
+Template repository for NextJS application.
+
+## Stack
+- TypeScript
+- NextJS v13 ... not app directory
+- @emotion/react
+- ESLint
+- Prettier

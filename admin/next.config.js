@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'export', // comment out this line when to use api routes.
+  output: 'export',
   distDir: 'dist',
+  experimental: {
+    serverActions: true,
+  },
 }
 
 module.exports = nextConfig

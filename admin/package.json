@@ -1,29 +1,28 @@
 {
-  "name": "speakit-web",
+  "name": "my-nextjs-template",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "scripts": {
-    "dev": "next dev",
+    "prepare": "panda codegen",
+    "dev": "rm -rf .next && next dev",
     "build": "next build",
     "lint": "next lint",
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "emotion-normalize": "^11.0.1",
-    "next": "13.4.10",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "usehooks-ts": "^2.9.1",
+    "next": "^13.4.12",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@types/node": "20.4.2",
-    "@types/react": "18.2.15",
+    "@pandacss/dev": "^0.9.0",
+    "@types/node": "20.4.8",
+    "@types/react": "18.2.18",
     "@types/react-dom": "18.2.7",
-    "eslint": "8.45.0",
-    "eslint-config-next": "13.4.10",
+    "eslint": "8.46.0",
+    "eslint-config-next": "^13.4.12",
     "prettier": "^3.0.0",
     "prettier-plugin-organize-imports": "^3.2.3",
     "typescript": "5.1.6"
