@@ -13,19 +13,20 @@ services:
     tty: true
     links:
       - voicevox
+      - admin
 
   voicevox:
     image: voicevox/voicevox_engine
-    ports:
-      - 50021:50021
+    # ports:
+    #   - 50021:50021
     tty: true
 
-  web:
+  admin:
     build:
-      context: ./apps/web
+      context: ./apps/admin
       dockerfile: Dockerfile
     volumes:
-      - ./apps/web:/app
+      - ./apps/admin:/app
       - node_modules:/app/node_modules
     command: yarn dev
     tty: true

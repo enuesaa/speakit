@@ -2,6 +2,6 @@ FROM golang:1.20
 
 WORKDIR /app
 COPY . .
-RUN go build -o main
+RUN go install github.com/cosmtrek/air@latest
 
-ENTRYPOINT ["/app/main"]
+CMD ["air", "-c", ".air.toml"]
