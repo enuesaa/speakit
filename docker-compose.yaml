@@ -8,7 +8,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./apps:/app/apps
+      - apps:/app/apps
       - ./:/app
     tty: true
     links:
@@ -17,8 +17,6 @@ services:
 
   voicevox:
     image: voicevox/voicevox_engine
-    # ports:
-    #   - 50021:50021
     tty: true
 
   admin:

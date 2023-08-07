@@ -2,7 +2,7 @@ FROM node:20
 
 WORKDIR /app
 COPY . .
-RUN yarn install --frozen-lockfile
-RUN yarn build
+RUN pnpm install
+RUN pnpm build
 
 CMD ["yarn", "start"]
