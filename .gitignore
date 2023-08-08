@@ -8,3 +8,6 @@
 !/apps/voicevox/.gitkeep
 
 tmp
+
+/apps/mongodb/configdb
+/apps/mongodb/db
