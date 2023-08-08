@@ -9,5 +9,4 @@
 
 tmp
 
-/apps/mongodb/configdb
-/apps/mongodb/db
+/apps/redis
