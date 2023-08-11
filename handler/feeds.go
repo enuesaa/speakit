@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/enuesaa/speakit/repository"
+	"github.com/enuesaa/speakit/service"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/mmcdole/gofeed"
@@ -34,6 +35,7 @@ type FeedRequest struct {
 	Name string `json:"name" validate:"required"`
 	Url  string `json:"url" validate:"required"`
 }
+type FeedResponse struct {}
 
 func (ctl *FeedsController) CreateFeed(c *fiber.Ctx) error {
 	body := new(FeedRequest)
@@ -45,9 +47,13 @@ func (ctl *FeedsController) CreateFeed(c *fiber.Ctx) error {
 		return err.(validator.ValidationErrors)
 	}
 
-	fmt.Printf("%+v", body)
+	feedSrv := service.NewFeedSevice(ctl.repos)
+	feedSrv.Create(service.Feed {
+		Name: body.Name,
+		Url: body.Url,
+	})
 
-	return c.JSON("")
+	return c.JSON(FeedResponse{})
 }
 
 func (ctl *FeedsController) DeleteFeed(c *fiber.Ctx) error {

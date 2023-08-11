@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/redis/go-redis/v9"
-	"os"
 )
 
 type RedisRepositoryInterface interface {
@@ -18,7 +17,7 @@ type RedisRepository struct{}
 
 func (repo *RedisRepository) client() *redis.Client {
 	client := redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("REDIS_ADDR"),
+		Addr:     "redis:6379",
 		Password: "",
 		DB:       0,
 	})

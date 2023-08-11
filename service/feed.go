@@ -5,7 +5,6 @@ import (
 )
 
 type Feed struct {
-	Id   string
 	Name string
 	Url  string
 }
@@ -30,6 +29,7 @@ func (srv *FeedService) Get(id string) Feed {
 }
 
 func (srv *FeedService) Create(feed Feed) string {
+	srv.repos.Redis.Set("feedss:" + feed.Name, feed.Url)
 	return ""
 }
 

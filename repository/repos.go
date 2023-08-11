@@ -1,3 +1,5 @@
 package repository
 
-type Repos struct{}
+type Repos struct {
+	Redis RedisRepositoryInterface
+}
