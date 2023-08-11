@@ -16,6 +16,7 @@ export default function Page() {
         speakit admin
       </h1>
       <Link href='/feeds'>Feeds</Link>
+      <Link href='/player'>Player</Link>
     </div>
     </>
   )
