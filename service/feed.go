@@ -5,9 +5,9 @@ import (
 )
 
 type Feed struct {
-	Id string
-    Name string
-	Url string
+	Id   string
+	Name string
+	Url  string
 }
 
 type FeedService struct {
@@ -15,7 +15,7 @@ type FeedService struct {
 }
 
 func NewFeedSevice(repos repository.Repos) FeedService {
-	return FeedService {
+	return FeedService{
 		repos,
 	}
 }

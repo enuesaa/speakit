@@ -8,8 +8,8 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - apps:/app/apps
       - ./:/app
+      - apps:/app/apps
     tty: true
     links:
       - voicevox
@@ -27,7 +27,7 @@ services:
     volumes:
       - ./apps/admin:/app
       - node_modules:/app/node_modules
-    command: yarn dev
+    command: pnpm dev
     tty: true
 
   redis:

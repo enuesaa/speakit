@@ -1,9 +1,8 @@
 package main
 
 import (
-	"strings"
-
 	"github.com/enuesaa/speakit/handler"
+	"github.com/enuesaa/speakit/repository"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/proxy"
 )
@@ -11,26 +10,24 @@ import (
 func main() {
 	app := fiber.New()
 
-	app.Get("/feeds", handler.ListFeeds)
-	app.Get("/feeds/:id", handler.GetFeed)
-	app.Post("/feeds", handler.CreateFeed)
-	app.Delete("/feeds/:id", handler.DeleteFeed)
+	api := app.Group("/api")
 
-	// - POST /jobs ... fetch rss feed and request to convert. 202 を返したい
-	// - GET /jobs
-	// - GET /jobs/{id}
+	feedsController := handler.NewFeedsController(repository.Repos{})
+	api.Get("/feeds", feedsController.ListFeeds)
+	api.Get("/feeds/:id", feedsController.GetFeed)
+	api.Post("/feeds", feedsController.CreateFeed)
+	api.Delete("/feeds/:id", feedsController.DeleteFeed)
 
-	// - GET /contents ... 一覧
-	// - GET /contents/{id} ... asset id を返す
+	api.Post("/jobs", handler.CreateJob)
+	api.Get("/jobs", handler.ListJobs)
+	api.Get("/jobs/:id", handler.GetJob)
+	api.Get("/contents", handler.ListContents)
+	api.Get("/contents/:id", handler.GetContent)
 
-	// - GET /assets/{id}  ... wav file
+	// - GET /storage/{id}  ... wav file
 
-	// - GET /_admin
-	// - GET /_admin/feeds
-	// - GET /_admin/player
-	app.Get("/_admin/*", func(c *fiber.Ctx) error {
+	app.Get("/*", func(c *fiber.Ctx) error {
 		path := c.OriginalURL()
-		path = strings.TrimLeft(path, "/_admin")
 		return proxy.Forward("http://admin:3000" + path)(c)
 	})
 

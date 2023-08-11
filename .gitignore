@@ -7,6 +7,6 @@
 /apps/voicevox/*
 !/apps/voicevox/.gitkeep
 
+# app
 tmp
-
 /apps/redis
