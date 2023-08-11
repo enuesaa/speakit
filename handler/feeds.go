@@ -20,6 +20,7 @@ func GetFeed(c *fiber.Ctx) error {
 
 type FeedRequest struct {
     Name string `json:"name"`
+	Url string `json:"url"`
 }
 func CreateFeed(c *fiber.Ctx) error {
 	body := new(FeedRequest)

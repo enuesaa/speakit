@@ -6,7 +6,6 @@ import (
 	"github.com/enuesaa/speakit/handler"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/proxy"
-	_ "github.com/mmcdole/gofeed"
 )
 
 func main() {
@@ -21,24 +20,19 @@ func main() {
 	// - GET /jobs
 	// - GET /jobs/{id}
 
+	// - GET /contents ... 一覧
+	// - GET /contents/{id} ... asset id を返す
+
+	// - GET /assets/{id}  ... wav file
 
 	// - GET /_admin
 	// - GET /_admin/feeds
-	// - GET /player
-	//   - start
-	//   - next
-	//   - prev
-	//   - stop
+	// - GET /_admin/player
 	app.Get("/_admin/*", func(c *fiber.Ctx) error {
 		path := c.OriginalURL()
 		path = strings.TrimLeft(path, "/_admin")
 		return proxy.Forward("http://admin:3000" + path)(c)
 	})
-
-	// - GET /contents ... 一覧
-	// - GET /contents/{id} ... asset id を返す
-
-	// - GET /assets/{id}  ... wav file
 
 	app.Listen(":3000")
 }
