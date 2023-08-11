@@ -1,15 +1,15 @@
 'use client'
-import { useState } from 'react'
 import {useKey} from 'react-use'
 
 export const KeyConsole = () => {
-  const [count, set] = useState(0)
-  const increment = () => set(count => ++count)
-  useKey('ArrowRight', increment)
+  useKey('ArrowRight', () => {
+    console.log('ArrowRight Event')
+  })
+  useKey('ArrowLeft', () => {
+    console.log('ArrowLeft Event')
+  })
 
   return (
-    <div>
-      Press arrow up: {count}
-    </div>
+    <></>
   )
 }
