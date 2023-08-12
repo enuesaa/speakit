@@ -17,14 +17,24 @@ func NewVoicevoxService(repos repository.Repos) VoicevoxService {
 	}
 }
 
-func (srv *VoicevoxService) AudioQuery(text string) {
+func (srv *VoicevoxService) AudioQuery(text string) (string, error) {
 	body, err := srv.repos.Httpcall.Post(
 		"http://voicevox:50021/audio_query?speaker=1&text=" + text,
 		strings.NewReader(""),
 	)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return "", fmt.Errorf("voicevox error %w", err)
 	}
-	fmt.Printf("%+v", body)
+	return body, nil
+}
+
+func (srv *VoicevoxService) Synthesis(query string) (string, error) {
+	body, err := srv.repos.Httpcall.Post(
+		"http://voicevox:50021/synthesis?speaker=1&text=",
+		strings.NewReader(query),
+	)
+	if err != nil {
+		return "", fmt.Errorf("voicevox error %w", err)
+	}
+	return body, nil
 }
