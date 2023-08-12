@@ -10,22 +10,25 @@ import (
 func main() {
 	app := fiber.New()
 
-	api := app.Group("/api")
-	feedsController := handler.NewFeedsController(repository.Repos {
+	repos := repository.Repos {
 		Redis: &repository.RedisRepository{},
-	})
+		Httpcall: &repository.HttpcallRepository{},
+	}
+
+	api := app.Group("/api")
+	feedsController := handler.NewFeedsController(repos)
 	api.Get("/feeds", feedsController.ListFeeds)
 	api.Get("/feeds/:id", feedsController.GetFeed)
 	api.Post("/feeds", feedsController.CreateFeed)
 	api.Delete("/feeds/:id", feedsController.DeleteFeed)
 
-	api.Post("/jobs", handler.CreateJob)
-	api.Get("/jobs", handler.ListJobs)
-	api.Get("/jobs/:id", handler.GetJob)
+	jobsController := handler.NewJobsController(repos)
+	api.Post("/jobs", jobsController.CreateJob)
+	api.Get("/jobs", jobsController.ListJobs)
+	api.Get("/jobs/:id", jobsController.GetJob)
+
 	api.Get("/contents", handler.ListContents)
 	api.Get("/contents/:id", handler.GetContent)
-
-	api.Post("/voicevox/query", handler.CreateQuery)
 
 	// - GET /storage/{id}  ... wav file
 
