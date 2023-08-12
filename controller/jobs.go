@@ -46,7 +46,7 @@ func (ctl *JobsController) CreateJob(c *fiber.Ctx) error {
 		return c.JSON("")
 	}
 
-	programsSrv.Create("aaaa.wav", converted)
+	programsSrv.Create(converted)
 
 	return c.JSON("")
 }

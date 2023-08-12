@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/enuesaa/speakit/repository"
+	"github.com/google/uuid"
 )
 
 type ProgramsService struct {
@@ -22,6 +23,14 @@ func (srv *ProgramsService) Get(id string) Feed {
 	return *new(Feed)
 }
 
-func (srv *ProgramsService) Create(key string, body string) {
-	srv.repos.Minio.Upload(key, body)
+func (srv *ProgramsService) Create(body string) {
+	uid, _ := uuid.NewUUID()
+	id := uid.String()
+
+	srv.repos.Minio.Upload(id + ".wav", body)
+	srv.repos.Redis.Set("programs:" + id, "")
+}
+
+func (srv *ProgramsService) Download(id string) (string, error) {
+	return srv.repos.Minio.Download(id + ".wav")
 }

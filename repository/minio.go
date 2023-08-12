@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -13,6 +14,7 @@ import (
 type MinioRepositoryInterface interface {
 	Bucket() string
 	Upload(key string, obj string)
+	Download(key string) (string, error)
 }
 
 type MinioRepository struct{}
@@ -40,4 +42,24 @@ func (repo *MinioRepository) Upload(key string, obj string) {
 		return
 	}
 	fmt.Println(info)
+}
+
+
+func (repo *MinioRepository) Download(key string) (string, error) {
+	ctx := context.Background()
+
+	client, err := minio.New("minio:9000", &minio.Options{
+		Creds: credentials.NewEnvMinio(),
+	})
+	if err != nil {
+		return "", err
+	}
+
+	minioObj, _ := client.GetObject(ctx, repo.Bucket(), key, minio.GetObjectOptions{})
+	obj, err := io.ReadAll(minioObj)
+	if err != nil {
+		return "", err
+	}
+
+	return string(obj), nil
 }

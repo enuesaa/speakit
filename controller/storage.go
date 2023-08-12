@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/enuesaa/speakit/repository"
+	"github.com/enuesaa/speakit/service"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -16,5 +17,15 @@ func NewStorageController(repos repository.Repos) StorageController {
 }
 
 func (ctl *StorageController) GetItem(c *fiber.Ctx) error {
-	return c.JSON("")
+	id := c.Params("id")
+	programsSrv := service.NewProgramsService(ctl.repos)
+
+	obj, err := programsSrv.Download(id)
+	if err != nil {
+		return c.JSON("")
+	}
+
+	c.Response().SetBodyRaw([]byte(obj))
+	c.Response().Header.SetContentType("audio/wav")
+	return nil
 }
