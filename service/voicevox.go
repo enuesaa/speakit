@@ -39,7 +39,3 @@ func (srv *VoicevoxService) Synthesis(query string) (string, error) {
 	}
 	return body, nil
 }
-
-func (srv *VoicevoxService) Upload(key string, body string) {
-	srv.repos.Minio.Upload(key, body)
-}

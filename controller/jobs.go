@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"fmt"
@@ -41,6 +41,7 @@ func (ctl *JobsController) CreateJob(c *fiber.Ctx) error {
 	}
 
 	voicevoxSrv := service.NewVoicevoxService(ctl.repos)
+	programsSrv := service.NewProgramsService(ctl.repos)
 	query, err := voicevoxSrv.AudioQuery(body.Text)
 	if err != nil {
 		fmt.Println(err)
@@ -51,7 +52,8 @@ func (ctl *JobsController) CreateJob(c *fiber.Ctx) error {
 		fmt.Println(err)
 		return c.JSON("")
 	}
-	voicevoxSrv.Upload("aaaa.wav", converted)
+
+	programsSrv.Create("aaaa.wav", converted)
 
 	return c.JSON("")
 }

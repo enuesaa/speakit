@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/enuesaa/speakit/handler"
+	"github.com/enuesaa/speakit/controller"
 	"github.com/enuesaa/speakit/repository"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/proxy"
@@ -10,26 +10,26 @@ import (
 func main() {
 	app := fiber.New()
 
+	api := app.Group("/api")
 	repos := repository.Repos {
 		Redis: &repository.RedisRepository{},
 		Httpcall: &repository.HttpcallRepository{},
 		Minio: &repository.MinioRepository{},
 	}
+	feeds := controller.NewFeedsController(repos)
+	api.Get("/feeds", feeds.ListFeeds)
+	api.Get("/feeds/:id", feeds.GetFeed)
+	api.Post("/feeds", feeds.CreateFeed)
+	api.Delete("/feeds/:id", feeds.DeleteFeed)
 
-	api := app.Group("/api")
-	feedsController := handler.NewFeedsController(repos)
-	api.Get("/feeds", feedsController.ListFeeds)
-	api.Get("/feeds/:id", feedsController.GetFeed)
-	api.Post("/feeds", feedsController.CreateFeed)
-	api.Delete("/feeds/:id", feedsController.DeleteFeed)
+	jobs := controller.NewJobsController(repos)
+	api.Post("/jobs", jobs.CreateJob)
+	api.Get("/jobs", jobs.ListJobs)
+	api.Get("/jobs/:id", jobs.GetJob)
 
-	jobsController := handler.NewJobsController(repos)
-	api.Post("/jobs", jobsController.CreateJob)
-	api.Get("/jobs", jobsController.ListJobs)
-	api.Get("/jobs/:id", jobsController.GetJob)
-
-	api.Get("/contents", handler.ListContents)
-	api.Get("/contents/:id", handler.GetContent)
+	programs := controller.NewProgramsController(repos)
+	api.Get("/programs", programs.ListPrograms)
+	api.Get("/programs/:id", programs.GetProgram)
 
 	// - GET /storage/{id}  ... wav file
 
