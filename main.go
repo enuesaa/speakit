@@ -11,10 +11,10 @@ func main() {
 	app := fiber.New()
 
 	api := app.Group("/api")
-	repos := repository.Repos {
-		Redis: &repository.RedisRepository{},
+	repos := repository.Repos{
+		Redis:    &repository.RedisRepository{},
 		Httpcall: &repository.HttpcallRepository{},
-		Minio: &repository.MinioRepository{},
+		Minio:    &repository.MinioRepository{},
 	}
 	feeds := controller.NewFeedsController(repos)
 	api.Get("/feeds", feeds.ListFeeds)
@@ -24,14 +24,13 @@ func main() {
 
 	jobs := controller.NewJobsController(repos)
 	api.Post("/jobs", jobs.CreateJob)
-	api.Get("/jobs", jobs.ListJobs)
-	api.Get("/jobs/:id", jobs.GetJob)
 
 	programs := controller.NewProgramsController(repos)
 	api.Get("/programs", programs.ListPrograms)
 	api.Get("/programs/:id", programs.GetProgram)
 
-	// - GET /storage/{id}  ... wav file
+	storage := controller.NewStorageController(repos)
+	api.Get("/storage/:id", storage.GetItem)
 
 	app.Get("/*", func(c *fiber.Ctx) error {
 		path := c.OriginalURL()

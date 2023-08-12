@@ -1,7 +1,7 @@
 package repository
 
 type Repos struct {
-	Redis RedisRepositoryInterface
+	Redis    RedisRepositoryInterface
 	Httpcall HttpcallRepositoryInterface
-	Minio MinioRepositoryInterface
+	Minio    MinioRepositoryInterface
 }

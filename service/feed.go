@@ -19,9 +19,8 @@ func NewFeedSevice(repos repository.Repos) FeedService {
 	}
 }
 
-func (srv *FeedService) List() []Feed {
-	list := make([]Feed, 0)
-	return list
+func (srv *FeedService) List() []string {
+	return srv.repos.Redis.Keys("feeds:*")
 }
 
 func (srv *FeedService) Get(id string) Feed {
@@ -29,7 +28,7 @@ func (srv *FeedService) Get(id string) Feed {
 }
 
 func (srv *FeedService) Create(feed Feed) string {
-	srv.repos.Redis.Set("feedss:" + feed.Name, feed.Url)
+	srv.repos.Redis.Set("feedss:"+feed.Name, feed.Url)
 	return ""
 }
 

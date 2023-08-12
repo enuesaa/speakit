@@ -19,17 +19,10 @@ func NewJobsController(repos repository.Repos) JobsController {
 	}
 }
 
-func (ctl *JobsController) ListJobs(c *fiber.Ctx) error {
-	return c.JSON("")
-}
-
-func (ctl *JobsController) GetJob(c *fiber.Ctx) error {
-	return c.JSON("")
-}
-
 type JobRequest struct {
 	Text string `json:"text" validate:"required"`
 }
+
 func (ctl *JobsController) CreateJob(c *fiber.Ctx) error {
 	body := new(JobRequest)
 	if err := c.BodyParser(body); err != nil {

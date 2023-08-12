@@ -15,7 +15,7 @@ type FeedsController struct {
 }
 
 func NewFeedsController(repos repository.Repos) FeedsController {
-	return FeedsController {
+	return FeedsController{
 		repos,
 	}
 }
@@ -35,7 +35,7 @@ type FeedRequest struct {
 	Name string `json:"name" validate:"required"`
 	Url  string `json:"url" validate:"required"`
 }
-type FeedResponse struct {}
+type FeedResponse struct{}
 
 func (ctl *FeedsController) CreateFeed(c *fiber.Ctx) error {
 	body := new(FeedRequest)
@@ -48,9 +48,9 @@ func (ctl *FeedsController) CreateFeed(c *fiber.Ctx) error {
 	}
 
 	feedSrv := service.NewFeedSevice(ctl.repos)
-	feedSrv.Create(service.Feed {
+	feedSrv.Create(service.Feed{
 		Name: body.Name,
-		Url: body.Url,
+		Url:  body.Url,
 	})
 
 	return c.JSON(FeedResponse{})

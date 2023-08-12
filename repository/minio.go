@@ -24,7 +24,7 @@ func (repo *MinioRepository) Bucket() string {
 func (repo *MinioRepository) Upload(key string, obj string) {
 	ctx := context.Background()
 
-	client, err := minio.New("minio:9000", &minio.Options {
+	client, err := minio.New("minio:9000", &minio.Options{
 		Creds: credentials.NewEnvMinio(),
 	})
 	if err != nil {
