@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/enuesaa/speakit/repository"
 	"github.com/enuesaa/speakit/service"
@@ -52,13 +51,7 @@ func (ctl *JobsController) CreateJob(c *fiber.Ctx) error {
 		fmt.Println(err)
 		return c.JSON("")
 	}
-
-	f, err := os.Create("example.wav")
-	if err != nil {
-		return c.JSON("")
-	}
-	defer f.Close()
-	f.Write([]byte(converted))
+	voicevoxSrv.Upload("aaaa.wav", converted)
 
 	return c.JSON("")
 }

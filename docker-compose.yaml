@@ -10,11 +10,14 @@ services:
     volumes:
       - ./:/app
       - apps:/app/apps
+    environment:
+      - BUCKET=sample
     tty: true
     links:
       - voicevox
       - admin
       - redis
+      - minio
 
   voicevox:
     image: voicevox/voicevox_engine
@@ -34,6 +37,19 @@ services:
     image: redis
     volumes:
       - ./apps/redis:/data
+
+  minio:
+    image: minio/minio
+    ports:
+      - 9001:9001
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=password
+    volumes:
+      - ./apps/minio:/export
+    entrypoint: sh
+    command: -c "/opt/bin/minio server /export --address :9000 --console-address :9001"
+    tty: true
 
 volumes:
   # to ignore dir.

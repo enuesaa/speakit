@@ -13,6 +13,7 @@ func main() {
 	repos := repository.Repos {
 		Redis: &repository.RedisRepository{},
 		Httpcall: &repository.HttpcallRepository{},
+		Minio: &repository.MinioRepository{},
 	}
 
 	api := app.Group("/api")

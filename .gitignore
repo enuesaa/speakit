@@ -10,4 +10,5 @@
 # app
 tmp
 /apps/redis
+/apps/minio
 *.wav
