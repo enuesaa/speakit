@@ -6,6 +6,7 @@ import (
 
 	"github.com/enuesaa/speakit/repository"
 	"github.com/enuesaa/speakit/service"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -27,10 +28,21 @@ func (ctl *JobsController) GetJob(c *fiber.Ctx) error {
 	return c.JSON("")
 }
 
-// fetch rss feed and request to convert. 202 を返したい
+type JobRequest struct {
+	Text string `json:"text" validate:"required"`
+}
 func (ctl *JobsController) CreateJob(c *fiber.Ctx) error {
+	body := new(JobRequest)
+	if err := c.BodyParser(body); err != nil {
+		return err
+	}
+	validate := validator.New()
+	if err := validate.Struct(body); err != nil {
+		return err.(validator.ValidationErrors)
+	}
+
 	voicevoxSrv := service.NewVoicevoxService(ctl.repos)
-	query, err := voicevoxSrv.AudioQuery("こんにちは")
+	query, err := voicevoxSrv.AudioQuery(body.Text)
 	if err != nil {
 		fmt.Println(err)
 		return c.JSON("")

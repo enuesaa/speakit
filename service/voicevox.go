@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/enuesaa/speakit/repository"
@@ -19,7 +20,7 @@ func NewVoicevoxService(repos repository.Repos) VoicevoxService {
 
 func (srv *VoicevoxService) AudioQuery(text string) (string, error) {
 	body, err := srv.repos.Httpcall.Post(
-		"http://voicevox:50021/audio_query?speaker=1&text=" + text,
+		"http://voicevox:50021/audio_query?speaker=1&text=" + url.QueryEscape(text),
 		strings.NewReader(""),
 	)
 	if err != nil {

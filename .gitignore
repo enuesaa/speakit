@@ -10,4 +10,4 @@
 # app
 tmp
 /apps/redis
-.wav
+*.wav
