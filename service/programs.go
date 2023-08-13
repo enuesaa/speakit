@@ -27,10 +27,10 @@ func (srv *ProgramsService) Create(body string) {
 	uid, _ := uuid.NewUUID()
 	id := uid.String()
 
-	srv.repos.Minio.Upload(id + ".wav", body)
-	srv.repos.Redis.Set("programs:" + id, "")
+	srv.repos.Storage.Upload(id+".wav", body)
+	srv.repos.Redis.Set("programs:"+id, "")
 }
 
 func (srv *ProgramsService) Download(id string) (string, error) {
-	return srv.repos.Minio.Download(id + ".wav")
+	return srv.repos.Storage.Download(id + ".wav")
 }

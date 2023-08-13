@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/enuesaa/speakit/controller"
 	"github.com/enuesaa/speakit/repository"
 	"github.com/gofiber/fiber/v2"
@@ -14,7 +16,10 @@ func main() {
 	repos := repository.Repos{
 		Redis:    &repository.RedisRepository{},
 		Httpcall: &repository.HttpcallRepository{},
-		Minio:    &repository.MinioRepository{},
+		Storage: &repository.StorageRepository{
+			Bucket:   os.Getenv("BUCKET"),
+			Endpoint: "minio:9000",
+		},
 	}
 	feeds := controller.NewFeedsController(repos)
 	api.Get("/feeds", feeds.ListFeeds)
