@@ -29,7 +29,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./apps/admin:/app
-    # command: pnpm dev
+    command: pnpm dev
     tty: true
 
   redis:
