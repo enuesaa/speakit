@@ -29,6 +29,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./apps/admin:/app
+      - node_modules:/app/node_modules
     command: pnpm dev
     tty: true
 
@@ -54,3 +55,4 @@ services:
 volumes:
   # to ignore dir.
   apps:
+  node_modules:
