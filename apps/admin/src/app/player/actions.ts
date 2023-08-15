@@ -1,4 +1,0 @@
-'use server'
-
-// next
-// prev

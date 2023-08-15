@@ -11,13 +11,13 @@ export default function Page() {
 
   return (
     <>
-    <div className={container()}>
-      <h1 className={styles.main}>
-        speakit admin
-      </h1>
-      <Link href='/feeds'>Feeds</Link>
-      <Link href='/player'>Player</Link>
-    </div>
+      <div className={container()}>
+        <h1 className={styles.main}>
+          speakit admin
+        </h1>
+        <Link href='/feeds'>Feeds</Link>
+        <Link href='/player'>Player</Link>
+      </div>
     </>
   )
 }
