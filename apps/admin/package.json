@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "prepare": "panda codegen",
-    "dev": "rm -rf .next && pnpm install && next dev",
+    "dev": "rm -rf .next && next dev",
     "build": "next build",
     "lint": "next lint",
     "format": "prettier --write \"src/**/*.{ts,tsx}\""

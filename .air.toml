@@ -1,7 +1,7 @@
 root = "."
 tmp_dir = "tmp"
 [build]
-  cmd = "go install && go build -o tmp/main"
+  cmd = "go build -o tmp/main"
   bin = "./tmp/main"
   delay = 1000
   exclude_dir = ["tmp", "apps"]
