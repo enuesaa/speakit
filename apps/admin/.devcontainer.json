@@ -1,5 +1,6 @@
 {
   "dockerComposeFile": ["../../docker-compose.yaml"],
   "service": "admin" ,
-  "workspaceFolder": "/app"
+  "workspaceFolder": "/workspace/apps/admin",
+  "shutdownAction": "none"
 }

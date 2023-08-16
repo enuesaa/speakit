@@ -1,0 +1,19 @@
+{
+  "dockerComposeFile": ["../docker-compose.yaml"],
+  "service": "app" ,
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "none",
+  "customizations": {
+		"vscode": {
+      "settings": {
+        "go.editor.formatOnSave": false,
+        "go.editor.codeActionsOnSave": {
+            "source.organizeImports": false
+        }
+      },
+			"extensions": [
+        "golang.go"
+      ]
+    }
+  }
+}

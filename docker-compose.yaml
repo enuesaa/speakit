@@ -8,7 +8,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./:/app
+      - .:/workspace:cached
       - apps:/app/apps
     environment:
       - BUCKET=sample
@@ -28,8 +28,8 @@ services:
       context: ./apps/admin
       dockerfile: Dockerfile
     volumes:
-      - ./apps/admin:/app
-      - node_modules:/app/node_modules
+      - .:/workspace:cached
+      - node_modules:/workspace/apps/admin/node_modules
     command: pnpm dev
     tty: true
 
