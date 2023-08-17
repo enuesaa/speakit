@@ -11,7 +11,8 @@ services:
       - .:/workspace:cached
       - apps:/app/apps
     environment:
-      - BUCKET=sample
+      - MINIO_BUCKET=sample
+      - MINIO_ENDPOINT=minio:9000
     tty: true
     links:
       - voicevox
