@@ -2,5 +2,7 @@
   "dockerComposeFile": ["../../docker-compose.yaml"],
   "service": "admin" ,
   "workspaceFolder": "/workspace/apps/admin",
-  "shutdownAction": "none"
+  "containerEnv": {
+    "TZ": "Asia/Tokyo"
+  }
 }

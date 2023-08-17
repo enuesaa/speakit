@@ -2,6 +2,9 @@
   "dockerComposeFile": ["../docker-compose.yaml"],
   "service": "app" ,
   "workspaceFolder": "/workspace",
+  "containerEnv": {
+    "TZ": "Asia/Tokyo"
+  },
   "customizations": {
 		"vscode": {
       "settings": {
