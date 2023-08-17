@@ -2,7 +2,6 @@
   "dockerComposeFile": ["../docker-compose.yaml"],
   "service": "app" ,
   "workspaceFolder": "/workspace",
-  "shutdownAction": "none",
   "customizations": {
 		"vscode": {
       "settings": {
@@ -12,8 +11,7 @@
         }
       },
 			"extensions": [
-        "golang.go",
-        "mhutchie.git-graph"
+        "golang.go"
       ]
     }
   }

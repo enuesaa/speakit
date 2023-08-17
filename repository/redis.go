@@ -14,7 +14,7 @@ type RedisRepositoryInterface interface {
 	Delete(key string)
 }
 
-type RedisRepository struct{
+type RedisRepository struct {
 	Addr string
 }
 
