@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-
 	"github.com/enuesaa/speakit/repository"
 )
 
@@ -18,9 +17,7 @@ func main() {
 		ADMIN_HOST: os.Getenv("ADMIN_HOST"),
 	}
 	repos := repository.NewRealRepos(env)
-
-	createApiRoute(app, repos)
-	createWebRoute(app, env)
+	createRoute(app, repos, env)
 
 	app.Listen(":3000")
 }

@@ -4,32 +4,27 @@ import (
 	"github.com/enuesaa/speakit/controller"
 	"github.com/enuesaa/speakit/repository"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/proxy"
 )
 
-func createApiRoute(app *fiber.App, repos repository.Repos) {
-	router := app.Group("/api")
-
+func createRoute(app *fiber.App, repos repository.Repos, env repository.Env) {
+	// api route
 	feeds := controller.NewFeedsController(repos)
-	router.Get("/feeds", feeds.ListFeeds)
-	router.Get("/feeds/:id", feeds.GetFeed)
-	router.Post("/feeds", feeds.CreateFeed)
-	router.Delete("/feeds/:id", feeds.DeleteFeed)
+	app.Get("/api/feeds", feeds.ListFeeds)
+	app.Get("/api/feeds/:id", feeds.GetFeed)
+	app.Post("/api/feeds", feeds.CreateFeed)
+	app.Delete("/api/feeds/:id", feeds.DeleteFeed)
 
 	jobs := controller.NewJobsController(repos)
-	router.Post("/jobs", jobs.CreateJob)
+	app.Post("/api/jobs", jobs.CreateJob)
 
 	programs := controller.NewProgramsController(repos)
-	router.Get("/programs", programs.ListPrograms)
-	router.Get("/programs/:id", programs.GetProgram)
+	app.Get("/api/programs", programs.ListPrograms)
+	app.Get("/api/programs/:id", programs.GetProgram)
 
 	storage := controller.NewStorageController(repos)
-	router.Get("/storage/:id", storage.GetItem)
-}
+	app.Get("/api/storage/:id", storage.GetItem)
 
-func createWebRoute(app *fiber.App, env repository.Env) {
-	app.Get("/*", func(c *fiber.Ctx) error {
-		path := c.OriginalURL()
-		return proxy.Forward("http://" + env.ADMIN_HOST + path)(c)
-	})
+	// web route
+	web := controller.NewWebController(env)
+	app.Get("/*", web.Forward)
 }
