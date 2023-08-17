@@ -9,6 +9,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+type JobSchema struct {
+	Text string `json:"text" validate:"required"`
+}
+
 type JobsController struct {
 	repos repository.Repos
 }
@@ -19,12 +23,8 @@ func NewJobsController(repos repository.Repos) JobsController {
 	}
 }
 
-type JobRequest struct {
-	Text string `json:"text" validate:"required"`
-}
-
 func (ctl *JobsController) CreateJob(c *fiber.Ctx) error {
-	body := new(JobRequest)
+	body := new(JobSchema)
 	if err := c.BodyParser(body); err != nil {
 		return err
 	}
@@ -48,5 +48,5 @@ func (ctl *JobsController) CreateJob(c *fiber.Ctx) error {
 
 	programsSrv.Create(converted)
 
-	return c.JSON("")
+	return c.JSON(EmptySchema{})
 }

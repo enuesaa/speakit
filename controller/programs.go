@@ -16,14 +16,10 @@ func NewProgramsController(repos repository.Repos) ProgramsController {
 	}
 }
 
-type ListProgramsResponse struct {
-	Items []string `json:"items"`
-}
-
 func (ctl *ProgramsController) ListPrograms(c *fiber.Ctx) error {
 	programsSrv := service.NewProgramsService(ctl.repos)
 	list := programsSrv.List()
-	response := ListProgramsResponse{
+	response := ListSchema[string]{
 		Items: list,
 	}
 
@@ -31,5 +27,5 @@ func (ctl *ProgramsController) ListPrograms(c *fiber.Ctx) error {
 }
 
 func (ctl *ProgramsController) GetProgram(c *fiber.Ctx) error {
-	return c.JSON("")
+	return c.JSON(EmptySchema{})
 }

@@ -22,10 +22,10 @@ func (ctl *StorageController) GetItem(c *fiber.Ctx) error {
 
 	obj, err := programsSrv.Download(id)
 	if err != nil {
-		return c.JSON("")
+		return c.JSON(EmptySchema{})
 	}
 
 	c.Response().SetBodyRaw([]byte(obj))
 	c.Response().Header.SetContentType("audio/wav")
-	return nil
+	return c.JSON(EmptySchema{})
 }

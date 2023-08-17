@@ -10,6 +10,11 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
+type FeedSchema struct {
+	Name string `json:"name" validate:"required"`
+	Url  string `json:"url" validate:"required"`
+}
+
 type FeedsController struct {
 	repos repository.Repos
 }
@@ -21,24 +26,18 @@ func NewFeedsController(repos repository.Repos) FeedsController {
 }
 
 func (ctl *FeedsController) ListFeeds(c *fiber.Ctx) error {
-	return c.JSON("")
+	return c.JSON(EmptySchema{})
 }
 
 func (ctl *FeedsController) GetFeed(c *fiber.Ctx) error {
 	id := c.Params("id")
 	fmt.Printf("%s", id)
 
-	return c.JSON("")
+	return c.JSON(EmptySchema{})
 }
-
-type FeedRequest struct {
-	Name string `json:"name" validate:"required"`
-	Url  string `json:"url" validate:"required"`
-}
-type FeedResponse struct{}
 
 func (ctl *FeedsController) CreateFeed(c *fiber.Ctx) error {
-	body := new(FeedRequest)
+	body := new(FeedSchema)
 	if err := c.BodyParser(body); err != nil {
 		return err
 	}
@@ -53,14 +52,14 @@ func (ctl *FeedsController) CreateFeed(c *fiber.Ctx) error {
 		Url:  body.Url,
 	})
 
-	return c.JSON(FeedResponse{})
+	return c.JSON(EmptySchema{})
 }
 
 func (ctl *FeedsController) DeleteFeed(c *fiber.Ctx) error {
 	id := c.Params("id")
 	fmt.Printf("%s", id)
 
-	return c.JSON("")
+	return c.JSON(EmptySchema{})
 }
 
 func (ctl *FeedsController) FetchFeed(c *fiber.Ctx) error {
@@ -68,5 +67,5 @@ func (ctl *FeedsController) FetchFeed(c *fiber.Ctx) error {
 	feed, _ := fp.ParseURL("https://gigazine.net/news/rss_2.0/")
 	fmt.Println(feed.Title)
 
-	return c.JSON("")
+	return c.JSON(EmptySchema{})
 }
