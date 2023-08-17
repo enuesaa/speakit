@@ -14,11 +14,13 @@ type RedisRepositoryInterface interface {
 	Delete(key string)
 }
 
-type RedisRepository struct{}
+type RedisRepository struct{
+	Addr string
+}
 
 func (repo *RedisRepository) client() *redis.Client {
 	client := redis.NewClient(&redis.Options{
-		Addr:     "redis:6379",
+		Addr:     repo.Addr,
 		Password: "",
 		DB:       0,
 	})

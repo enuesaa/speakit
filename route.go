@@ -27,9 +27,9 @@ func createApiRoute(app *fiber.App, repos repository.Repos) {
 	router.Get("/storage/:id", storage.GetItem)
 }
 
-func createWebRoute(app *fiber.App, repos repository.Repos) {
+func createWebRoute(app *fiber.App, env repository.Env) {
 	app.Get("/*", func(c *fiber.Ctx) error {
 		path := c.OriginalURL()
-		return proxy.Forward("http://admin:3000" + path)(c)
+		return proxy.Forward("http://" + env.ADMIN_HOST + path)(c)
 	})
 }

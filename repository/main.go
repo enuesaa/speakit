@@ -1,8 +1,11 @@
 package repository
 
-import (
-	"os"
-)
+type Env struct {
+	MINIO_BUCKET string
+	MINIO_HOST string
+	REDIS_HOST string
+	ADMIN_HOST string
+}
 
 type Repos struct {
 	Redis    RedisRepositoryInterface
@@ -10,13 +13,15 @@ type Repos struct {
 	Storage  StorageRepositoryInterface
 }
 
-func NewRealRepos() Repos {
-	return Repos {
-		Redis:    &RedisRepository{},
+func NewRealRepos(env Env) Repos {
+	return Repos{
+		Redis: &RedisRepository{
+			Addr: env.REDIS_HOST,
+		},
 		Httpcall: &HttpcallRepository{},
 		Storage: &StorageRepository{
-			Bucket:   os.Getenv("MINIO_BUCKET"),
-			Endpoint: os.Getenv("MINIO_ENDPOINT"),
+			Bucket:   env.MINIO_BUCKET,
+			Endpoint: env.MINIO_HOST,
 		},
 	}
 }

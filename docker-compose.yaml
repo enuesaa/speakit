@@ -12,7 +12,9 @@ services:
       - apps:/app/apps
     environment:
       - MINIO_BUCKET=sample
-      - MINIO_ENDPOINT=minio:9000
+      - MINIO_HOST=minio:9000
+      - REDIS_HOST=redis:6379
+      - ADMIN_HOST=admin:3000
     tty: true
     links:
       - voicevox
