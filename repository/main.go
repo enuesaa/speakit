@@ -13,7 +13,7 @@ type Repos struct {
 	Storage  StorageRepositoryInterface
 }
 
-func NewRealRepos(env Env) Repos {
+func NewRepos(env Env) Repos {
 	return Repos{
 		Redis: &RedisRepository{
 			Addr: env.REDIS_HOST,
