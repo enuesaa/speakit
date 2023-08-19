@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { QueryProvider } from './query'
 import './global.css'
 
 type Props = {
@@ -9,7 +10,9 @@ export default function RootLayout({ children }: Props) {
     <>
       <html lang='ja'>
         <body>
-          {children}
+          <QueryProvider>
+            {children}
+          </QueryProvider>
         </body>
       </html>
     </>
