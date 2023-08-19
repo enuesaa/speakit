@@ -12,3 +12,4 @@ tmp
 /apps/redis
 /apps/minio
 *.wav
+openapi.yaml

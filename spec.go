@@ -1,8 +1,32 @@
+//go:build ignore
+
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/go-yaml/yaml"
 )
+
+func main() {
+	spec := GenerateOpenAPISpec()
+
+	specYaml, err := yaml.Marshal(spec)
+	if err != nil {
+		fmt.Println("failed to marshal.")
+		return
+	}
+
+	f, err := os.Create("openapi.yaml")
+	if err != nil {
+		fmt.Println("failed to create file.")
+		return
+	}
+	defer f.Close()
+	f.Write(specYaml)
+}
 
 func GenerateOpenAPISpec() openapi3.T {
 	spec := openapi3.T{}

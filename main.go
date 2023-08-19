@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/enuesaa/speakit/repository"
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
