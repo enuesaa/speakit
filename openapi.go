@@ -58,19 +58,38 @@ func defineOps(spec openapi3.T, path string, options OpsOption) openapi3.T {
 	schemaRef := "#/components/schemas/" + schemaName
 	spec = appendSchema(spec, schemaName, options.Schema)
 	if options.List {
-		spec = appendOp(spec, path, "GET", OpOption{responseSchemaRef: schemaRef, listResponse: true})
+		spec = appendOp(spec, path, Op {
+			Method: "GET",
+			ResponseRef: schemaRef,
+			IsListReponse: true,
+		})
 	}
 	if options.View {
-		spec = appendOp(spec, path + "/{id}", "GET", OpOption{responseSchemaRef: schemaRef})
+		spec = appendOp(spec, path + "/{id}", Op {
+			Method: "GET",
+			ResponseRef: schemaRef,
+			PathParams: []string{"id"},
+		})
 	}
 	if options.Create {
-		spec = appendOp(spec, path, "POST", OpOption{requestSchemaRef: schemaRef})
+		spec = appendOp(spec, path, Op {
+			Method: "POST",
+			ResponseRef: schemaRef,
+		})
 	}
 	if options.Update {
-		spec = appendOp(spec, path, "PUT" + "/{id}", OpOption{requestSchemaRef: schemaRef})
+		spec = appendOp(spec, path + "/{id}", Op {
+			Method: "PUT",
+			ResponseRef: schemaRef,
+			PathParams: []string{"id"},
+		})
 	}
 	if options.Delete {
-		spec = appendOp(spec, path, "DELETE" + "/{id}", OpOption{})
+		spec = appendOp(spec, path + "/{id}", Op {
+			Method: "DELETE",
+			ResponseRef: schemaRef,
+			PathParams: []string{"id"},
+		})
 	}
 	return spec
 }
@@ -81,42 +100,64 @@ func appendSchema(spec openapi3.T, name string, schema interface{}) openapi3.T {
 	return spec
 }
 
-type OpOption struct {
-	requestSchemaRef string
-	responseSchemaRef string
-	listResponse bool
+type Op struct {
+	Method string
+	RequestRef string
+	ResponseRef string
+	IsListReponse bool
+	PathParams []string
 }
-func appendOp(spec openapi3.T, path string, method string, option OpOption) openapi3.T {
+func appendOp(spec openapi3.T, path string, op Op) openapi3.T {
 	if spec.Paths[path] == nil {
 		spec.Paths[path] = &openapi3.PathItem{}
 	}
+
 	operation := openapi3.Operation{}
-	operation.Summary = method + " " + path
-	operation.OperationID = strcase.ToLowerCamel(method + path)
-	if option.requestSchemaRef != "" {
+	operation.Summary = op.Method + " " + path
+	operation.OperationID = strcase.ToLowerCamel(op.Method + path)
+	operation.Parameters = openapi3.NewParameters()
+
+	if op.PathParams != nil && len(op.PathParams) > 0 {
+		for _, pathParamName := range op.PathParams {
+			operation.Parameters = append(operation.Parameters, &openapi3.ParameterRef{
+				Value: &openapi3.Parameter{
+					In: "path",
+					Name: pathParamName,
+					Schema: &openapi3.SchemaRef{
+						Value: &openapi3.Schema{
+							Type: "string",
+						},
+					},
+					Required: true,
+				},
+			})
+		}
+	}
+
+	if op.RequestRef != "" {
 		operation.RequestBody = &openapi3.RequestBodyRef{
 			Value: &openapi3.RequestBody{
 				Content: openapi3.Content{
 					"application/json": &openapi3.MediaType{
 						Schema: &openapi3.SchemaRef{
-							Ref: option.requestSchemaRef,
+							Ref: op.RequestRef,
 						},
 					},
 				},
 			},
 		}
 	}
-	if option.responseSchemaRef != "" {
+	if op.ResponseRef != "" {
 		responseSchema := &openapi3.SchemaRef{
-			Ref: option.responseSchemaRef,
+			Ref: op.ResponseRef,
 		}
-		if option.listResponse {
+		if op.IsListReponse {
 			responseSchema = &openapi3.SchemaRef{
 				Value: &openapi3.Schema{
 					Type: "object",
 					Properties: openapi3.Schemas{
 						"items": &openapi3.SchemaRef{
-							Ref: option.responseSchemaRef,
+							Ref: op.RequestRef,
 						},
 					},
 				},
@@ -135,7 +176,7 @@ func appendOp(spec openapi3.T, path string, method string, option OpOption) open
 			},
 		}
 	}
-	spec.Paths[path].SetOperation(method, &operation)
+	spec.Paths[path].SetOperation(op.Method, &operation)
 
 	return spec
 }
