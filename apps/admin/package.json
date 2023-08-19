@@ -12,6 +12,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
+    "@tanstack/react-query": "^4.32.6",
     "next": "^13.4.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
