@@ -5,12 +5,12 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/enuesaa/speakit/controller"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/getkin/kin-openapi/openapi3gen"
 	"github.com/go-yaml/yaml"
+	"github.com/iancoleman/strcase"
 )
 
 func main() {
@@ -54,7 +54,7 @@ type OpsOption struct {
 }
 
 func defineOps(spec openapi3.T, path string, options OpsOption) openapi3.T {
-	schemaName := strings.ReplaceAll(path, "/", "")
+	schemaName := strcase.ToLowerCamel(path)
 	spec = appendSchema(spec, schemaName, options.Schema)
 	if options.List {
 		spec = appendPath(spec, path, "GET", "", schemaName)
@@ -86,7 +86,7 @@ func appendPath(spec openapi3.T, path string, method string, requestSchema strin
 	}
 	operation := openapi3.Operation{}
 	operation.Summary = method + " " + path
-	operation.OperationID = method + strings.ReplaceAll(path, "/", "-")
+	operation.OperationID = strcase.ToLowerCamel(method + path)
 	if requestSchema != "" {
 		operation.RequestBody = &openapi3.RequestBodyRef{
 			Value: &openapi3.RequestBody{
