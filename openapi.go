@@ -16,8 +16,12 @@ import (
 func main() {
 	spec := openapi3.T{}
 	spec = configure(spec)
-	spec = appendPath(spec, "/feeds", "POST", &controller.FeedSchema{}, nil)
-	// spec = appendPaths(spec)
+	spec = defineOps(spec, "/feeds", OpsOption {
+		List: true,
+		View: true,
+		Create: true,
+		Schema: &controller.FeedSchema{},
+	})
 
 	writeYaml(spec)
 }
@@ -40,36 +44,71 @@ func configure(spec openapi3.T) openapi3.T {
 	return spec
 }
 
-func appendPath(spec openapi3.T, path string, method string, request interface{}, response interface{}) openapi3.T {
+type OpsOption struct {
+	List bool
+	View bool
+	Create bool
+	Update bool
+	Delete bool
+	Schema interface{}
+}
+
+func defineOps(spec openapi3.T, path string, options OpsOption) openapi3.T {
+	schemaName := strings.ReplaceAll(path, "/", "")
+	spec = appendSchema(spec, schemaName, options.Schema)
+	if options.List {
+		spec = appendPath(spec, path, "GET", "", schemaName)
+	}
+	if options.View {
+		spec = appendPath(spec, path + "/{id}", "GET", "", schemaName)
+	}
+	if options.Create {
+		spec = appendPath(spec, path, "POST", schemaName, "")
+	}
+	if options.Update {
+		spec = appendPath(spec, path, "PUT" + "/{id}", schemaName, "")
+	}
+	if options.Delete {
+		spec = appendPath(spec, path, "DELETE" + "/{id}", "", "")
+	}
+	return spec
+}
+
+func appendSchema(spec openapi3.T, name string, schema interface{}) openapi3.T {
+	schemaRef, _ := openapi3gen.NewSchemaRefForValue(schema, nil)
+	spec.Components.Schemas[name] = schemaRef
+	return spec
+}
+
+func appendPath(spec openapi3.T, path string, method string, requestSchema string, responseSchema string) openapi3.T {
 	if spec.Paths[path] == nil {
 		spec.Paths[path] = &openapi3.PathItem{}
 	}
 	operation := openapi3.Operation{}
 	operation.Summary = method + " " + path
 	operation.OperationID = method + strings.ReplaceAll(path, "/", "-")
-	if request != nil {
-		requestSchemaRef, _ := openapi3gen.NewSchemaRefForValue(request, nil)
+	if requestSchema != "" {
 		operation.RequestBody = &openapi3.RequestBodyRef{
 			Value: &openapi3.RequestBody{
 				Content: openapi3.Content{
 					"application/json": &openapi3.MediaType{
 						Schema: &openapi3.SchemaRef{
-							Ref: "a",
+							Ref: requestSchema,
 						},
 					},
 				},
 			},
 		}
-		spec.Components.Schemas["a"] = requestSchemaRef
 	}
-	if response != nil {
-		responseSchemaRef, _ := openapi3gen.NewSchemaRefForValue(response, nil)
+	if responseSchema != "" {
 		operation.Responses = openapi3.Responses{
 			"200": &openapi3.ResponseRef{
 				Value: &openapi3.Response{
 					Content: openapi3.Content{
 						"application/json": &openapi3.MediaType{
-							Schema: responseSchemaRef,
+							Schema: &openapi3.SchemaRef{
+								Ref: responseSchema,
+							},
 						},
 					},
 				},
