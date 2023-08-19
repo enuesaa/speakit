@@ -55,21 +55,22 @@ type OpsOption struct {
 
 func defineOps(spec openapi3.T, path string, options OpsOption) openapi3.T {
 	schemaName := strcase.ToLowerCamel(path)
+	schemaRef := "#/components/schemas/" + schemaName
 	spec = appendSchema(spec, schemaName, options.Schema)
 	if options.List {
-		spec = appendPath(spec, path, "GET", "", schemaName, true)
+		spec = appendOp(spec, path, "GET", OpOption{responseSchemaRef: schemaRef, listResponse: true})
 	}
 	if options.View {
-		spec = appendPath(spec, path + "/{id}", "GET", "", schemaName, false)
+		spec = appendOp(spec, path + "/{id}", "GET", OpOption{responseSchemaRef: schemaRef})
 	}
 	if options.Create {
-		spec = appendPath(spec, path, "POST", schemaName, "", false)
+		spec = appendOp(spec, path, "POST", OpOption{requestSchemaRef: schemaRef})
 	}
 	if options.Update {
-		spec = appendPath(spec, path, "PUT" + "/{id}", schemaName, "", false)
+		spec = appendOp(spec, path, "PUT" + "/{id}", OpOption{requestSchemaRef: schemaRef})
 	}
 	if options.Delete {
-		spec = appendPath(spec, path, "DELETE" + "/{id}", "", "", false)
+		spec = appendOp(spec, path, "DELETE" + "/{id}", OpOption{})
 	}
 	return spec
 }
@@ -80,60 +81,58 @@ func appendSchema(spec openapi3.T, name string, schema interface{}) openapi3.T {
 	return spec
 }
 
-func appendPath(spec openapi3.T, path string, method string, requestSchema string, responseSchema string, listResponse bool) openapi3.T {
+type OpOption struct {
+	requestSchemaRef string
+	responseSchemaRef string
+	listResponse bool
+}
+func appendOp(spec openapi3.T, path string, method string, option OpOption) openapi3.T {
 	if spec.Paths[path] == nil {
 		spec.Paths[path] = &openapi3.PathItem{}
 	}
 	operation := openapi3.Operation{}
 	operation.Summary = method + " " + path
 	operation.OperationID = strcase.ToLowerCamel(method + path)
-	if requestSchema != "" {
+	if option.requestSchemaRef != "" {
 		operation.RequestBody = &openapi3.RequestBodyRef{
 			Value: &openapi3.RequestBody{
 				Content: openapi3.Content{
 					"application/json": &openapi3.MediaType{
 						Schema: &openapi3.SchemaRef{
-							Ref: requestSchema,
+							Ref: option.requestSchemaRef,
 						},
 					},
 				},
 			},
 		}
 	}
-	if responseSchema != "" {
-		if listResponse {
-			operation.Responses = openapi3.Responses{
-				"200": &openapi3.ResponseRef{
-					Value: &openapi3.Response{
-						Content: openapi3.Content{
-							"application/json": &openapi3.MediaType{
-								Schema: &openapi3.SchemaRef{
-									Value: &openapi3.Schema{
-										Type: "array",
-										Items: &openapi3.SchemaRef{
-											Ref: responseSchema,
-										},
-									},
-								},
-							},
+	if option.responseSchemaRef != "" {
+		responseSchema := &openapi3.SchemaRef{
+			Ref: option.responseSchemaRef,
+		}
+		if option.listResponse {
+			responseSchema = &openapi3.SchemaRef{
+				Value: &openapi3.Schema{
+					Type: "object",
+					Properties: openapi3.Schemas{
+						"items": &openapi3.SchemaRef{
+							Ref: option.responseSchemaRef,
 						},
 					},
 				},
 			}
-		} else {
-			operation.Responses = openapi3.Responses{
-				"200": &openapi3.ResponseRef{
-					Value: &openapi3.Response{
-						Content: openapi3.Content{
-							"application/json": &openapi3.MediaType{
-								Schema: &openapi3.SchemaRef{
-									Ref: responseSchema,
-								},
-							},
+		}
+
+		operation.Responses = openapi3.Responses{
+			"200": &openapi3.ResponseRef{
+				Value: &openapi3.Response{
+					Content: openapi3.Content{
+						"application/json": &openapi3.MediaType{
+							Schema: responseSchema,
 						},
 					},
 				},
-			}
+			},
 		}
 	}
 	spec.Paths[path].SetOperation(method, &operation)
