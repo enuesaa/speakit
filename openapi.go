@@ -57,19 +57,19 @@ func defineOps(spec openapi3.T, path string, options OpsOption) openapi3.T {
 	schemaName := strcase.ToLowerCamel(path)
 	spec = appendSchema(spec, schemaName, options.Schema)
 	if options.List {
-		spec = appendPath(spec, path, "GET", "", schemaName)
+		spec = appendPath(spec, path, "GET", "", schemaName, true)
 	}
 	if options.View {
-		spec = appendPath(spec, path + "/{id}", "GET", "", schemaName)
+		spec = appendPath(spec, path + "/{id}", "GET", "", schemaName, false)
 	}
 	if options.Create {
-		spec = appendPath(spec, path, "POST", schemaName, "")
+		spec = appendPath(spec, path, "POST", schemaName, "", false)
 	}
 	if options.Update {
-		spec = appendPath(spec, path, "PUT" + "/{id}", schemaName, "")
+		spec = appendPath(spec, path, "PUT" + "/{id}", schemaName, "", false)
 	}
 	if options.Delete {
-		spec = appendPath(spec, path, "DELETE" + "/{id}", "", "")
+		spec = appendPath(spec, path, "DELETE" + "/{id}", "", "", false)
 	}
 	return spec
 }
@@ -80,7 +80,7 @@ func appendSchema(spec openapi3.T, name string, schema interface{}) openapi3.T {
 	return spec
 }
 
-func appendPath(spec openapi3.T, path string, method string, requestSchema string, responseSchema string) openapi3.T {
+func appendPath(spec openapi3.T, path string, method string, requestSchema string, responseSchema string, listResponse bool) openapi3.T {
 	if spec.Paths[path] == nil {
 		spec.Paths[path] = &openapi3.PathItem{}
 	}
@@ -101,18 +101,39 @@ func appendPath(spec openapi3.T, path string, method string, requestSchema strin
 		}
 	}
 	if responseSchema != "" {
-		operation.Responses = openapi3.Responses{
-			"200": &openapi3.ResponseRef{
-				Value: &openapi3.Response{
-					Content: openapi3.Content{
-						"application/json": &openapi3.MediaType{
-							Schema: &openapi3.SchemaRef{
-								Ref: responseSchema,
+		if listResponse {
+			operation.Responses = openapi3.Responses{
+				"200": &openapi3.ResponseRef{
+					Value: &openapi3.Response{
+						Content: openapi3.Content{
+							"application/json": &openapi3.MediaType{
+								Schema: &openapi3.SchemaRef{
+									Value: &openapi3.Schema{
+										Type: "array",
+										Items: &openapi3.SchemaRef{
+											Ref: responseSchema,
+										},
+									},
+								},
 							},
 						},
 					},
 				},
-			},
+			}
+		} else {
+			operation.Responses = openapi3.Responses{
+				"200": &openapi3.ResponseRef{
+					Value: &openapi3.Response{
+						Content: openapi3.Content{
+							"application/json": &openapi3.MediaType{
+								Schema: &openapi3.SchemaRef{
+									Ref: responseSchema,
+								},
+							},
+						},
+					},
+				},
+			}
 		}
 	}
 	spec.Paths[path].SetOperation(method, &operation)
