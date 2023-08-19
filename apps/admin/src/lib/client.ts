@@ -2,11 +2,11 @@
 
 type Args = {
   url: string
-  method: 'get'|'post'|'put'|'delete'
-  params?: Record<string, any>;
-  headers?: Record<string, any>;
-  data?: any;
-  signal?: any;
+  method: 'get' | 'post' | 'put' | 'delete'
+  params?: Record<string, any>
+  headers?: Record<string, any>
+  data?: any
+  signal?: any
 }
 export const useClient = <T>() => {
   return async ({ url, method, params, headers, data }: Args): Promise<T> => {
