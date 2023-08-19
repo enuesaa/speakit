@@ -4,5 +4,6 @@
   "workspaceFolder": "/workspace/apps/admin",
   "containerEnv": {
     "TZ": "Asia/Tokyo"
-  }
+  },
+  "shutdownAction": "none"
 }

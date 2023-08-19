@@ -157,16 +157,18 @@ func appendOp(spec openapi3.T, path string, op Op) openapi3.T {
 					Type: "object",
 					Properties: openapi3.Schemas{
 						"items": &openapi3.SchemaRef{
-							Ref: op.RequestRef,
+							Ref: op.ResponseRef,
 						},
 					},
 				},
 			}
 		}
 
+		description := ""
 		operation.Responses = openapi3.Responses{
 			"200": &openapi3.ResponseRef{
 				Value: &openapi3.Response{
+					Description: &description,
 					Content: openapi3.Content{
 						"application/json": &openapi3.MediaType{
 							Schema: responseSchema,
