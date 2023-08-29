@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// deprecated
 type JobSchema struct {
 	Text string `json:"text" validate:"required"`
 }

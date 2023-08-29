@@ -10,7 +10,7 @@
       "settings": {
         "go.editor.formatOnSave": false,
         "go.editor.codeActionsOnSave": {
-            "source.organizeImports": false
+          "source.organizeImports": false
         }
       },
 			"extensions": [

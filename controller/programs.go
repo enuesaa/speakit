@@ -6,6 +6,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+type ProgramSchema struct {
+	Id string `json:"id"`
+	Title string `json:"title"`
+	Content string `json:"content"`
+	Created string `json:"created"`
+}
+
 type ProgramsController struct {
 	repos repository.Repos
 }

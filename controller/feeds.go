@@ -11,6 +11,7 @@ import (
 )
 
 type FeedSchema struct {
+	Id string `json:"id"`
 	Name string `json:"name" validate:"required"`
 	Url  string `json:"url" validate:"required"`
 }
@@ -62,6 +63,7 @@ func (ctl *FeedsController) DeleteFeed(c *fiber.Ctx) error {
 	return c.JSON(EmptySchema{})
 }
 
+// put job
 func (ctl *FeedsController) FetchFeed(c *fiber.Ctx) error {
 	fp := gofeed.NewParser()
 	feed, _ := fp.ParseURL("https://gigazine.net/news/rss_2.0/")
