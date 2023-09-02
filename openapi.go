@@ -1,10 +1,7 @@
-//go:build ignore
-
 package main
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/enuesaa/speakit/controller"
 	"github.com/getkin/kin-openapi/openapi3"
@@ -13,7 +10,7 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-func main() {
+func PrintOpenapi() {
 	spec := openapi3.T{}
 	spec = configure(spec)
 	spec = defineOps(spec, "/feeds", OpsOption {
@@ -190,11 +187,5 @@ func writeYaml(spec openapi3.T) {
 		return
 	}
 
-	f, err := os.Create("openapi.yaml")
-	if err != nil {
-		fmt.Println("failed to create file.")
-		return
-	}
-	defer f.Close()
-	f.Write(specYaml)
+	fmt.Printf("%s", specYaml)
 }

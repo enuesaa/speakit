@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"os"
 
 	"github.com/enuesaa/speakit/repository"
@@ -8,6 +9,14 @@ import (
 )
 
 func main() {
+	var task string
+	flag.StringVar(&task, "task", "serve", "")
+    flag.Parse()
+	if task == "print-openapi" {
+		PrintOpenapi()
+		return
+	}
+
 	app := fiber.New()
 
 	// env
