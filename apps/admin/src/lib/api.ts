@@ -13,55 +13,55 @@ import type {
   UseQueryResult,
   QueryKey,
 } from '@tanstack/react-query'
-import type { Getfeeds200, Feeds } from './schema'
+import type { Getapifeeds200, Apifeeds } from './schema'
 import { useClient } from './client'
 
 /**
- * @summary GET /feeds
+ * @summary GET /api/feeds
  */
-export const useGetfeedsHook = () => {
-  const getfeeds = useClient<Getfeeds200>()
+export const useGetapifeedsHook = () => {
+  const getapifeeds = useClient<Getapifeeds200>()
 
   return (signal?: AbortSignal) => {
-    return getfeeds({ url: `/feeds`, method: 'get', signal })
+    return getapifeeds({ url: `/api/feeds`, method: 'get', signal })
   }
 }
 
-export const getGetfeedsQueryKey = () => [`/feeds`] as const
+export const getGetapifeedsQueryKey = () => [`/api/feeds`] as const
 
-export const useGetfeedsQueryOptions = <
-  TData = Awaited<ReturnType<ReturnType<typeof useGetfeedsHook>>>,
+export const useGetapifeedsQueryOptions = <
+  TData = Awaited<ReturnType<ReturnType<typeof useGetapifeedsHook>>>,
   TError = unknown,
 >(options?: {
-  query?: UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetfeedsHook>>>, TError, TData>
-}): UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetfeedsHook>>>, TError, TData> & {
+  query?: UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetapifeedsHook>>>, TError, TData>
+}): UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetapifeedsHook>>>, TError, TData> & {
   queryKey: QueryKey
 } => {
   const { query: queryOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getGetfeedsQueryKey()
+  const queryKey = queryOptions?.queryKey ?? getGetapifeedsQueryKey()
 
-  const getfeeds = useGetfeedsHook()
+  const getapifeeds = useGetapifeedsHook()
 
-  const queryFn: QueryFunction<Awaited<ReturnType<ReturnType<typeof useGetfeedsHook>>>> = ({ signal }) =>
-    getfeeds(signal)
+  const queryFn: QueryFunction<Awaited<ReturnType<ReturnType<typeof useGetapifeedsHook>>>> = ({ signal }) =>
+    getapifeeds(signal)
 
   return { queryKey, queryFn, ...queryOptions }
 }
 
-export type GetfeedsQueryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof useGetfeedsHook>>>>
-export type GetfeedsQueryError = unknown
+export type GetapifeedsQueryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof useGetapifeedsHook>>>>
+export type GetapifeedsQueryError = unknown
 
 /**
- * @summary GET /feeds
+ * @summary GET /api/feeds
  */
-export const useGetfeeds = <
-  TData = Awaited<ReturnType<ReturnType<typeof useGetfeedsHook>>>,
+export const useGetapifeeds = <
+  TData = Awaited<ReturnType<ReturnType<typeof useGetapifeedsHook>>>,
   TError = unknown,
 >(options?: {
-  query?: UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetfeedsHook>>>, TError, TData>
+  query?: UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetapifeedsHook>>>, TError, TData>
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-  const queryOptions = useGetfeedsQueryOptions(options)
+  const queryOptions = useGetapifeedsQueryOptions(options)
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey }
 
@@ -71,90 +71,103 @@ export const useGetfeeds = <
 }
 
 /**
- * @summary POST /feeds
+ * @summary POST /api/feeds
  */
-export const usePostfeedsHook = () => {
-  const postfeeds = useClient<Feeds>()
+export const usePostapifeedsHook = () => {
+  const postapifeeds = useClient<Apifeeds>()
 
   return () => {
-    return postfeeds({ url: `/feeds`, method: 'post' })
+    return postapifeeds({ url: `/api/feeds`, method: 'post' })
   }
 }
 
-export const usePostfeedsMutationOptions = <TError = unknown, TVariables = void, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<Awaited<ReturnType<ReturnType<typeof usePostfeedsHook>>>, TError, TVariables, TContext>
-}): UseMutationOptions<Awaited<ReturnType<ReturnType<typeof usePostfeedsHook>>>, TError, TVariables, TContext> => {
+export const usePostapifeedsMutationOptions = <TError = unknown, TVariables = void, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof usePostapifeedsHook>>>,
+    TError,
+    TVariables,
+    TContext
+  >
+}): UseMutationOptions<Awaited<ReturnType<ReturnType<typeof usePostapifeedsHook>>>, TError, TVariables, TContext> => {
   const { mutation: mutationOptions } = options ?? {}
 
-  const postfeeds = usePostfeedsHook()
+  const postapifeeds = usePostapifeedsHook()
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<ReturnType<typeof usePostfeedsHook>>>, TVariables> = () => {
-    return postfeeds()
+  const mutationFn: MutationFunction<Awaited<ReturnType<ReturnType<typeof usePostapifeedsHook>>>, TVariables> = () => {
+    return postapifeeds()
   }
 
   return { mutationFn, ...mutationOptions }
 }
 
-export type PostfeedsMutationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof usePostfeedsHook>>>>
+export type PostapifeedsMutationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof usePostapifeedsHook>>>>
 
-export type PostfeedsMutationError = unknown
+export type PostapifeedsMutationError = unknown
 
 /**
- * @summary POST /feeds
+ * @summary POST /api/feeds
  */
-export const usePostfeeds = <TError = unknown, TVariables = void, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<Awaited<ReturnType<ReturnType<typeof usePostfeedsHook>>>, TError, TVariables, TContext>
+export const usePostapifeeds = <TError = unknown, TVariables = void, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof usePostapifeedsHook>>>,
+    TError,
+    TVariables,
+    TContext
+  >
 }) => {
-  const mutationOptions = usePostfeedsMutationOptions(options)
+  const mutationOptions = usePostapifeedsMutationOptions(options)
 
   return useMutation(mutationOptions)
 }
 
 /**
- * @summary GET /feeds/{id}
+ * @summary GET /api/feeds/{id}
  */
-export const useGetfeedsidHook = () => {
-  const getfeedsid = useClient<Feeds>()
+export const useGetapifeedsidHook = () => {
+  const getapifeedsid = useClient<Apifeeds>()
 
   return (id: string, signal?: AbortSignal) => {
-    return getfeedsid({ url: `/feeds/${id}`, method: 'get', signal })
+    return getapifeedsid({ url: `/api/feeds/${id}`, method: 'get', signal })
   }
 }
 
-export const getGetfeedsidQueryKey = (id: string) => [`/feeds/${id}`] as const
+export const getGetapifeedsidQueryKey = (id: string) => [`/api/feeds/${id}`] as const
 
-export const useGetfeedsidQueryOptions = <
-  TData = Awaited<ReturnType<ReturnType<typeof useGetfeedsidHook>>>,
+export const useGetapifeedsidQueryOptions = <
+  TData = Awaited<ReturnType<ReturnType<typeof useGetapifeedsidHook>>>,
   TError = unknown,
 >(
   id: string,
-  options?: { query?: UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetfeedsidHook>>>, TError, TData> },
-): UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetfeedsidHook>>>, TError, TData> & {
+  options?: { query?: UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetapifeedsidHook>>>, TError, TData> },
+): UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetapifeedsidHook>>>, TError, TData> & {
   queryKey: QueryKey
 } => {
   const { query: queryOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getGetfeedsidQueryKey(id)
+  const queryKey = queryOptions?.queryKey ?? getGetapifeedsidQueryKey(id)
 
-  const getfeedsid = useGetfeedsidHook()
+  const getapifeedsid = useGetapifeedsidHook()
 
-  const queryFn: QueryFunction<Awaited<ReturnType<ReturnType<typeof useGetfeedsidHook>>>> = ({ signal }) =>
-    getfeedsid(id, signal)
+  const queryFn: QueryFunction<Awaited<ReturnType<ReturnType<typeof useGetapifeedsidHook>>>> = ({ signal }) =>
+    getapifeedsid(id, signal)
 
   return { queryKey, queryFn, enabled: !!id, ...queryOptions }
 }
 
-export type GetfeedsidQueryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof useGetfeedsidHook>>>>
-export type GetfeedsidQueryError = unknown
+export type GetapifeedsidQueryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof useGetapifeedsidHook>>>>
+export type GetapifeedsidQueryError = unknown
 
 /**
- * @summary GET /feeds/{id}
+ * @summary GET /api/feeds/{id}
  */
-export const useGetfeedsid = <TData = Awaited<ReturnType<ReturnType<typeof useGetfeedsidHook>>>, TError = unknown>(
+export const useGetapifeedsid = <
+  TData = Awaited<ReturnType<ReturnType<typeof useGetapifeedsidHook>>>,
+  TError = unknown,
+>(
   id: string,
-  options?: { query?: UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetfeedsidHook>>>, TError, TData> },
+  options?: { query?: UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetapifeedsidHook>>>, TError, TData> },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-  const queryOptions = useGetfeedsidQueryOptions(id, options)
+  const queryOptions = useGetapifeedsidQueryOptions(id, options)
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey }
 

@@ -5,7 +5,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface Feeds {
+export interface Apifeeds {
   id?: string;
   name?: string;
   url?: string;

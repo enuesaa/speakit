@@ -10,10 +10,12 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
+// run following command.
+// go run . -task print-openapi > ./apps/admin/openapi.yaml --task print-openapi
 func PrintOpenapi() {
 	spec := openapi3.T{}
 	spec = configure(spec)
-	spec = defineOps(spec, "/feeds", OpsOption {
+	spec = defineOps(spec, "/api/feeds", OpsOption {
 		List: true,
 		View: true,
 		Create: true,

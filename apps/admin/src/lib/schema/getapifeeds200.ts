@@ -4,9 +4,8 @@
  * Speakit API
  * OpenAPI spec version: 0.1.0
  */
+import type { Apifeeds } from './apifeeds';
 
-export interface Feeds {
-  id?: string;
-  name?: string;
-  url?: string;
-}
+export type Getapifeeds200 = {
+  items?: Apifeeds;
+};

@@ -35,3 +35,6 @@ next-env.d.ts
 
 # pandacss
 src/styled-system
+
+# openapi
+openapi.yaml
