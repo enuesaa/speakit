@@ -27,14 +27,34 @@ func NewFeedsController(repos repository.Repos) FeedsController {
 }
 
 func (ctl *FeedsController) ListFeeds(c *fiber.Ctx) error {
-	return c.JSON(EmptySchema{})
+	res := ListSchema[FeedSchema]{
+		Items: make([]FeedSchema, 0),
+	}
+
+	feedSrv := service.NewFeedSevice(ctl.repos)
+	for _, feed := range feedSrv.List() {
+		res.Items = append(res.Items, FeedSchema{
+			Id: feed.Id,
+			Name: feed.Name,
+			Url: feed.Url,
+		})
+	}
+
+	return c.JSON(res)
 }
 
 func (ctl *FeedsController) GetFeed(c *fiber.Ctx) error {
 	id := c.Params("id")
-	fmt.Printf("%s", id)
 
-	return c.JSON(EmptySchema{})
+	feedSrv := service.NewFeedSevice(ctl.repos)
+	feed := feedSrv.Get(id)
+	res := FeedSchema {
+		Id: feed.Id,
+		Name: feed.Name,
+		Url: feed.Url,	
+	}
+
+	return c.JSON(res)
 }
 
 func (ctl *FeedsController) CreateFeed(c *fiber.Ctx) error {
@@ -48,17 +68,19 @@ func (ctl *FeedsController) CreateFeed(c *fiber.Ctx) error {
 	}
 
 	feedSrv := service.NewFeedSevice(ctl.repos)
-	feedSrv.Create(service.Feed{
+	id := feedSrv.Create(service.Feed{
 		Name: body.Name,
 		Url:  body.Url,
 	})
 
-	return c.JSON(EmptySchema{})
+	return c.JSON(struct { Id string `json:"id"` } { Id: id })
 }
 
 func (ctl *FeedsController) DeleteFeed(c *fiber.Ctx) error {
 	id := c.Params("id")
-	fmt.Printf("%s", id)
+
+	feedSrv := service.NewFeedSevice(ctl.repos)
+	feedSrv.Delete(id)
 
 	return c.JSON(EmptySchema{})
 }

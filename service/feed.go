@@ -1,10 +1,13 @@
 package service
 
 import (
+	"encoding/json"
 	"github.com/enuesaa/speakit/repository"
+	"github.com/google/uuid"
 )
 
 type Feed struct {
+	Id string
 	Name string
 	Url  string
 }
@@ -19,8 +22,18 @@ func NewFeedSevice(repos repository.Repos) FeedService {
 	}
 }
 
-func (srv *FeedService) List() []string {
+func (srv *FeedService) ListKeys() []string {
 	return srv.repos.Redis.Keys("feeds:*")
+}
+
+func (srv *FeedService) List() []Feed {
+	ids := srv.ListKeys()
+	list := make([]Feed, 0)
+
+	for _, id := range ids {
+		list = append(list, srv.Get(id))
+	}
+	return list
 }
 
 func (srv *FeedService) Get(id string) Feed {
@@ -28,8 +41,12 @@ func (srv *FeedService) Get(id string) Feed {
 }
 
 func (srv *FeedService) Create(feed Feed) string {
-	srv.repos.Redis.Set("feedss:"+feed.Name, feed.Url)
-	return ""
+	uid, _ := uuid.NewUUID()
+	id := uid.String()
+	feed.Id = id
+	bfeed, _ := json.Marshal(feed)
+	srv.repos.Redis.Set("feeds:" + id, string(bfeed))
+	return id
 }
 
 func (srv *FeedService) Delete(id string) {}
