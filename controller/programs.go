@@ -25,8 +25,8 @@ func NewProgramsController(repos repository.Repos) ProgramsController {
 
 func (ctl *ProgramsController) ListPrograms(c *fiber.Ctx) error {
 	programsSrv := service.NewProgramsService(ctl.repos)
-	list := programsSrv.List()
-	response := ListSchema[string]{
+	list := programsSrv.ListKeys()
+	response := ListSchema[string] {
 		Items: list,
 	}
 

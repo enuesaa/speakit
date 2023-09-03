@@ -1,10 +1,8 @@
 package controller
 
 import (
-	"fmt"
-
 	"github.com/enuesaa/speakit/repository"
-	"github.com/enuesaa/speakit/service"
+	// "github.com/enuesaa/speakit/service"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
@@ -34,20 +32,20 @@ func (ctl *JobsController) CreateJob(c *fiber.Ctx) error {
 		return err.(validator.ValidationErrors)
 	}
 
-	voicevoxSrv := service.NewVoicevoxService(ctl.repos)
-	programsSrv := service.NewProgramsService(ctl.repos)
-	query, err := voicevoxSrv.AudioQuery(body.Text)
-	if err != nil {
-		fmt.Println(err)
-		return c.JSON("")
-	}
-	converted, err := voicevoxSrv.Synthesis(query)
-	if err != nil {
-		fmt.Println(err)
-		return c.JSON("")
-	}
+	// voicevoxSrv := service.NewVoicevoxService(ctl.repos)
+	// programsSrv := service.NewProgramsService(ctl.repos)
+	// query, err := voicevoxSrv.AudioQuery(body.Text)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return c.JSON("")
+	// }
+	// converted, err := voicevoxSrv.Synthesis(query)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return c.JSON("")
+	// }
 
-	programsSrv.Create(converted)
+	// programsSrv.Create(converted)
 
 	return c.JSON(EmptySchema{})
 }

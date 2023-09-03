@@ -2,14 +2,20 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
+
 	"github.com/enuesaa/speakit/repository"
 	"github.com/google/uuid"
+	"github.com/mmcdole/gofeed"
 )
 
 type Feed struct {
 	Id string
 	Name string
 	Url  string
+}
+type Realfeed struct {
+	gofeed.Feed
 }
 
 type FeedService struct {
@@ -37,6 +43,9 @@ func (srv *FeedService) List() []Feed {
 }
 
 func (srv *FeedService) Get(id string) Feed {
+	value := srv.repos.Redis.Get("feeds:" + id)
+	fmt.Println(value)
+
 	return *new(Feed)
 }
 
@@ -49,4 +58,16 @@ func (srv *FeedService) Create(feed Feed) string {
 	return id
 }
 
-func (srv *FeedService) Delete(id string) {}
+func (srv *FeedService) Delete(id string) {
+	srv.repos.Redis.Delete("feeds:" + id)
+}
+
+func (srv *FeedService) Refetch(id string) Realfeed {
+	feed := srv.Get(id)
+	url := feed.Url
+
+	fp := gofeed.NewParser()
+	realfeed, _ := fp.ParseURL(url)
+
+	return Realfeed{ *realfeed }
+}

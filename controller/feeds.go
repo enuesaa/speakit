@@ -1,13 +1,10 @@
 package controller
 
 import (
-	"fmt"
-
 	"github.com/enuesaa/speakit/repository"
 	"github.com/enuesaa/speakit/service"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"github.com/mmcdole/gofeed"
 )
 
 type FeedSchema struct {
@@ -92,11 +89,19 @@ func (ctl *FeedsController) DeleteFeed(c *fiber.Ctx) error {
 	return c.JSON(EmptySchema{})
 }
 
-// put job
-func (ctl *FeedsController) FetchFeed(c *fiber.Ctx) error {
-	fp := gofeed.NewParser()
-	feed, _ := fp.ParseURL("https://gigazine.net/news/rss_2.0/")
-	fmt.Println(feed.Title)
+func (ctl *FeedsController) RefetchFeed(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	feedSrv := service.NewFeedSevice(ctl.repos)
+	programSrv := service.NewProgramsService(ctl.repos)
+	realfeed := feedSrv.Refetch(id)
+	
+	for _, realfeeditem := range realfeed.Items {
+		programSrv.Create(service.Program{
+			Title: realfeeditem.Title,
+			Content: realfeed.Description,
+		})
+	}
 
 	return c.JSON(EmptySchema{})
 }
