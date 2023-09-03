@@ -4,9 +4,10 @@ import (
 	"flag"
 	"os"
 
+	"github.com/enuesaa/speakit/controller"
 	"github.com/enuesaa/speakit/repository"
 	"github.com/gofiber/fiber/v2"
-	"github.com/enuesaa/speakit/controller"
+	"github.com/gofiber/fiber/v2/log"
 )
 
 func main() {
@@ -18,8 +19,6 @@ func main() {
 		return
 	}
 
-	app := fiber.New()
-
 	// env
 	env := repository.Env {
 		MINIO_BUCKET: os.Getenv("MINIO_BUCKET"),
@@ -29,7 +28,8 @@ func main() {
 	}
 	repos := repository.NewRepos(env)
 
-	// route
+	app := fiber.New()
+	app.Use(logger())
 	createRoute(app, repos, env)
 
 	app.Listen(":3000")
@@ -55,4 +55,19 @@ func createRoute(app *fiber.App, repos repository.Repos, env repository.Env) {
 	// web route
 	web := controller.NewWebController(env)
 	app.Get("/*", web.Forward)
+}
+
+func logger() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		logfile, err := os.Create("./tmp/app.log")
+		if err != nil {
+			return err
+		}
+		defer logfile.Close()
+		log.SetOutput(logfile)
+
+		c.Next()
+
+		return nil
+	}
 }
