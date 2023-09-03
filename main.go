@@ -33,7 +33,7 @@ func main() {
 	repos := repository.NewRepos(env)
 
 	app := fiber.New()
-	app.Use(logger())
+	// app.Use(logger())
 	app.Use(adaptor.HTTPMiddleware(monitorSentry))
 	createRoute(app, repos, env)
 
@@ -85,7 +85,6 @@ func monitorSentry(next http.Handler) http.Handler {
 		ProfilesSampleRate: 1.0,
 	})
 	if err != nil {
-		log.Info(err)
 		return next
 	}
 

@@ -3,8 +3,13 @@ module github.com/enuesaa/speakit
 go 1.21
 
 require (
+	github.com/getkin/kin-openapi v0.118.0
 	github.com/go-playground/validator/v10 v10.15.0
+	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/gofiber/fiber/v2 v2.48.0
+	github.com/google/uuid v1.3.0
+	github.com/iancoleman/strcase v0.3.0
+	github.com/minio/minio-go/v7 v7.0.61
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/redis/go-redis/v9 v9.0.5
 )
@@ -17,15 +22,11 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
-	github.com/getkin/kin-openapi v0.118.0 // indirect
 	github.com/getsentry/sentry-go v0.23.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/swag v0.19.5 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-yaml/yaml v2.1.0+incompatible // indirect
-	github.com/google/uuid v1.3.0 // indirect
-	github.com/iancoleman/strcase v0.3.0 // indirect
 	github.com/invopop/yaml v0.1.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -37,7 +38,6 @@ require (
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/minio/md5-simd v1.1.2 // indirect
-	github.com/minio/minio-go/v7 v7.0.61 // indirect
 	github.com/minio/sha256-simd v1.0.1 // indirect
 	github.com/mmcdole/goxpp v1.1.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
