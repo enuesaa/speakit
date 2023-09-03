@@ -19,6 +19,7 @@ func PrintOpenapi() {
 		List: true,
 		View: true,
 		Create: true,
+		Delete: true,
 		Schema: &controller.FeedSchema{},
 	})
 
@@ -32,7 +33,7 @@ func configure(spec openapi3.T) openapi3.T {
 		Version: "0.1.0",
 	}
 	spec.AddServer(&openapi3.Server{
-		URL: "http://localhost:3000/api",
+		URL: "http://localhost:3000/api/",
 		Description: "local server",
 	})
 	spec.Components = &openapi3.Components{
