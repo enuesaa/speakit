@@ -4,6 +4,7 @@ import (
 	"flag"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/enuesaa/speakit/controller"
 	"github.com/enuesaa/speakit/repository"
@@ -80,6 +81,7 @@ func logger() fiber.Handler {
 func monitorSentry(next http.Handler) http.Handler {
 	err := sentry.Init(sentry.ClientOptions{
 		Dsn: os.Getenv("SENTRY_DSN"),
+		AttachStacktrace: true,
 		EnableTracing: true,
 		TracesSampleRate: 1.0,
 		ProfilesSampleRate: 1.0,
@@ -87,6 +89,8 @@ func monitorSentry(next http.Handler) http.Handler {
 	if err != nil {
 		return next
 	}
+	defer sentry.Flush(2 * time.Second)
+	sentry.CaptureMessage("It works!")
 
 	sentryHandler := sentryhttp.New(sentryhttp.Options{})
 	return sentryHandler.Handle(next)
