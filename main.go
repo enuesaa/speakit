@@ -2,34 +2,39 @@ package main
 
 import (
 	"flag"
+	"net/http"
 	"os"
 
 	"github.com/enuesaa/speakit/controller"
 	"github.com/enuesaa/speakit/repository"
+	"github.com/getsentry/sentry-go"
+	sentryhttp "github.com/getsentry/sentry-go/http"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
 )
 
 func main() {
 	var task string
 	flag.StringVar(&task, "task", "serve", "")
-    flag.Parse()
+	flag.Parse()
 	if task == "print-openapi" {
 		PrintOpenapi()
 		return
 	}
 
 	// env
-	env := repository.Env {
+	env := repository.Env{
 		MINIO_BUCKET: os.Getenv("MINIO_BUCKET"),
-		MINIO_HOST: os.Getenv("MINIO_HOST"),
-		REDIS_HOST: os.Getenv("REDIS_HOST"),
-		ADMIN_HOST: os.Getenv("ADMIN_HOST"),
+		MINIO_HOST:   os.Getenv("MINIO_HOST"),
+		REDIS_HOST:   os.Getenv("REDIS_HOST"),
+		ADMIN_HOST:   os.Getenv("ADMIN_HOST"),
 	}
 	repos := repository.NewRepos(env)
 
 	app := fiber.New()
 	app.Use(logger())
+	app.Use(adaptor.HTTPMiddleware(monitorSentry))
 	createRoute(app, repos, env)
 
 	app.Listen(":3000")
@@ -70,4 +75,20 @@ func logger() fiber.Handler {
 
 		return nil
 	}
+}
+
+func monitorSentry(next http.Handler) http.Handler {
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn: os.Getenv("SENTRY_DSN"),
+		EnableTracing: true,
+		TracesSampleRate: 1.0,
+		ProfilesSampleRate: 1.0,
+	})
+	if err != nil {
+		log.Info(err)
+		return next
+	}
+
+	sentryHandler := sentryhttp.New(sentryhttp.Options{})
+	return sentryHandler.Handle(next)
 }

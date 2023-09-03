@@ -13,3 +13,4 @@ tmp
 /apps/minio
 *.wav
 openapi.yaml
+.env
