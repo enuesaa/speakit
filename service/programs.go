@@ -1,10 +1,7 @@
 package service
 
 import (
-	"encoding/json"
-
 	"github.com/enuesaa/speakit/repository"
-	"github.com/google/uuid"
 )
 
 type Program struct {
@@ -23,12 +20,8 @@ func NewProgramsService(repos repository.Repos) ProgramsService {
 	}
 }
 
-func (srv *ProgramsService) ListKeys() []string {
-	return srv.repos.Redis.Keys("programs:*")
-}
-
 func (srv *ProgramsService) List() []Program {
-	ids := srv.ListKeys()
+	ids := srv.repos.Redis.Keys("programs:*")
 	list := make([]Program, 0)
 
 	for _, id := range ids {
@@ -38,18 +31,15 @@ func (srv *ProgramsService) List() []Program {
 }
 
 func (srv *ProgramsService) Get(id string) Program {
-	return *new(Program)
+	value := srv.repos.Redis.Get("programs:" + id)
+	return parseJson[Program](value)
 }
 
 func (srv *ProgramsService) Create(program Program) string {
-	uid, _ := uuid.NewUUID()
-	id := uid.String()
-	program.Id = id
-	bfeed, _ := json.Marshal(program)
-
+	program.Id = createId()
 	// srv.repos.Storage.Upload(id+".wav", body)
-	srv.repos.Redis.Set("programs:" + id, string(bfeed))
-	return id
+	srv.repos.Redis.Set("programs:" + program.Id, toJson(program))
+	return program.Id
 }
 
 func (srv *ProgramsService) Download(id string) (string, error) {

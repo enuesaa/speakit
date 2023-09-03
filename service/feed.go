@@ -1,18 +1,14 @@
 package service
 
 import (
-	"encoding/json"
-	"fmt"
-
 	"github.com/enuesaa/speakit/repository"
-	"github.com/google/uuid"
 	"github.com/mmcdole/gofeed"
 )
 
 type Feed struct {
-	Id string
-	Name string
-	Url  string
+	Id string `json:"id"`
+	Name string `json:"name"`
+	Url  string `json:"url"`
 }
 type Realfeed struct {
 	gofeed.Feed
@@ -21,19 +17,14 @@ type Realfeed struct {
 type FeedService struct {
 	repos repository.Repos
 }
-
 func NewFeedSevice(repos repository.Repos) FeedService {
 	return FeedService{
 		repos,
 	}
 }
 
-func (srv *FeedService) ListKeys() []string {
-	return srv.repos.Redis.Keys("feeds:*")
-}
-
 func (srv *FeedService) List() []Feed {
-	ids := srv.ListKeys()
+	ids := srv.repos.Redis.Keys("feeds:*")
 	list := make([]Feed, 0)
 
 	for _, id := range ids {
@@ -44,18 +35,13 @@ func (srv *FeedService) List() []Feed {
 
 func (srv *FeedService) Get(id string) Feed {
 	value := srv.repos.Redis.Get("feeds:" + id)
-	fmt.Println(value)
-
-	return *new(Feed)
+	return parseJson[Feed](value)
 }
 
 func (srv *FeedService) Create(feed Feed) string {
-	uid, _ := uuid.NewUUID()
-	id := uid.String()
-	feed.Id = id
-	bfeed, _ := json.Marshal(feed)
-	srv.repos.Redis.Set("feeds:" + id, string(bfeed))
-	return id
+	feed.Id = createId()
+	srv.repos.Redis.Set("feeds:" + feed.Id, toJson(feed))
+	return feed.Id
 }
 
 func (srv *FeedService) Delete(id string) {
