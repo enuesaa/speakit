@@ -18,7 +18,7 @@ func NewStorageController(repos repository.Repos) StorageController {
 
 func (ctl *StorageController) GetItem(c *fiber.Ctx) error {
 	id := c.Params("id")
-	programsSrv := service.NewProgramsService(ctl.repos)
+	programsSrv := service.NewProgramService(ctl.repos)
 
 	obj, err := programsSrv.Download(id)
 	if err != nil {
