@@ -1,4 +1,10 @@
-import { defineConfig } from '@pandacss/dev'
+import { defineConfig, defineGlobalStyles } from '@pandacss/dev'
+
+const globalCss = defineGlobalStyles({
+  'html, body': {
+    background: 'indigo.950',
+  },
+})
 
 export default defineConfig({
   preflight: true,
@@ -8,4 +14,5 @@ export default defineConfig({
     extend: {}
   },
   outdir: 'src/styled-system',
+  globalCss,
 })

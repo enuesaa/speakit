@@ -1,25 +1,28 @@
 import { Metadata } from 'next'
 import { QueryProvider } from './query'
-import './global.css'
+import '../styles/global.css'
+import { FiraCode } from '../styles/font'
+import { ReactNode } from 'react'
+import { WithSidebar } from './WithSidebar'
 
 type Props = {
-  children: React.ReactNode,
+  children: ReactNode,
 }
-export default function RootLayout({ children }: Props) {
+export default function AppLayout({ children }: Props) {
   return (
-    <>
-      <html lang='ja'>
-        <body>
-          <QueryProvider>
+    <html lang='ja' className={FiraCode.className}>
+      <body>
+        <QueryProvider>
+          <WithSidebar>
             {children}
-          </QueryProvider>
-        </body>
-      </html>
-    </>
+          </WithSidebar>
+        </QueryProvider>
+      </body>
+    </html>
   )
 }
  
 export const metadata: Metadata = {
-  title: 'my-nextjs-template',
-  description: 'my-nextjs-template',
+  title: 'speakit',
+  description: 'speakit',
 }
