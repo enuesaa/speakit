@@ -6,6 +6,7 @@
  */
 
 export * from './apifeeds';
+export * from './apifeedsData';
 export * from './feeds';
 export * from './getapifeeds200';
 export * from './getfeeds200';

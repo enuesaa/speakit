@@ -4,9 +4,11 @@
  * Speakit API
  * OpenAPI spec version: 0.1.0
  */
+import type { ApifeedsData } from './apifeedsData';
 
 export interface Apifeeds {
+  created?: string;
+  data?: ApifeedsData;
   id?: string;
-  name?: string;
-  url?: string;
+  modified?: string;
 }

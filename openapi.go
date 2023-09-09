@@ -20,7 +20,7 @@ func PrintOpenapi() {
 		View: true,
 		Create: true,
 		Delete: true,
-		Schema: &controller.FeedSchema{},
+		Schema: &controller.WithMetadata[controller.FeedSchema]{},
 	})
 
 	writeYaml(spec)
@@ -157,7 +157,12 @@ func appendOp(spec openapi3.T, path string, op Op) openapi3.T {
 					Type: "object",
 					Properties: openapi3.Schemas{
 						"items": &openapi3.SchemaRef{
-							Ref: op.ResponseRef,
+							Value: &openapi3.Schema{
+								Type: openapi3.TypeArray,
+								Items: &openapi3.SchemaRef{
+									Ref: op.ResponseRef,
+								},
+							},
 						},
 					},
 				},

@@ -121,6 +121,68 @@ export const usePostapifeeds = <TError = unknown, TVariables = void, TContext = 
 }
 
 /**
+ * @summary DELETE /api/feeds/{id}
+ */
+export const useDeleteapifeedsidHook = () => {
+  const deleteapifeedsid = useClient<Apifeeds>()
+
+  return (id: string) => {
+    return deleteapifeedsid({ url: `/api/feeds/${id}`, method: 'delete' })
+  }
+}
+
+export const useDeleteapifeedsidMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof useDeleteapifeedsidHook>>>,
+    TError,
+    { id: string },
+    TContext
+  >
+}): UseMutationOptions<
+  Awaited<ReturnType<ReturnType<typeof useDeleteapifeedsidHook>>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const { mutation: mutationOptions } = options ?? {}
+
+  const deleteapifeedsid = useDeleteapifeedsidHook()
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<ReturnType<typeof useDeleteapifeedsidHook>>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {}
+
+    return deleteapifeedsid(id)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type DeleteapifeedsidMutationResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof useDeleteapifeedsidHook>>>
+>
+
+export type DeleteapifeedsidMutationError = unknown
+
+/**
+ * @summary DELETE /api/feeds/{id}
+ */
+export const useDeleteapifeedsid = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof useDeleteapifeedsidHook>>>,
+    TError,
+    { id: string },
+    TContext
+  >
+}) => {
+  const mutationOptions = useDeleteapifeedsidMutationOptions(options)
+
+  return useMutation(mutationOptions)
+}
+
+/**
  * @summary GET /api/feeds/{id}
  */
 export const useGetapifeedsidHook = () => {
