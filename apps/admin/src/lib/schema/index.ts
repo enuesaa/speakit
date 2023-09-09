@@ -7,6 +7,9 @@
 
 export * from './apifeeds';
 export * from './apifeedsData';
+export * from './apifeedsWithMetadata';
+export * from './apifeedsWithMetadataData';
+export * from './apifetch';
 export * from './feeds';
 export * from './getapifeeds200';
 export * from './getfeeds200';

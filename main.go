@@ -49,7 +49,8 @@ func createRoute(app *fiber.App, repos repository.Repos, env repository.Env) {
 	app.Post("/api/feeds", feeds.CreateFeed)
 	app.Delete("/api/feeds/:id", feeds.DeleteFeed)
 
-	app.Post("/api/feeds/:id/fetch", feeds.RefetchFeed)
+	feedfetch := controller.NewFeedfetchController(repos)
+	app.Post("/api/fetch", feedfetch.Create)
 
 	programs := controller.NewProgramsController(repos)
 	app.Get("/api/programs", programs.ListPrograms)

@@ -5,7 +5,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface Apifeeds {
+export type ApifeedsWithMetadataData = {
   name?: string;
   url?: string;
-}
+};

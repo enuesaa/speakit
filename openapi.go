@@ -20,7 +20,12 @@ func PrintOpenapi() {
 		View: true,
 		Create: true,
 		Delete: true,
-		Schema: &controller.WithMetadata[controller.FeedSchema]{},
+		Schema: &controller.FeedSchema{},
+		SchemaWithMetadata: &controller.WithMetadata[controller.FeedSchema]{},
+	})
+	spec = defineOps(spec, "/api/fetch", OpsOption {
+		Create: true,
+		Schema: &controller.FeedfetchSchema{},
 	})
 
 	writeYaml(spec)
@@ -51,43 +56,51 @@ type OpsOption struct {
 	Update bool
 	Delete bool
 	Schema interface{}
+	SchemaWithMetadata interface{}
 }
 
 func defineOps(spec openapi3.T, path string, options OpsOption) openapi3.T {
 	schemaName := strcase.ToLowerCamel(path)
 	schemaRef := "#/components/schemas/" + schemaName
 	spec = appendSchema(spec, schemaName, options.Schema)
+
+	schemaWithMetadataRef := schemaRef
+	if options.SchemaWithMetadata != nil {
+		schemaWithMetadataName := schemaName + "-with-metadata"
+		schemaWithMetadataRef = "#/components/schemas/" + schemaWithMetadataName
+		spec = appendSchema(spec, schemaWithMetadataName, options.SchemaWithMetadata)	
+	}
+
 	if options.List {
 		spec = appendOp(spec, path, Op {
 			Method: "GET",
-			ResponseRef: schemaRef,
+			ResponseRef: schemaWithMetadataRef,
 			IsListReponse: true,
 		})
 	}
 	if options.View {
 		spec = appendOp(spec, path + "/{id}", Op {
 			Method: "GET",
-			ResponseRef: schemaRef,
+			ResponseRef: schemaWithMetadataRef,
 			PathParams: []string{"id"},
 		})
 	}
 	if options.Create {
 		spec = appendOp(spec, path, Op {
 			Method: "POST",
-			ResponseRef: schemaRef,
+			RequestRef: schemaRef,
 		})
 	}
 	if options.Update {
 		spec = appendOp(spec, path + "/{id}", Op {
 			Method: "PUT",
-			ResponseRef: schemaRef,
+			RequestRef: schemaRef,
 			PathParams: []string{"id"},
 		})
 	}
 	if options.Delete {
 		spec = appendOp(spec, path + "/{id}", Op {
 			Method: "DELETE",
-			ResponseRef: schemaRef,
 			PathParams: []string{"id"},
 		})
 	}

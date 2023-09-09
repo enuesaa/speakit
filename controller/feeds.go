@@ -88,23 +88,3 @@ func (ctl *FeedsController) DeleteFeed(c *fiber.Ctx) error {
 
 	return c.JSON(EmptySchema{})
 }
-
-func (ctl *FeedsController) RefetchFeed(c *fiber.Ctx) error {
-	id := c.Params("id")
-
-	feedSrv := service.NewFeedSevice(ctl.repos)
-	programSrv := service.NewProgramService(ctl.repos)
-	realfeed := feedSrv.Refetch(id)
-	
-	for _, realfeeditem := range realfeed.Items {
-		// query, _ := voicevoxSrv.AudioQuery(body.Text)
-		// converted, err := voicevoxSrv.Synthesis(query)
-		// programsSrv.Create(converted)
-		programSrv.Create(service.Program{
-			Title: realfeeditem.Title,
-			Content: realfeed.Description,
-		})
-	}
-
-	return c.JSON(EmptySchema{})
-}

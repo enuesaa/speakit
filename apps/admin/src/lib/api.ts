@@ -13,7 +13,7 @@ import type {
   UseQueryResult,
   QueryKey,
 } from '@tanstack/react-query'
-import type { Getapifeeds200, Apifeeds } from './schema'
+import type { Getapifeeds200, Apifeeds, ApifeedsWithMetadata, Apifetch } from './schema'
 import { useClient } from './client'
 
 /**
@@ -74,44 +74,59 @@ export const useGetapifeeds = <
  * @summary POST /api/feeds
  */
 export const usePostapifeedsHook = () => {
-  const postapifeeds = useClient<Apifeeds>()
+  const postapifeeds = useClient<unknown>()
 
-  return () => {
-    return postapifeeds({ url: `/api/feeds`, method: 'post' })
+  return (apifeeds: Apifeeds) => {
+    return postapifeeds({
+      url: `/api/feeds`,
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      data: apifeeds,
+    })
   }
 }
 
-export const usePostapifeedsMutationOptions = <TError = unknown, TVariables = void, TContext = unknown>(options?: {
+export const usePostapifeedsMutationOptions = <TError = unknown, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof usePostapifeedsHook>>>,
     TError,
-    TVariables,
+    { data: Apifeeds },
     TContext
   >
-}): UseMutationOptions<Awaited<ReturnType<ReturnType<typeof usePostapifeedsHook>>>, TError, TVariables, TContext> => {
+}): UseMutationOptions<
+  Awaited<ReturnType<ReturnType<typeof usePostapifeedsHook>>>,
+  TError,
+  { data: Apifeeds },
+  TContext
+> => {
   const { mutation: mutationOptions } = options ?? {}
 
   const postapifeeds = usePostapifeedsHook()
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<ReturnType<typeof usePostapifeedsHook>>>, TVariables> = () => {
-    return postapifeeds()
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<ReturnType<typeof usePostapifeedsHook>>>,
+    { data: Apifeeds }
+  > = (props) => {
+    const { data } = props ?? {}
+
+    return postapifeeds(data)
   }
 
   return { mutationFn, ...mutationOptions }
 }
 
 export type PostapifeedsMutationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof usePostapifeedsHook>>>>
-
+export type PostapifeedsMutationBody = Apifeeds
 export type PostapifeedsMutationError = unknown
 
 /**
  * @summary POST /api/feeds
  */
-export const usePostapifeeds = <TError = unknown, TVariables = void, TContext = unknown>(options?: {
+export const usePostapifeeds = <TError = unknown, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof usePostapifeedsHook>>>,
     TError,
-    TVariables,
+    { data: Apifeeds },
     TContext
   >
 }) => {
@@ -124,7 +139,7 @@ export const usePostapifeeds = <TError = unknown, TVariables = void, TContext = 
  * @summary DELETE /api/feeds/{id}
  */
 export const useDeleteapifeedsidHook = () => {
-  const deleteapifeedsid = useClient<Apifeeds>()
+  const deleteapifeedsid = useClient<unknown>()
 
   return (id: string) => {
     return deleteapifeedsid({ url: `/api/feeds/${id}`, method: 'delete' })
@@ -186,7 +201,7 @@ export const useDeleteapifeedsid = <TError = unknown, TContext = unknown>(option
  * @summary GET /api/feeds/{id}
  */
 export const useGetapifeedsidHook = () => {
-  const getapifeedsid = useClient<Apifeeds>()
+  const getapifeedsid = useClient<ApifeedsWithMetadata>()
 
   return (id: string, signal?: AbortSignal) => {
     return getapifeedsid({ url: `/api/feeds/${id}`, method: 'get', signal })
@@ -236,4 +251,69 @@ export const useGetapifeedsid = <
   query.queryKey = queryOptions.queryKey
 
   return query
+}
+
+/**
+ * @summary POST /api/fetch
+ */
+export const usePostapifetchHook = () => {
+  const postapifetch = useClient<unknown>()
+
+  return (apifetch: Apifetch) => {
+    return postapifetch({
+      url: `/api/fetch`,
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      data: apifetch,
+    })
+  }
+}
+
+export const usePostapifetchMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof usePostapifetchHook>>>,
+    TError,
+    { data: Apifetch },
+    TContext
+  >
+}): UseMutationOptions<
+  Awaited<ReturnType<ReturnType<typeof usePostapifetchHook>>>,
+  TError,
+  { data: Apifetch },
+  TContext
+> => {
+  const { mutation: mutationOptions } = options ?? {}
+
+  const postapifetch = usePostapifetchHook()
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<ReturnType<typeof usePostapifetchHook>>>,
+    { data: Apifetch }
+  > = (props) => {
+    const { data } = props ?? {}
+
+    return postapifetch(data)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type PostapifetchMutationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof usePostapifetchHook>>>>
+export type PostapifetchMutationBody = Apifetch
+export type PostapifetchMutationError = unknown
+
+/**
+ * @summary POST /api/fetch
+ */
+export const usePostapifetch = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof usePostapifetchHook>>>,
+    TError,
+    { data: Apifetch },
+    TContext
+  >
+}) => {
+  const mutationOptions = usePostapifetchMutationOptions(options)
+
+  return useMutation(mutationOptions)
 }
