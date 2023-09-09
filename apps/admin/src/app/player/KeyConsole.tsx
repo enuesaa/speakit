@@ -9,11 +9,6 @@ export const KeyConsole = () => {
     console.log('ArrowLeft Event')
   })
 
-	//   - start
-	//   - next
-	//   - prev
-	//   - stop
-
   return (
     <></>
   )
