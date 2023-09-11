@@ -7,10 +7,8 @@ import (
 )
 
 type ProgramSchema struct {
-	Id string `json:"id"`
 	Title string `json:"title"`
 	Content string `json:"content"`
-	Created string `json:"created"`
 }
 
 type ProgramsController struct {
@@ -23,19 +21,41 @@ func NewProgramsController(repos repository.Repos) ProgramsController {
 	}
 }
 
-func (ctl *ProgramsController) ListPrograms(c *fiber.Ctx) error {
-	programsSrv := service.NewProgramService(ctl.repos)
-	list := programsSrv.List()
-	response := ListSchema[string] {
-		Items: make([]string, 0),
-	}
-	for _, item := range list {
-		response.Items = append(response.Items, item.Id)
+func (ctl *ProgramsController) List(c *fiber.Ctx) error {
+	res := ListSchema[WithMetadata[ProgramSchema]]{
+		Items: make([]WithMetadata[ProgramSchema], 0),
 	}
 
-	return c.JSON(response)
+	programSrv := service.NewProgramService(ctl.repos)
+	for _, program := range programSrv.List() {
+		res.Items = append(res.Items, WithMetadata[ProgramSchema] {
+			Id: program.Id,
+			Data: ProgramSchema {
+				Title: program.Title,
+				Content: program.Content,
+			},
+			Created: "",
+			Modified: "",
+		})
+	}
+
+	return c.JSON(res)
 }
 
-func (ctl *ProgramsController) GetProgram(c *fiber.Ctx) error {
-	return c.JSON(EmptySchema{})
+func (ctl *ProgramsController) Get(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	programSrv := service.NewProgramService(ctl.repos)
+	program := programSrv.Get(id)
+	res := WithMetadata[ProgramSchema] {
+		Id: program.Id,
+		Data: ProgramSchema {
+			Title: program.Title,
+			Content: program.Content,
+		},
+		Created: "",
+		Modified: "",
+	}
+
+	return c.JSON(res)
 }

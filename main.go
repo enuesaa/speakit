@@ -34,17 +34,17 @@ func main() {
 
 		// api route
 		feeds := controller.NewFeedsController(repos)
-		app.Get("/api/feeds", feeds.ListFeeds)
-		app.Get("/api/feeds/:id", feeds.GetFeed)
-		app.Post("/api/feeds", feeds.CreateFeed)
-		app.Delete("/api/feeds/:id", feeds.DeleteFeed)
+		app.Get("/api/feeds", feeds.List)
+		app.Get("/api/feeds/:id", feeds.Get)
+		app.Post("/api/feeds", feeds.Create)
+		app.Delete("/api/feeds/:id", feeds.Delete)
 	
 		feedfetch := controller.NewFeedfetchController(repos)
 		app.Post("/api/fetch", feedfetch.Create)
 	
 		programs := controller.NewProgramsController(repos)
-		app.Get("/api/programs", programs.ListPrograms)
-		app.Get("/api/programs/:id", programs.GetProgram)
+		app.Get("/api/programs", programs.List)
+		app.Get("/api/programs/:id", programs.Get)
 	
 		storage := controller.NewStorageController(repos)
 		app.Get("/api/storage/:id", storage.GetItem)

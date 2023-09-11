@@ -22,7 +22,7 @@ func NewFeedsController(repos repository.Repos) FeedsController {
 	}
 }
 
-func (ctl *FeedsController) ListFeeds(c *fiber.Ctx) error {
+func (ctl *FeedsController) List(c *fiber.Ctx) error {
 	res := ListSchema[WithMetadata[FeedSchema]]{
 		Items: make([]WithMetadata[FeedSchema], 0),
 	}
@@ -43,7 +43,7 @@ func (ctl *FeedsController) ListFeeds(c *fiber.Ctx) error {
 	return c.JSON(res)
 }
 
-func (ctl *FeedsController) GetFeed(c *fiber.Ctx) error {
+func (ctl *FeedsController) Get(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	feedSrv := service.NewFeedSevice(ctl.repos)
@@ -61,7 +61,7 @@ func (ctl *FeedsController) GetFeed(c *fiber.Ctx) error {
 	return c.JSON(res)
 }
 
-func (ctl *FeedsController) CreateFeed(c *fiber.Ctx) error {
+func (ctl *FeedsController) Create(c *fiber.Ctx) error {
 	body := new(FeedSchema)
 	if err := c.BodyParser(body); err != nil {
 		return err
@@ -80,7 +80,7 @@ func (ctl *FeedsController) CreateFeed(c *fiber.Ctx) error {
 	return c.JSON(struct { Id string `json:"id"` } { Id: id })
 }
 
-func (ctl *FeedsController) DeleteFeed(c *fiber.Ctx) error {
+func (ctl *FeedsController) Delete(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	feedSrv := service.NewFeedSevice(ctl.repos)
