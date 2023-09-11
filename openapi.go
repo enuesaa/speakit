@@ -11,7 +11,7 @@ import (
 )
 
 // run following command.
-// go run . -task print-openapi > ./apps/admin/openapi.yaml --task print-openapi
+// go run . -task print-openapi > ./apps/admin/openapi.yaml
 func PrintOpenapi() {
 	spec := openapi3.T{}
 	spec = configure(spec)
@@ -26,6 +26,11 @@ func PrintOpenapi() {
 	spec = defineOps(spec, "/api/fetch", OpsOption {
 		Create: true,
 		Schema: &controller.FeedfetchSchema{},
+	})
+	spec = defineOps(spec, "/api/programs", OpsOption {
+		List: true,
+		View: true,
+		Schema: &controller.ProgramSchema{},
 	})
 
 	writeYaml(spec)

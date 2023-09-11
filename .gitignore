@@ -8,9 +8,8 @@
 !/apps/voicevox/.gitkeep
 
 # app
-tmp
+/tmp
 /apps/redis
 /apps/minio
 *.wav
 openapi.yaml
-.env

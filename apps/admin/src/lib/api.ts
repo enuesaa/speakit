@@ -13,7 +13,7 @@ import type {
   UseQueryResult,
   QueryKey,
 } from '@tanstack/react-query'
-import type { Getapifeeds200, Apifeeds, ApifeedsWithMetadata, Apifetch } from './schema'
+import type { Getapifeeds200, Apifeeds, ApifeedsWithMetadata, Apifetch, Getapiprograms200, Apiprograms } from './schema'
 import { useClient } from './client'
 
 /**
@@ -316,4 +316,114 @@ export const usePostapifetch = <TError = unknown, TContext = unknown>(options?: 
   const mutationOptions = usePostapifetchMutationOptions(options)
 
   return useMutation(mutationOptions)
+}
+
+/**
+ * @summary GET /api/programs
+ */
+export const useGetapiprogramsHook = () => {
+  const getapiprograms = useClient<Getapiprograms200>()
+
+  return (signal?: AbortSignal) => {
+    return getapiprograms({ url: `/api/programs`, method: 'get', signal })
+  }
+}
+
+export const getGetapiprogramsQueryKey = () => [`/api/programs`] as const
+
+export const useGetapiprogramsQueryOptions = <
+  TData = Awaited<ReturnType<ReturnType<typeof useGetapiprogramsHook>>>,
+  TError = unknown,
+>(options?: {
+  query?: UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetapiprogramsHook>>>, TError, TData>
+}): UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetapiprogramsHook>>>, TError, TData> & {
+  queryKey: QueryKey
+} => {
+  const { query: queryOptions } = options ?? {}
+
+  const queryKey = queryOptions?.queryKey ?? getGetapiprogramsQueryKey()
+
+  const getapiprograms = useGetapiprogramsHook()
+
+  const queryFn: QueryFunction<Awaited<ReturnType<ReturnType<typeof useGetapiprogramsHook>>>> = ({ signal }) =>
+    getapiprograms(signal)
+
+  return { queryKey, queryFn, ...queryOptions }
+}
+
+export type GetapiprogramsQueryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof useGetapiprogramsHook>>>>
+export type GetapiprogramsQueryError = unknown
+
+/**
+ * @summary GET /api/programs
+ */
+export const useGetapiprograms = <
+  TData = Awaited<ReturnType<ReturnType<typeof useGetapiprogramsHook>>>,
+  TError = unknown,
+>(options?: {
+  query?: UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetapiprogramsHook>>>, TError, TData>
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+  const queryOptions = useGetapiprogramsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey }
+
+  query.queryKey = queryOptions.queryKey
+
+  return query
+}
+
+/**
+ * @summary GET /api/programs/{id}
+ */
+export const useGetapiprogramsidHook = () => {
+  const getapiprogramsid = useClient<Apiprograms>()
+
+  return (id: string, signal?: AbortSignal) => {
+    return getapiprogramsid({ url: `/api/programs/${id}`, method: 'get', signal })
+  }
+}
+
+export const getGetapiprogramsidQueryKey = (id: string) => [`/api/programs/${id}`] as const
+
+export const useGetapiprogramsidQueryOptions = <
+  TData = Awaited<ReturnType<ReturnType<typeof useGetapiprogramsidHook>>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: { query?: UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetapiprogramsidHook>>>, TError, TData> },
+): UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetapiprogramsidHook>>>, TError, TData> & {
+  queryKey: QueryKey
+} => {
+  const { query: queryOptions } = options ?? {}
+
+  const queryKey = queryOptions?.queryKey ?? getGetapiprogramsidQueryKey(id)
+
+  const getapiprogramsid = useGetapiprogramsidHook()
+
+  const queryFn: QueryFunction<Awaited<ReturnType<ReturnType<typeof useGetapiprogramsidHook>>>> = ({ signal }) =>
+    getapiprogramsid(id, signal)
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions }
+}
+
+export type GetapiprogramsidQueryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof useGetapiprogramsidHook>>>>
+export type GetapiprogramsidQueryError = unknown
+
+/**
+ * @summary GET /api/programs/{id}
+ */
+export const useGetapiprogramsid = <
+  TData = Awaited<ReturnType<ReturnType<typeof useGetapiprogramsidHook>>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: { query?: UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetapiprogramsidHook>>>, TError, TData> },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+  const queryOptions = useGetapiprogramsidQueryOptions(id, options)
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey }
+
+  query.queryKey = queryOptions.queryKey
+
+  return query
 }
