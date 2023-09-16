@@ -35,15 +35,16 @@ func (ctl *FeedfetchController) Create(c *fiber.Ctx) error {
 
 	feedSrv := service.NewFeedSevice(ctl.repos)
 	programSrv := service.NewProgramService(ctl.repos)
+	voicevoxSrv := service.NewVoicevoxService(ctl.repos)
 	realfeed := feedSrv.Refetch(id)
 	
 	for _, realfeeditem := range realfeed.Items {
-		// query, _ := voicevoxSrv.AudioQuery(body.Text)
-		// converted, err := voicevoxSrv.Synthesis(query)
-		// programsSrv.Create(converted)
+		audioquery, _ := voicevoxSrv.AudioQuery(realfeeditem.Content)
+		converted, _ := voicevoxSrv.Synthesis(audioquery)
+		
 		programSrv.Create(service.Program{
 			Title: realfeeditem.Title,
-			Content: realfeed.Description,
+			Content: converted, // todo: save to storage
 		})
 	}
 
