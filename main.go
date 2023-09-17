@@ -39,6 +39,7 @@ func main() {
 	
 		feedfetch := controller.NewFeedfetchController(repos)
 		app.Post("/api/fetch", feedfetch.Create)
+		// app.Post("/api/prefetch", feedfetch.Create) // 少し頭のいいエンドポイント
 		
 		convert := controller.NewConvertController(repos)
 		app.Post("/api/convert", convert.Create)
@@ -46,7 +47,10 @@ func main() {
 		programs := controller.NewProgramsController(repos)
 		app.Get("/api/programs", programs.List)
 		app.Get("/api/programs/:id", programs.Get)
-	
+		// app.Get("/api/programs/:id/audio", programs.GetAudio)
+		// app.Get("/api/programs/:id", programs.Delete)
+
+		// deperecated
 		storage := controller.NewStorageController(repos)
 		app.Get("/api/storage/:id", storage.GetItem)
 	
