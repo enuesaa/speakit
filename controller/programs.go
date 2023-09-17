@@ -9,6 +9,7 @@ import (
 type ProgramSchema struct {
 	Title string `json:"title"`
 	Content string `json:"content"`
+	Converted bool `json:"converted"`
 }
 
 type ProgramsController struct {
@@ -33,6 +34,7 @@ func (ctl *ProgramsController) List(c *fiber.Ctx) error {
 			Data: ProgramSchema {
 				Title: program.Title,
 				Content: program.Content,
+				Converted: program.Converted,
 			},
 			Created: "",
 			Modified: "",
@@ -52,6 +54,7 @@ func (ctl *ProgramsController) Get(c *fiber.Ctx) error {
 		Data: ProgramSchema {
 			Title: program.Title,
 			Content: program.Content,
+			Converted: program.Converted,
 		},
 		Created: "",
 		Modified: "",

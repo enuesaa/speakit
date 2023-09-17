@@ -7,5 +7,6 @@
 
 export type ApiprogramsWithMetadataData = {
   content?: string;
+  converted?: boolean;
   title?: string;
 };

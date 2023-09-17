@@ -42,6 +42,7 @@ func (ctl *FeedfetchController) Create(c *fiber.Ctx) error {
 		programSrv.Create(service.Program{
 			Title: realfeeditem.Title,
 			Content: realfeeditem.Content,
+			Converted: false,
 		})
 	}
 

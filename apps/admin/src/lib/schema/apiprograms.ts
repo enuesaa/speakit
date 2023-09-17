@@ -7,5 +7,6 @@
 
 export interface Apiprograms {
   content?: string;
+  converted?: boolean;
   title?: string;
 }
