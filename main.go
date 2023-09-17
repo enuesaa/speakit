@@ -7,7 +7,6 @@ import (
 	"github.com/enuesaa/speakit/controller"
 	"github.com/enuesaa/speakit/repository"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 )
 
 func main() {
@@ -30,7 +29,6 @@ func main() {
 		repos := repository.NewRepos(env)
 
 		app := fiber.New()
-		// app.Use(logger())
 
 		// api route
 		feeds := controller.NewFeedsController(repos)
@@ -42,8 +40,8 @@ func main() {
 		feedfetch := controller.NewFeedfetchController(repos)
 		app.Post("/api/fetch", feedfetch.Create)
 		
-		programConvert := controller.NewProgramConvertController(repos)
-		app.Post("/api/convert", programConvert.Create)
+		convert := controller.NewConvertController(repos)
+		app.Post("/api/convert", convert.Create)
 	
 		programs := controller.NewProgramsController(repos)
 		app.Get("/api/programs", programs.List)
@@ -58,20 +56,5 @@ func main() {
 
 		app.Listen(":3000")
 		return
-	}
-}
-
-func logger() fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		logfile, err := os.Create("./build/app.log")
-		if err != nil {
-			return err
-		}
-		defer logfile.Close()
-		log.SetOutput(logfile)
-
-		c.Next()
-
-		return nil
 	}
 }

@@ -27,10 +27,15 @@ func PrintOpenapi() {
 		Create: true,
 		Schema: &controller.FeedfetchSchema{},
 	})
+	spec = defineOps(spec, "/api/convert", OpsOption {
+		Create: true,
+		Schema: &controller.ConvertSchema{},
+	})
 	spec = defineOps(spec, "/api/programs", OpsOption {
 		List: true,
 		View: true,
 		Schema: &controller.ProgramSchema{},
+		SchemaWithMetadata: &controller.WithMetadata[controller.ProgramSchema]{},
 	})
 
 	writeYaml(spec)

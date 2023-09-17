@@ -7,22 +7,22 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type ProgramConvertSchema struct {
+type ConvertSchema struct {
 	Id string `json:"id" validate:"required"`
 }
 
-type ProgramConvertController struct {
+type ConvertController struct {
 	repos repository.Repos
 }
 
-func NewProgramConvertController(repos repository.Repos) ProgramConvertController {
-	return ProgramConvertController{
+func NewConvertController(repos repository.Repos) ConvertController {
+	return ConvertController{
 		repos,
 	}
 }
 
-func (ctl *ProgramConvertController) Create(c *fiber.Ctx) error {
-	body := new(ProgramConvertSchema)
+func (ctl *ConvertController) Create(c *fiber.Ctx) error {
+	body := new(ConvertSchema)
 	if err := c.BodyParser(body); err != nil {
 		return err
 	}

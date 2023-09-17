@@ -13,8 +13,81 @@ import type {
   UseQueryResult,
   QueryKey,
 } from '@tanstack/react-query'
-import type { Getapifeeds200, Apifeeds, ApifeedsWithMetadata, Apifetch, Getapiprograms200, Apiprograms } from './schema'
+import type {
+  Apiconvert,
+  Getapifeeds200,
+  Apifeeds,
+  ApifeedsWithMetadata,
+  Apifetch,
+  Getapiprograms200,
+  ApiprogramsWithMetadata,
+} from './schema'
 import { useClient } from './client'
+
+/**
+ * @summary POST /api/convert
+ */
+export const usePostapiconvertHook = () => {
+  const postapiconvert = useClient<unknown>()
+
+  return (apiconvert: Apiconvert) => {
+    return postapiconvert({
+      url: `/api/convert`,
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      data: apiconvert,
+    })
+  }
+}
+
+export const usePostapiconvertMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof usePostapiconvertHook>>>,
+    TError,
+    { data: Apiconvert },
+    TContext
+  >
+}): UseMutationOptions<
+  Awaited<ReturnType<ReturnType<typeof usePostapiconvertHook>>>,
+  TError,
+  { data: Apiconvert },
+  TContext
+> => {
+  const { mutation: mutationOptions } = options ?? {}
+
+  const postapiconvert = usePostapiconvertHook()
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<ReturnType<typeof usePostapiconvertHook>>>,
+    { data: Apiconvert }
+  > = (props) => {
+    const { data } = props ?? {}
+
+    return postapiconvert(data)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type PostapiconvertMutationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof usePostapiconvertHook>>>>
+export type PostapiconvertMutationBody = Apiconvert
+export type PostapiconvertMutationError = unknown
+
+/**
+ * @summary POST /api/convert
+ */
+export const usePostapiconvert = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof usePostapiconvertHook>>>,
+    TError,
+    { data: Apiconvert },
+    TContext
+  >
+}) => {
+  const mutationOptions = usePostapiconvertMutationOptions(options)
+
+  return useMutation(mutationOptions)
+}
 
 /**
  * @summary GET /api/feeds
@@ -376,7 +449,7 @@ export const useGetapiprograms = <
  * @summary GET /api/programs/{id}
  */
 export const useGetapiprogramsidHook = () => {
-  const getapiprogramsid = useClient<Apiprograms>()
+  const getapiprogramsid = useClient<ApiprogramsWithMetadata>()
 
   return (id: string, signal?: AbortSignal) => {
     return getapiprogramsid({ url: `/api/programs/${id}`, method: 'get', signal })

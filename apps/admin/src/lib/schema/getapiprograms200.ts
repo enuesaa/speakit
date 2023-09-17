@@ -4,8 +4,8 @@
  * Speakit API
  * OpenAPI spec version: 0.1.0
  */
-import type { Apiprograms } from './apiprograms';
+import type { ApiprogramsWithMetadata } from './apiprogramsWithMetadata';
 
 export type Getapiprograms200 = {
-  items?: Apiprograms[];
+  items?: ApiprogramsWithMetadata[];
 };
