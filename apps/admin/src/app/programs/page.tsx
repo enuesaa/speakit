@@ -4,6 +4,7 @@ import { useGetapiprograms, usePostapiconvertHook } from '@/lib/api'
 import { css } from '@/styled-system/css'
 import { MouseEventHandler } from 'react'
 import { GiCycle } from 'react-icons/gi'
+import { AiFillPlayCircle } from 'react-icons/ai'
 
 export default function Page() {
   const { data, isLoading } = useGetapiprograms()
@@ -25,7 +26,7 @@ export default function Page() {
       {data?.items?.map((v,i) => (
         <div key={i} className={styles.item}>
           {v.data?.title}
-          {v.data?.converted ? (<></>) : (<ConvertButton id={v.id ?? ''} />)}
+          {v.data?.converted ? (<PlayStartButton id={v.id ?? ''} />) : (<ConvertButton id={v.id ?? ''} />)}
         </div>
       ))}
     </>
@@ -43,4 +44,23 @@ const ConvertButton = ({ id }: {id: string}) => {
   return (
     <button onClick={handleConvert}><GiCycle /></button>
   )
+}
+
+const PlayStartButton = ({ id }: {id: string}) => {
+  const handlePlayStart: MouseEventHandler<HTMLButtonElement> = async (e) => {
+    e.preventDefault()
+    const res = await fetch(`http://localhost:3000/api/storage/${id}`)
+    const body = await res.arrayBuffer()
+    console.log(body)
+    const audioContext = new AudioContext()
+    const audioBuffer = await audioContext.decodeAudioData(body)
+    console.log(audioBuffer.duration)
+
+    const source = audioContext.createBufferSource();
+    source.buffer = audioBuffer
+    source.connect(audioContext.destination)
+    source.start();
+  }
+
+  return (<button onClick={handlePlayStart}><AiFillPlayCircle /></button>)
 }

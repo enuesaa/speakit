@@ -27,5 +27,5 @@ func (ctl *StorageController) GetItem(c *fiber.Ctx) error {
 
 	c.Response().SetBodyRaw([]byte(obj))
 	c.Response().Header.SetContentType("audio/wav")
-	return c.JSON(EmptySchema{})
+	return nil
 }
