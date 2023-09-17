@@ -49,12 +49,15 @@ func (srv *FeedService) Delete(id string) {
 	srv.repos.Redis.Delete("feeds:" + id)
 }
 
-func (srv *FeedService) Refetch(id string) Realfeed {
+func (srv *FeedService) Refetch(id string) (*Realfeed, error) {
 	feed := srv.Get(id)
 	url := feed.Url
 
 	fp := gofeed.NewParser()
-	realfeed, _ := fp.ParseURL(url)
+	realfeed, err := fp.ParseURL(url)
+	if err != nil {
+		return nil, err
+	}
 
-	return Realfeed{ *realfeed }
+	return &Realfeed{ *realfeed }, nil
 }

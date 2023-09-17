@@ -8,7 +8,7 @@
 !/apps/voicevox/.gitkeep
 
 # app
-/tmp
+/build
 /apps/redis
 /apps/minio
 *.wav

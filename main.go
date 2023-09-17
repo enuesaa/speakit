@@ -30,7 +30,7 @@ func main() {
 		repos := repository.NewRepos(env)
 
 		app := fiber.New()
-		app.Use(logger())
+		// app.Use(logger())
 
 		// api route
 		feeds := controller.NewFeedsController(repos)
@@ -41,6 +41,9 @@ func main() {
 	
 		feedfetch := controller.NewFeedfetchController(repos)
 		app.Post("/api/fetch", feedfetch.Create)
+		
+		programConvert := controller.NewProgramConvertController(repos)
+		app.Post("/api/convert", programConvert.Create)
 	
 		programs := controller.NewProgramsController(repos)
 		app.Get("/api/programs", programs.List)
@@ -60,7 +63,7 @@ func main() {
 
 func logger() fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		logfile, err := os.Create("./tmp/app.log")
+		logfile, err := os.Create("./build/app.log")
 		if err != nil {
 			return err
 		}

@@ -8,7 +8,7 @@ import (
 )
 
 type FeedfetchSchema struct {
-	Id string `json:"id" validate:"required"`
+	Id string `json:"id" validate:"required"` // feed id
 }
 
 type FeedfetchController struct {
@@ -31,20 +31,17 @@ func (ctl *FeedfetchController) Create(c *fiber.Ctx) error {
 		return err.(validator.ValidationErrors)
 	}
 
-	id := c.Params("id")
-
 	feedSrv := service.NewFeedSevice(ctl.repos)
 	programSrv := service.NewProgramService(ctl.repos)
-	voicevoxSrv := service.NewVoicevoxService(ctl.repos)
-	realfeed := feedSrv.Refetch(id)
+	realfeed, err := feedSrv.Refetch(body.Id)
+	if err != nil {
+		return err
+	}
 	
 	for _, realfeeditem := range realfeed.Items {
-		audioquery, _ := voicevoxSrv.AudioQuery(realfeeditem.Content)
-		converted, _ := voicevoxSrv.Synthesis(audioquery)
-		
 		programSrv.Create(service.Program{
 			Title: realfeeditem.Title,
-			Content: converted, // todo: save to storage
+			Content: realfeeditem.Content,
 		})
 	}
 
