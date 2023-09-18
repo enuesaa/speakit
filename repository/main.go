@@ -2,9 +2,8 @@ package repository
 
 type Env struct {
 	MINIO_BUCKET string
-	MINIO_HOST string
-	REDIS_HOST string
-	ADMIN_HOST string
+	MINIO_HOST   string
+	REDIS_HOST   string
 }
 
 type Repos struct {

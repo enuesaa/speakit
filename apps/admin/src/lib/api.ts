@@ -15,6 +15,7 @@ import type {
 } from '@tanstack/react-query'
 import type {
   Getfeeds200,
+  Empty,
   Feeds,
   FeedsWithMetadata,
   Fetch,
@@ -82,7 +83,7 @@ export const useGetfeeds = <
  * @summary POST /feeds
  */
 export const usePostfeedsHook = () => {
-  const postfeeds = useClient<unknown>()
+  const postfeeds = useClient<Empty>()
 
   return (feeds: Feeds) => {
     return postfeeds({ url: `/feeds`, method: 'post', headers: { 'Content-Type': 'application/json' }, data: feeds })
@@ -136,7 +137,7 @@ export const usePostfeeds = <TError = unknown, TContext = unknown>(options?: {
  * @summary DELETE /feeds/{id}
  */
 export const useDeletefeedsidHook = () => {
-  const deletefeedsid = useClient<unknown>()
+  const deletefeedsid = useClient<Empty>()
 
   return (id: string) => {
     return deletefeedsid({ url: `/feeds/${id}`, method: 'delete' })
@@ -248,7 +249,7 @@ export const useGetfeedsid = <TData = Awaited<ReturnType<ReturnType<typeof useGe
  * @summary POST /feeds/{id}/fetch
  */
 export const usePostfeedsidfetchHook = () => {
-  const postfeedsidfetch = useClient<unknown>()
+  const postfeedsidfetch = useClient<Empty>()
 
   return (id: string, fetch: Fetch) => {
     return postfeedsidfetch({
@@ -369,7 +370,7 @@ export const useGetprograms = <
  * @summary DELETE /programs/{id}
  */
 export const useDeleteprogramsidHook = () => {
-  const deleteprogramsid = useClient<unknown>()
+  const deleteprogramsid = useClient<Empty>()
 
   return (id: string) => {
     return deleteprogramsid({ url: `/programs/${id}`, method: 'delete' })
@@ -487,7 +488,7 @@ export const useGetprogramsid = <
  * @summary POST /programs/{id}/convert
  */
 export const usePostprogramsidconvertHook = () => {
-  const postprogramsidconvert = useClient<unknown>()
+  const postprogramsidconvert = useClient<Empty>()
 
   return (id: string, convert: Convert) => {
     return postprogramsidconvert({
