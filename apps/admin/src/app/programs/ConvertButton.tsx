@@ -1,14 +1,17 @@
 'use client'
 import { usePostprogramsidconvertHook } from '@/lib/api'
 import { css } from '@/styled-system/css'
+import { useQueryClient } from '@tanstack/react-query'
 import { MouseEventHandler } from 'react'
 
 export const ConvertButton = ({ id }: {id: string}) => {
   const convert = usePostprogramsidconvertHook()
+  const queryClient = useQueryClient()
 
-  const handleConvert: MouseEventHandler<HTMLButtonElement> = (e) => {
+  const handleConvert: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault()
-    convert(id, {})
+    await convert(id, {})
+    await queryClient.invalidateQueries({queryKey: ['/programs']})
   }
 
   const styles = {

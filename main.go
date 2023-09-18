@@ -43,7 +43,7 @@ func serve() {
 	app.Get("/api/feeds/:id", feeds.Get)
 	app.Post("/api/feeds", feeds.Create)
 	app.Delete("/api/feeds/:id", feeds.Delete)
-	app.Delete("/api/feeds/:id/fetch", feeds.Fetch)
+	app.Post("/api/feeds/:id/fetch", feeds.Fetch)
 
 	programs := controller.NewProgramsController(repos)
 	app.Get("/api/programs", programs.List)
