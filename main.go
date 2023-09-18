@@ -47,13 +47,9 @@ func main() {
 		programs := controller.NewProgramsController(repos)
 		app.Get("/api/programs", programs.List)
 		app.Get("/api/programs/:id", programs.Get)
-		// app.Get("/api/programs/:id/audio", programs.GetAudio)
-		// app.Get("/api/programs/:id", programs.Delete)
+		app.Get("/api/programs/:id", programs.Delete)
+		app.Get("/api/programs/:id/audio", programs.GetAudio)
 
-		// deperecated
-		storage := controller.NewStorageController(repos)
-		app.Get("/api/storage/:id", storage.GetItem)
-	
 		// web route
 		web := controller.NewWebController(env)
 		app.Get("/*", web.Forward)

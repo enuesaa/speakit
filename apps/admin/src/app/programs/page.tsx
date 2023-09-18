@@ -49,7 +49,7 @@ const ConvertButton = ({ id }: {id: string}) => {
 const PlayStartButton = ({ id }: {id: string}) => {
   const handlePlayStart: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault()
-    const res = await fetch(`http://localhost:3000/api/storage/${id}`)
+    const res = await fetch(`http://localhost:3000/api/programs/${id}/audio`)
     const body = await res.arrayBuffer()
     console.log(body)
     const audioContext = new AudioContext()

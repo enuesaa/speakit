@@ -62,3 +62,26 @@ func (ctl *ProgramsController) Get(c *fiber.Ctx) error {
 
 	return c.JSON(res)
 }
+
+func (ctl *ProgramsController) Delete(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	programSrv := service.NewProgramService(ctl.repos)
+	programSrv.Delete(id)
+
+	return c.JSON(EmptySchema{})
+}
+
+func (ctl *ProgramsController) GetAudio(c *fiber.Ctx) error {
+	id := c.Params("id")
+	programsSrv := service.NewProgramService(ctl.repos)
+
+	obj, err := programsSrv.Download(id)
+	if err != nil {
+		return c.JSON(EmptySchema{})
+	}
+
+	c.Response().SetBodyRaw([]byte(obj))
+	c.Response().Header.SetContentType("audio/wav")
+	return nil
+}

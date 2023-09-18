@@ -1,8 +1,6 @@
 package service
 
 import (
-	"fmt"
-
 	"github.com/enuesaa/speakit/repository"
 )
 
@@ -34,7 +32,6 @@ func (srv *ProgramService) List() []Program {
 }
 
 func (srv *ProgramService) Get(id string) Program {
-	fmt.Println("programs:" + id)
 	value := srv.repos.Redis.Get("programs:" + id)
 	return parseJson[Program](value)
 }
@@ -44,6 +41,10 @@ func (srv *ProgramService) Create(program Program) string {
 	// srv.repos.Storage.Upload(id+".wav", body)
 	srv.repos.Redis.Set("programs:" + program.Id, toJson(program))
 	return program.Id
+}
+
+func (srv *ProgramService) Delete(id string) {
+	srv.repos.Redis.Delete("programs:" + id)
 }
 
 func (srv *ProgramService) Upload(id string, body string) error {
