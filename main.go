@@ -48,7 +48,7 @@ func serve() {
 	programs := controller.NewProgramsController(repos)
 	app.Get("/api/programs", programs.List)
 	app.Get("/api/programs/:id", programs.Get)
-	app.Get("/api/programs/:id", programs.Delete)
+	app.Delete("/api/programs/:id", programs.Delete)
 	app.Post("/api/programs/:id/convert", programs.Convert)
 	app.Get("/api/programs/:id/audio", programs.GetAudio)
 

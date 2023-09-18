@@ -1,6 +1,7 @@
 import { css } from '@/styled-system/css'
-import { PlayStartButton } from './PlayStartButton';
-import { ConvertButton } from './ConvertButton';
+import { PlayStartButton } from './PlayStartButton'
+import { ConvertButton } from './ConvertButton'
+import { DeleteProgramButton } from './DeleteProgramButton'
 
 type Props = {
   title: string;
@@ -21,7 +22,10 @@ export const ProgramCard = ({ title, converted, id }: Props) => {
       flex: '1 1 auto',
     }),
     right: css({
-      flex: '0 0 100px',
+      flex: '0 0 80px',
+    }),
+    delete: css({
+      flex: '0 0 20px',
     })
   }
 
@@ -32,6 +36,9 @@ export const ProgramCard = ({ title, converted, id }: Props) => {
       </div>
       <div className={styles.right}>
         {converted ? (<PlayStartButton id={id} />) : (<ConvertButton id={id} />)}
+      </div>
+      <div className={styles.delete}>
+        <DeleteProgramButton id={id} />
       </div>
     </div>
   )

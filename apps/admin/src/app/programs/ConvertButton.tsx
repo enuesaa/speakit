@@ -2,7 +2,6 @@
 import { usePostprogramsidconvertHook } from '@/lib/api'
 import { css } from '@/styled-system/css'
 import { MouseEventHandler } from 'react'
-import { GiCycle } from 'react-icons/gi'
 
 export const ConvertButton = ({ id }: {id: string}) => {
   const convert = usePostprogramsidconvertHook()
