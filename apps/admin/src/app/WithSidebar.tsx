@@ -41,7 +41,6 @@ const Sidebar = () => {
       <div className={styles.sideLinks}>
         <SideLink href='/feeds' name='Feeds' />
         <SideLink href='/programs' name='Programs' />
-        <SideLink href='/player' name='Player' />
       </div>
     </nav>
   )

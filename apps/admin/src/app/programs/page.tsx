@@ -1,10 +1,9 @@
 'use client'
 import { PageTitle } from '@/components/PageTitle'
-import { useGetprograms, usePostprogramsidconvertHook } from '@/lib/api'
+import { useGetprograms } from '@/lib/api'
 import { css } from '@/styled-system/css'
-import { MouseEventHandler } from 'react'
-import { GiCycle } from 'react-icons/gi'
-import { AiFillPlayCircle } from 'react-icons/ai'
+import { PlayStartButton } from './PlayStartButton'
+import { ConvertButton } from './ConvertButton'
 
 export default function Page() {
   const { data, isLoading } = useGetprograms()
@@ -31,34 +30,4 @@ export default function Page() {
       ))}
     </>
   )
-}
-
-const ConvertButton = ({ id }: {id: string}) => {
-  const convert = usePostprogramsidconvertHook()
-
-  const handleConvert: MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.preventDefault()
-    convert(id, {})
-  }
-
-  return (
-    <button onClick={handleConvert}><GiCycle /></button>
-  )
-}
-
-const PlayStartButton = ({ id }: {id: string}) => {
-  const handlePlayStart: MouseEventHandler<HTMLButtonElement> = async (e) => {
-    e.preventDefault()
-    const res = await fetch(`http://localhost:3000/api/programs/${id}/audio`)
-    const body = await res.arrayBuffer()
-    const audioContext = new AudioContext()
-    const audioBuffer = await audioContext.decodeAudioData(body)
-
-    const source = audioContext.createBufferSource();
-    source.buffer = audioBuffer
-    source.connect(audioContext.destination)
-    source.start();
-  }
-
-  return (<button onClick={handlePlayStart}><AiFillPlayCircle /></button>)
 }
