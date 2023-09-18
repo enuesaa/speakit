@@ -11,8 +11,8 @@ import (
 )
 
 // run following command.
-// go run . -task print-openapi > ./apps/admin/openapi.yaml
-func PrintOpenapi() {
+// go run . -emit-openapi > ./apps/admin/openapi.yaml
+func emitOpenapi() {
 	spec := openapi3.T{}
 	spec = configure(spec)
 	spec = defineOps(spec, "/api/feeds", OpsOption {
