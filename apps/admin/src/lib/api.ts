@@ -14,80 +14,15 @@ import type {
   QueryKey,
 } from '@tanstack/react-query'
 import type {
-  Apiconvert,
   Getapifeeds200,
   Apifeeds,
   ApifeedsWithMetadata,
   Apifetch,
   Getapiprograms200,
   ApiprogramsWithMetadata,
+  Apiconvert,
 } from './schema'
 import { useClient } from './client'
-
-/**
- * @summary POST /api/convert
- */
-export const usePostapiconvertHook = () => {
-  const postapiconvert = useClient<unknown>()
-
-  return (apiconvert: Apiconvert) => {
-    return postapiconvert({
-      url: `/api/convert`,
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      data: apiconvert,
-    })
-  }
-}
-
-export const usePostapiconvertMutationOptions = <TError = unknown, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<ReturnType<typeof usePostapiconvertHook>>>,
-    TError,
-    { data: Apiconvert },
-    TContext
-  >
-}): UseMutationOptions<
-  Awaited<ReturnType<ReturnType<typeof usePostapiconvertHook>>>,
-  TError,
-  { data: Apiconvert },
-  TContext
-> => {
-  const { mutation: mutationOptions } = options ?? {}
-
-  const postapiconvert = usePostapiconvertHook()
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<ReturnType<typeof usePostapiconvertHook>>>,
-    { data: Apiconvert }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return postapiconvert(data)
-  }
-
-  return { mutationFn, ...mutationOptions }
-}
-
-export type PostapiconvertMutationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof usePostapiconvertHook>>>>
-export type PostapiconvertMutationBody = Apiconvert
-export type PostapiconvertMutationError = unknown
-
-/**
- * @summary POST /api/convert
- */
-export const usePostapiconvert = <TError = unknown, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<ReturnType<typeof usePostapiconvertHook>>>,
-    TError,
-    { data: Apiconvert },
-    TContext
-  >
-}) => {
-  const mutationOptions = usePostapiconvertMutationOptions(options)
-
-  return useMutation(mutationOptions)
-}
 
 /**
  * @summary GET /api/feeds
@@ -327,14 +262,14 @@ export const useGetapifeedsid = <
 }
 
 /**
- * @summary POST /api/fetch
+ * @summary POST /api/feeds/{id}/fetch
  */
-export const usePostapifetchHook = () => {
-  const postapifetch = useClient<unknown>()
+export const usePostapifeedsidfetchHook = () => {
+  const postapifeedsidfetch = useClient<unknown>()
 
-  return (apifetch: Apifetch) => {
-    return postapifetch({
-      url: `/api/fetch`,
+  return (id: string, apifetch: Apifetch) => {
+    return postapifeedsidfetch({
+      url: `/api/feeds/${id}/fetch`,
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       data: apifetch,
@@ -342,51 +277,53 @@ export const usePostapifetchHook = () => {
   }
 }
 
-export const usePostapifetchMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+export const usePostapifeedsidfetchMutationOptions = <TError = unknown, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<ReturnType<typeof usePostapifetchHook>>>,
+    Awaited<ReturnType<ReturnType<typeof usePostapifeedsidfetchHook>>>,
     TError,
-    { data: Apifetch },
+    { id: string; data: Apifetch },
     TContext
   >
 }): UseMutationOptions<
-  Awaited<ReturnType<ReturnType<typeof usePostapifetchHook>>>,
+  Awaited<ReturnType<ReturnType<typeof usePostapifeedsidfetchHook>>>,
   TError,
-  { data: Apifetch },
+  { id: string; data: Apifetch },
   TContext
 > => {
   const { mutation: mutationOptions } = options ?? {}
 
-  const postapifetch = usePostapifetchHook()
+  const postapifeedsidfetch = usePostapifeedsidfetchHook()
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<ReturnType<typeof usePostapifetchHook>>>,
-    { data: Apifetch }
+    Awaited<ReturnType<ReturnType<typeof usePostapifeedsidfetchHook>>>,
+    { id: string; data: Apifetch }
   > = (props) => {
-    const { data } = props ?? {}
+    const { id, data } = props ?? {}
 
-    return postapifetch(data)
+    return postapifeedsidfetch(id, data)
   }
 
   return { mutationFn, ...mutationOptions }
 }
 
-export type PostapifetchMutationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof usePostapifetchHook>>>>
-export type PostapifetchMutationBody = Apifetch
-export type PostapifetchMutationError = unknown
+export type PostapifeedsidfetchMutationResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof usePostapifeedsidfetchHook>>>
+>
+export type PostapifeedsidfetchMutationBody = Apifetch
+export type PostapifeedsidfetchMutationError = unknown
 
 /**
- * @summary POST /api/fetch
+ * @summary POST /api/feeds/{id}/fetch
  */
-export const usePostapifetch = <TError = unknown, TContext = unknown>(options?: {
+export const usePostapifeedsidfetch = <TError = unknown, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<ReturnType<typeof usePostapifetchHook>>>,
+    Awaited<ReturnType<ReturnType<typeof usePostapifeedsidfetchHook>>>,
     TError,
-    { data: Apifetch },
+    { id: string; data: Apifetch },
     TContext
   >
 }) => {
-  const mutationOptions = usePostapifetchMutationOptions(options)
+  const mutationOptions = usePostapifeedsidfetchMutationOptions(options)
 
   return useMutation(mutationOptions)
 }
@@ -561,4 +498,71 @@ export const useGetapiprogramsid = <
   query.queryKey = queryOptions.queryKey
 
   return query
+}
+
+/**
+ * @summary POST /api/programs/{id}/convert
+ */
+export const usePostapiprogramsidconvertHook = () => {
+  const postapiprogramsidconvert = useClient<unknown>()
+
+  return (id: string, apiconvert: Apiconvert) => {
+    return postapiprogramsidconvert({
+      url: `/api/programs/${id}/convert`,
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      data: apiconvert,
+    })
+  }
+}
+
+export const usePostapiprogramsidconvertMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof usePostapiprogramsidconvertHook>>>,
+    TError,
+    { id: string; data: Apiconvert },
+    TContext
+  >
+}): UseMutationOptions<
+  Awaited<ReturnType<ReturnType<typeof usePostapiprogramsidconvertHook>>>,
+  TError,
+  { id: string; data: Apiconvert },
+  TContext
+> => {
+  const { mutation: mutationOptions } = options ?? {}
+
+  const postapiprogramsidconvert = usePostapiprogramsidconvertHook()
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<ReturnType<typeof usePostapiprogramsidconvertHook>>>,
+    { id: string; data: Apiconvert }
+  > = (props) => {
+    const { id, data } = props ?? {}
+
+    return postapiprogramsidconvert(id, data)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type PostapiprogramsidconvertMutationResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof usePostapiprogramsidconvertHook>>>
+>
+export type PostapiprogramsidconvertMutationBody = Apiconvert
+export type PostapiprogramsidconvertMutationError = unknown
+
+/**
+ * @summary POST /api/programs/{id}/convert
+ */
+export const usePostapiprogramsidconvert = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof usePostapiprogramsidconvertHook>>>,
+    TError,
+    { id: string; data: Apiconvert },
+    TContext
+  >
+}) => {
+  const mutationOptions = usePostapiprogramsidconvertMutationOptions(options)
+
+  return useMutation(mutationOptions)
 }

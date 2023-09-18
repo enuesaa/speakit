@@ -1,6 +1,6 @@
 'use client'
 import { PageTitle } from '@/components/PageTitle'
-import { useGetapiprograms, usePostapiconvertHook } from '@/lib/api'
+import { useGetapiprograms, usePostapiprogramsidconvertHook } from '@/lib/api'
 import { css } from '@/styled-system/css'
 import { MouseEventHandler } from 'react'
 import { GiCycle } from 'react-icons/gi'
@@ -34,11 +34,11 @@ export default function Page() {
 }
 
 const ConvertButton = ({ id }: {id: string}) => {
-  const convert = usePostapiconvertHook()
+  const convert = usePostapiprogramsidconvertHook()
 
   const handleConvert: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault()
-    convert({ id })
+    convert(id, {})
   }
 
   return (
@@ -51,10 +51,8 @@ const PlayStartButton = ({ id }: {id: string}) => {
     e.preventDefault()
     const res = await fetch(`http://localhost:3000/api/programs/${id}/audio`)
     const body = await res.arrayBuffer()
-    console.log(body)
     const audioContext = new AudioContext()
     const audioBuffer = await audioContext.decodeAudioData(body)
-    console.log(audioBuffer.duration)
 
     const source = audioContext.createBufferSource();
     source.buffer = audioBuffer

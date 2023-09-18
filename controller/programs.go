@@ -3,8 +3,8 @@ package controller
 import (
 	"github.com/enuesaa/speakit/repository"
 	"github.com/enuesaa/speakit/service"
-	"github.com/gofiber/fiber/v2"
 	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 )
 
 type ProgramSchema struct {

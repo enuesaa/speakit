@@ -5,6 +5,4 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface Apifetch {
-  id?: string;
-}
+export type Apifetch = unknown;
