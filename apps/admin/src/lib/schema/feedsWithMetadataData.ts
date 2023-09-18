@@ -5,8 +5,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ApiprogramsWithMetadataData = {
-  content?: string;
-  converted?: boolean;
-  title?: string;
-};
+export type FeedsWithMetadataData = {
+  name?: string
+  url?: string
+}

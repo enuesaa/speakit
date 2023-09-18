@@ -8,10 +8,11 @@ export default defineConfig({
       target: 'src/lib/api.ts',
       override: {
         mutator: {
-          path: './src/lib/client.ts',
+          path: 'src/lib/client.ts',
           name: 'useClient',
         },
       },
+      prettier: true,
     },
     input: './openapi.yaml',
   },

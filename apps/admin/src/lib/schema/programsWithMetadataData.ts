@@ -5,4 +5,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type Apiconvert = unknown;
+export type ProgramsWithMetadataData = {
+  content?: string
+  converted?: boolean
+  title?: string
+}

@@ -1,13 +1,13 @@
 'use client'
 import { PageTitle } from '@/components/PageTitle'
-import { useGetapiprograms, usePostapiprogramsidconvertHook } from '@/lib/api'
+import { useGetprograms, usePostprogramsidconvertHook } from '@/lib/api'
 import { css } from '@/styled-system/css'
 import { MouseEventHandler } from 'react'
 import { GiCycle } from 'react-icons/gi'
 import { AiFillPlayCircle } from 'react-icons/ai'
 
 export default function Page() {
-  const { data, isLoading } = useGetapiprograms()
+  const { data, isLoading } = useGetprograms()
   const styles = {
     item: css({
       color: 'indigo.200',
@@ -34,7 +34,7 @@ export default function Page() {
 }
 
 const ConvertButton = ({ id }: {id: string}) => {
-  const convert = usePostapiprogramsidconvertHook()
+  const convert = usePostprogramsidconvertHook()
 
   const handleConvert: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault()

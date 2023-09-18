@@ -4,8 +4,8 @@
  * Speakit API
  * OpenAPI spec version: 0.1.0
  */
-import type { Feeds } from './feeds';
+import type { FeedsWithMetadata } from './feedsWithMetadata'
 
 export type Getfeeds200 = {
-  items?: Feeds;
-};
+  items?: FeedsWithMetadata[]
+}

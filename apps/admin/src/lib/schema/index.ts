@@ -5,16 +5,12 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export * from './apiconvert';
-export * from './apifeeds';
-export * from './apifeedsData';
-export * from './apifeedsWithMetadata';
-export * from './apifeedsWithMetadataData';
-export * from './apifetch';
-export * from './apiprograms';
-export * from './apiprogramsWithMetadata';
-export * from './apiprogramsWithMetadataData';
-export * from './feeds';
-export * from './getapifeeds200';
-export * from './getapiprograms200';
-export * from './getfeeds200';
+export * from './convert'
+export * from './feeds'
+export * from './feedsWithMetadata'
+export * from './feedsWithMetadataData'
+export * from './fetch'
+export * from './getfeeds200'
+export * from './getprograms200'
+export * from './programsWithMetadata'
+export * from './programsWithMetadataData'

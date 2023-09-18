@@ -5,7 +5,4 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ApifeedsData = {
-  name?: string;
-  url?: string;
-};
+export type Convert = unknown

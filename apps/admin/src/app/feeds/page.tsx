@@ -1,11 +1,11 @@
 'use client'
 import { PageTitle } from '@/components/PageTitle'
-import { useGetapifeeds, usePostapifetchHook } from '@/lib/api'
+import { useGetfeeds, usePostfeedsidfetchHook } from '@/lib/api'
 import { css } from '@/styled-system/css'
 import { MouseEventHandler } from 'react'
 
 export default function Page() {
-  const { data, isLoading } = useGetapifeeds()
+  const { data, isLoading } = useGetfeeds()
   const styles = {
     item: css({
       color: 'indigo.200',
@@ -29,11 +29,11 @@ export default function Page() {
 }
 
 const FetchFeedButton = ({ id }: { id: string }) => {
-  const fetchFeeds = usePostapifetchHook()
+  const fetchFeeds = usePostfeedsidfetchHook()
 
   const handleFeedFetch: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault()
-    fetchFeeds({ id })
+    fetchFeeds(id, {})
   }
 
   return (

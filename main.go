@@ -7,6 +7,7 @@ import (
 	"github.com/enuesaa/speakit/controller"
 	"github.com/enuesaa/speakit/repository"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 var taskOpenapi bool
@@ -34,6 +35,7 @@ func serve() {
 	repos := repository.NewRepos(env)
 
 	app := fiber.New()
+	app.Use(cors.New())
 
 	// api route
 	feeds := controller.NewFeedsController(repos)
@@ -49,10 +51,6 @@ func serve() {
 	app.Get("/api/programs/:id", programs.Delete)
 	app.Post("/api/programs/:id/convert", programs.Convert)
 	app.Get("/api/programs/:id/audio", programs.GetAudio)
-
-	// web route
-	web := controller.NewWebController(env)
-	app.Get("/*", web.Forward)
 
 	app.Listen(":3000")
 }

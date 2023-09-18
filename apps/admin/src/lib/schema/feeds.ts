@@ -6,7 +6,6 @@
  */
 
 export interface Feeds {
-  id?: string;
-  name?: string;
-  url?: string;
+  name?: string
+  url?: string
 }

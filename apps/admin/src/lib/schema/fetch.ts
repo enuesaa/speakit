@@ -5,8 +5,4 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface Apiprograms {
-  content?: string;
-  converted?: boolean;
-  title?: string;
-}
+export type Fetch = unknown
