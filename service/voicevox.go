@@ -20,7 +20,7 @@ func NewVoicevoxService(repos repository.Repos) VoicevoxService {
 
 func (srv *VoicevoxService) AudioQuery(text string) (string, error) {
 	body, err := srv.repos.Httpcall.Post(
-		"http://voicevox:50021/audio_query?speaker=1&text="+url.QueryEscape(text),
+		"http://voicevox:50021/audio_query?speaker=2&text="+url.QueryEscape(text),
 		strings.NewReader(""),
 	)
 	if err != nil {
@@ -31,7 +31,7 @@ func (srv *VoicevoxService) AudioQuery(text string) (string, error) {
 
 func (srv *VoicevoxService) Synthesis(query string) (string, error) {
 	body, err := srv.repos.Httpcall.Post(
-		"http://voicevox:50021/synthesis?speaker=1&text=",
+		"http://voicevox:50021/synthesis?speaker=2&text=",
 		strings.NewReader(query),
 	)
 	if err != nil {
