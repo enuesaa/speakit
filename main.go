@@ -9,10 +9,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+var taskOpenapi bool
+func init() {
+	flag.BoolVar(&taskOpenapi, "emit-openapi", false, "create openapi.yaml")
+}
+
 func main() {
-	var openapi bool
-	flag.BoolVar(&openapi, "emit-openapi", false, "create openapi.yaml")
-	if openapi {
+	flag.Parse()
+	if taskOpenapi {
 		emitOpenapi()
 		return
 	}

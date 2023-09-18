@@ -15,27 +15,54 @@ import (
 func emitOpenapi() {
 	spec := openapi3.T{}
 	spec = configure(spec)
-	spec = defineOps(spec, "/api/feeds", OpsOption {
-		List: true,
-		View: true,
-		Create: true,
-		Delete: true,
-		Schema: &controller.FeedSchema{},
-		SchemaWithMetadata: &controller.WithMetadata[controller.FeedSchema]{},
+
+	spec = appendSchema(spec, "apifeeds", &controller.FeedSchema{})
+	spec = appendSchema(spec, "apifeeds-with-metadata", &controller.WithMetadata[controller.FeedSchema]{})
+	spec = appendOp(spec, "/api/feeds", Op{
+		Method: "GET",
+		ResponseRef: "#/components/schemas/apifeeds-with-metadata",
+		IsListReponse: true,
 	})
-	spec = defineOps(spec, "/api/fetch", OpsOption {
-		Create: true,
-		Schema: &controller.FeedfetchSchema{},
+	spec = appendOp(spec, "/api/feeds/{id}", Op {
+		Method: "GET",
+		ResponseRef: "#/components/schemas/apifeeds-with-metadata",
+		PathParams: []string{"id"},
 	})
-	spec = defineOps(spec, "/api/convert", OpsOption {
-		Create: true,
-		Schema: &controller.ConvertSchema{},
+	spec = appendOp(spec, "/api/feeds", Op {
+		Method: "POST",
+		RequestRef: "#/components/schemas/apifeeds",
 	})
-	spec = defineOps(spec, "/api/programs", OpsOption {
-		List: true,
-		View: true,
-		Schema: &controller.ProgramSchema{},
-		SchemaWithMetadata: &controller.WithMetadata[controller.ProgramSchema]{},
+	spec = appendOp(spec, "/api/feeds/{id}", Op {
+		Method: "DELETE",
+		PathParams: []string{"id"},
+	})
+
+	spec = appendSchema(spec, "apifetch", &controller.FeedfetchSchema{})
+	spec = appendOp(spec, "/api/fetch", Op {
+		Method: "POST",
+		RequestRef: "#/components/schemas/apifetch",
+	})
+
+	spec = appendSchema(spec, "apiconvert", &controller.ConvertSchema{})
+	spec = appendOp(spec, "/api/convert", Op {
+		Method: "POST",
+		RequestRef: "#/components/schemas/apiconvert",
+	})
+
+	spec = appendSchema(spec, "apiprograms-with-metadata", &controller.WithMetadata[controller.ProgramSchema]{})
+	spec = appendOp(spec, "/api/programs", Op{
+		Method: "GET",
+		ResponseRef: "#/components/schemas/apiprograms-with-metadata",
+		IsListReponse: true,
+	})
+	spec = appendOp(spec, "/api/programs/{id}", Op {
+		Method: "GET",
+		ResponseRef: "#/components/schemas/apiprograms-with-metadata",
+		PathParams: []string{"id"},
+	})
+	spec = appendOp(spec, "/api/programs/{id}", Op {
+		Method: "DELETE",
+		PathParams: []string{"id"},
 	})
 
 	writeYaml(spec)
@@ -56,64 +83,6 @@ func configure(spec openapi3.T) openapi3.T {
 	}
 	spec.Paths = openapi3.Paths {}
 
-	return spec
-}
-
-type OpsOption struct {
-	List bool
-	View bool
-	Create bool
-	Update bool
-	Delete bool
-	Schema interface{}
-	SchemaWithMetadata interface{}
-}
-
-func defineOps(spec openapi3.T, path string, options OpsOption) openapi3.T {
-	schemaName := strcase.ToLowerCamel(path)
-	schemaRef := "#/components/schemas/" + schemaName
-	spec = appendSchema(spec, schemaName, options.Schema)
-
-	schemaWithMetadataRef := schemaRef
-	if options.SchemaWithMetadata != nil {
-		schemaWithMetadataName := schemaName + "-with-metadata"
-		schemaWithMetadataRef = "#/components/schemas/" + schemaWithMetadataName
-		spec = appendSchema(spec, schemaWithMetadataName, options.SchemaWithMetadata)	
-	}
-
-	if options.List {
-		spec = appendOp(spec, path, Op {
-			Method: "GET",
-			ResponseRef: schemaWithMetadataRef,
-			IsListReponse: true,
-		})
-	}
-	if options.View {
-		spec = appendOp(spec, path + "/{id}", Op {
-			Method: "GET",
-			ResponseRef: schemaWithMetadataRef,
-			PathParams: []string{"id"},
-		})
-	}
-	if options.Create {
-		spec = appendOp(spec, path, Op {
-			Method: "POST",
-			RequestRef: schemaRef,
-		})
-	}
-	if options.Update {
-		spec = appendOp(spec, path + "/{id}", Op {
-			Method: "PUT",
-			RequestRef: schemaRef,
-			PathParams: []string{"id"},
-		})
-	}
-	if options.Delete {
-		spec = appendOp(spec, path + "/{id}", Op {
-			Method: "DELETE",
-			PathParams: []string{"id"},
-		})
-	}
 	return spec
 }
 

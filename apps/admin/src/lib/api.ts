@@ -446,6 +446,68 @@ export const useGetapiprograms = <
 }
 
 /**
+ * @summary DELETE /api/programs/{id}
+ */
+export const useDeleteapiprogramsidHook = () => {
+  const deleteapiprogramsid = useClient<unknown>()
+
+  return (id: string) => {
+    return deleteapiprogramsid({ url: `/api/programs/${id}`, method: 'delete' })
+  }
+}
+
+export const useDeleteapiprogramsidMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof useDeleteapiprogramsidHook>>>,
+    TError,
+    { id: string },
+    TContext
+  >
+}): UseMutationOptions<
+  Awaited<ReturnType<ReturnType<typeof useDeleteapiprogramsidHook>>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const { mutation: mutationOptions } = options ?? {}
+
+  const deleteapiprogramsid = useDeleteapiprogramsidHook()
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<ReturnType<typeof useDeleteapiprogramsidHook>>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {}
+
+    return deleteapiprogramsid(id)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type DeleteapiprogramsidMutationResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof useDeleteapiprogramsidHook>>>
+>
+
+export type DeleteapiprogramsidMutationError = unknown
+
+/**
+ * @summary DELETE /api/programs/{id}
+ */
+export const useDeleteapiprogramsid = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof useDeleteapiprogramsidHook>>>,
+    TError,
+    { id: string },
+    TContext
+  >
+}) => {
+  const mutationOptions = useDeleteapiprogramsidMutationOptions(options)
+
+  return useMutation(mutationOptions)
+}
+
+/**
  * @summary GET /api/programs/{id}
  */
 export const useGetapiprogramsidHook = () => {
