@@ -38,15 +38,10 @@ func emitOpenapi() {
 	})
 
 	spec = appendSchema(spec, "apifetch", &controller.FeedfetchSchema{})
-	spec = appendOp(spec, "/api/fetch", Op {
+	spec = appendOp(spec, "/api/feeds/{id}/fetch", Op {
 		Method: "POST",
 		RequestRef: "#/components/schemas/apifetch",
-	})
-
-	spec = appendSchema(spec, "apiconvert", &controller.ConvertSchema{})
-	spec = appendOp(spec, "/api/convert", Op {
-		Method: "POST",
-		RequestRef: "#/components/schemas/apiconvert",
+		PathParams: []string{"id"},
 	})
 
 	spec = appendSchema(spec, "apiprograms-with-metadata", &controller.WithMetadata[controller.ProgramSchema]{})
@@ -62,6 +57,13 @@ func emitOpenapi() {
 	})
 	spec = appendOp(spec, "/api/programs/{id}", Op {
 		Method: "DELETE",
+		PathParams: []string{"id"},
+	})
+
+	spec = appendSchema(spec, "apiconvert", &controller.ConvertSchema{})
+	spec = appendOp(spec, "/api/programs/{id}/convert", Op {
+		Method: "POST",
+		RequestRef: "#/components/schemas/apiconvert",
 		PathParams: []string{"id"},
 	})
 

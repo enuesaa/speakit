@@ -88,3 +88,35 @@ func (ctl *FeedsController) Delete(c *fiber.Ctx) error {
 
 	return c.JSON(EmptySchema{})
 }
+
+
+type FeedfetchSchema struct {}
+
+func (ctl *FeedsController) Fetch(c *fiber.Ctx) error {
+	body := new(FeedfetchSchema)
+	if err := c.BodyParser(body); err != nil {
+		return err
+	}
+	validate := validator.New()
+	if err := validate.Struct(body); err != nil {
+		return err.(validator.ValidationErrors)
+	}
+	id := c.Params("id")
+
+	feedSrv := service.NewFeedSevice(ctl.repos)
+	programSrv := service.NewProgramService(ctl.repos)
+	realfeed, err := feedSrv.Refetch(id)
+	if err != nil {
+		return err
+	}
+	
+	for _, realfeeditem := range realfeed.Items {
+		programSrv.Create(service.Program{
+			Title: realfeeditem.Title,
+			Content: realfeeditem.Content,
+			Converted: false,
+		})
+	}
+
+	return c.JSON(EmptySchema{})
+}

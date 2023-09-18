@@ -4,6 +4,7 @@ import (
 	"github.com/enuesaa/speakit/repository"
 	"github.com/enuesaa/speakit/service"
 	"github.com/gofiber/fiber/v2"
+	"github.com/go-playground/validator/v10"
 )
 
 type ProgramSchema struct {
@@ -68,6 +69,30 @@ func (ctl *ProgramsController) Delete(c *fiber.Ctx) error {
 
 	programSrv := service.NewProgramService(ctl.repos)
 	programSrv.Delete(id)
+
+	return c.JSON(EmptySchema{})
+}
+
+type ConvertSchema struct {}
+func (ctl *ProgramsController) Convert(c *fiber.Ctx) error {
+	body := new(ConvertSchema)
+	if err := c.BodyParser(body); err != nil {
+		return err
+	}
+	validate := validator.New()
+	if err := validate.Struct(body); err != nil {
+		return err.(validator.ValidationErrors)
+	}
+	id := c.Params("id")
+
+	programSrv := service.NewProgramService(ctl.repos)
+	program := programSrv.Get(id)
+
+	voicevoxSrv := service.NewVoicevoxService(ctl.repos)
+	audioquery, _ := voicevoxSrv.AudioQuery(program.Title)
+	converted, _ := voicevoxSrv.Synthesis(audioquery)
+
+	programSrv.Upload(id, converted)
 
 	return c.JSON(EmptySchema{})
 }

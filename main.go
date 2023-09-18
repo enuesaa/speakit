@@ -41,17 +41,13 @@ func serve() {
 	app.Get("/api/feeds/:id", feeds.Get)
 	app.Post("/api/feeds", feeds.Create)
 	app.Delete("/api/feeds/:id", feeds.Delete)
-
-	feedfetch := controller.NewFeedfetchController(repos)
-	app.Post("/api/fetch", feedfetch.Create)
-	
-	convert := controller.NewConvertController(repos)
-	app.Post("/api/convert", convert.Create)
+	app.Delete("/api/feeds/:id/fetch", feeds.Fetch)
 
 	programs := controller.NewProgramsController(repos)
 	app.Get("/api/programs", programs.List)
 	app.Get("/api/programs/:id", programs.Get)
 	app.Get("/api/programs/:id", programs.Delete)
+	app.Post("/api/programs/:id/convert", programs.Convert)
 	app.Get("/api/programs/:id/audio", programs.GetAudio)
 
 	// web route
