@@ -1,6 +1,7 @@
 'use client'
 import { useDeleteprogramsidHook } from '@/lib/api'
 import { css } from '@/styled-system/css'
+import { useQueryClient } from '@tanstack/react-query'
 import { MouseEventHandler } from 'react'
 import { FaTrash } from 'react-icons/fa'
 
@@ -8,10 +9,13 @@ type Props = {
   id: string;
 }
 export const DeleteProgramButton = ({ id }: Props) => {
+  const queryClient = useQueryClient()
+
   const deleteProgram = useDeleteprogramsidHook()
-  const handleDelete: MouseEventHandler<HTMLButtonElement> = (e) => {
+  const handleDelete: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault()
-    deleteProgram(id)
+    await deleteProgram(id)
+    await queryClient.invalidateQueries({queryKey: ['/programs']})
   }
 
   const styles = {
