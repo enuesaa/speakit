@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// Deprecated: instead, please use voicevox repository
 type HttpcallRepositoryInterface interface {
 	Post(url string, body io.Reader) (string, error)
 }
