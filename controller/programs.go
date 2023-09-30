@@ -86,13 +86,7 @@ func (ctl *ProgramsController) Convert(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	programSrv := service.NewProgramService(ctl.repos)
-	program := programSrv.Get(id)
-
-	voicevoxSrv := service.NewVoicevoxService(ctl.repos)
-	audioquery, _ := voicevoxSrv.AudioQuery(program.Title)
-	converted, _ := voicevoxSrv.Synthesis(audioquery)
-
-	programSrv.Upload(id, converted)
+	programSrv.Convert(id)
 
 	return c.JSON(EmptySchema{})
 }

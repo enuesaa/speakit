@@ -8,8 +8,8 @@ type Env struct {
 
 type Repos struct {
 	Redis    RedisRepositoryInterface
-	Httpcall HttpcallRepositoryInterface
 	Storage  StorageRepositoryInterface
+	Voicevox VoicevoxRepositoryInterface
 }
 
 func NewRepos(env Env) Repos {
@@ -17,10 +17,10 @@ func NewRepos(env Env) Repos {
 		Redis: &RedisRepository{
 			Addr: env.REDIS_HOST,
 		},
-		Httpcall: &HttpcallRepository{},
 		Storage: &StorageRepository{
 			Bucket:   env.MINIO_BUCKET,
 			Endpoint: env.MINIO_HOST,
 		},
+		Voicevox: &VoicevoxRepository{},
 	}
 }

@@ -31,6 +31,7 @@ func (srv *ProgramService) List() []Program {
 	return list
 }
 
+// TODO: should return error
 func (srv *ProgramService) Get(id string) Program {
 	value := srv.repos.Redis.Get("programs:" + id)
 	return parseJson[Program](value)
@@ -63,4 +64,19 @@ func (srv *ProgramService) AddConvertedFlag(id string) {
 
 func (srv *ProgramService) Download(id string) (string, error) {
 	return srv.repos.Storage.Download(id + ".wav")
+}
+
+
+func (srv *ProgramService) Convert(id string) (error) {
+	program := srv.Get(id)
+
+	audioquery, err := srv.repos.Voicevox.AudioQuery(program.Title)
+	if err != nil {
+		return err
+	}
+	converted, err := srv.repos.Voicevox.Synthesis(audioquery)
+	if err != nil {
+		return err
+	}
+	return srv.Upload(id, converted)
 }
