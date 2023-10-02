@@ -24,6 +24,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/enuesaa/speakit/speakit-app
+          tags: type=raw,value=latest,enable=true
 
       - uses: docker/build-push-action@v5
         with:
@@ -36,6 +37,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/enuesaa/speakit/speakit-admin
+          tags: type=raw,value=latest,enable=true
 
       - uses: docker/build-push-action@v5
         with:
