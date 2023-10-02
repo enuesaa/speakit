@@ -1,9 +1,7 @@
 name: release
 
 on:
-  push:
-    tags:
-      - '*'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -21,7 +19,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - id: meta
+      # app
+      - id: appmeta
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/enuesaa/speakit/speakit-app
@@ -31,3 +30,15 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+      
+      # admin
+      - id: adminmeta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/enuesaa/speakit/speakit-admin
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: ./apps/admin
+          push: true
+          tags: ${{ steps.adminmeta.outputs.tags }}
