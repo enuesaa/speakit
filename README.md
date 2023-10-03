@@ -12,3 +12,6 @@ Toy app to read aloud rss feed information.
 - voicevox
 - golang app
 - nextjs app
+
+## Development Plan
+- とりあえず nomad で動かす
