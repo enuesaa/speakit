@@ -1,6 +1,6 @@
 **Work in progress..**
 # speakit
-Toy app to read aloud rss feed information.
+Toy app to read aloud rss feed.
 
 ## コンセプト
 - RSSの情報を読み上げたい
@@ -8,10 +8,8 @@ Toy app to read aloud rss feed information.
 - で、要約とかもして欲しい
 - 単に一つずつ読み上げるのではなく、文脈でグルーピングしたい
 
-## Stacks
-- voicevox
-- golang app
-- nextjs app
-
 ## Development Plan
-- とりあえず nomad で動かす
+- [chore] use go-task
+- [app] use golang embed static files
+- [golang] use pkg dir
+- [app] mv apps/admin to admin
