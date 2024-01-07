@@ -1,45 +1,14 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 3000:3000
-    volumes:
-      - .:/workspace:cached
-      - apps:/app/apps
-    environment:
-      - MINIO_BUCKET=sample
-      - MINIO_HOST=minio:9000
-      - REDIS_HOST=redis:6379
-    tty: true
-    links:
-      - voicevox
-      - redis
-      - minio
-
   voicevox:
     image: voicevox/voicevox_engine
-    tty: true
-
-  admin:
-    build:
-      context: ./apps/admin
-      dockerfile: Dockerfile
-    volumes:
-      - .:/workspace:cached
-      - node_modules:/apps/admin/node_modules
-    ports:
-      - 3001:3000
-    command: pnpm dev
     tty: true
 
   redis:
     image: redis
     volumes:
-      - ./apps/redis:/data
+      - ./docker/redis/data:/data
 
   minio:
     image: minio/minio
@@ -51,11 +20,6 @@ services:
       - MINIO_ADDRESS=:9000
       - MINIO_CONSOLE_ADDRESS=:9001
     volumes:
-      - ./apps/minio:/data
+      - ./docker/minio/data:/data
     command: server /data
     tty: true
-
-volumes:
-  # to ignore dir.
-  apps:
-  node_modules:

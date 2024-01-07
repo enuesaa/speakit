@@ -13,3 +13,4 @@ Toy app to read aloud rss feed.
 - [app] use golang embed static files
 - [golang] use pkg dir
 - [app] mv apps/admin to admin
+- [app] identify env vars

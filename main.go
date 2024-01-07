@@ -4,14 +4,15 @@ import (
 	"flag"
 	"os"
 
-	"github.com/enuesaa/speakit/controller"
-	"github.com/enuesaa/speakit/repository"
+	"github.com/enuesaa/speakit/pkg/controller"
+	"github.com/enuesaa/speakit/pkg/repository"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 var taskOpenapi bool
 
+//TODO refactor
 func init() {
 	flag.BoolVar(&taskOpenapi, "emit-openapi", false, "create openapi.yaml")
 }

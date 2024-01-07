@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/enuesaa/speakit/repository"
+	"github.com/enuesaa/speakit/pkg/repository"
 )
 
 type Program struct {

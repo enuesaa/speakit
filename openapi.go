@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/enuesaa/speakit/controller"
+	"github.com/enuesaa/speakit/pkg/controller"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/getkin/kin-openapi/openapi3gen"
 	"github.com/go-yaml/yaml"

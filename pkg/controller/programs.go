@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"github.com/enuesaa/speakit/repository"
-	"github.com/enuesaa/speakit/service"
+	"github.com/enuesaa/speakit/pkg/repository"
+	"github.com/enuesaa/speakit/pkg/service"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )

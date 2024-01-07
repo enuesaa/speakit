@@ -1,0 +1,8 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: '3'
+
+tasks:
+  openapi:
+    desc: emit openapi
+    cmds:
+      - go run . -emit-openapi > ./admin/openapi.yaml
