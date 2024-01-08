@@ -1,0 +1,46 @@
+name: pushimage
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  pushimage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # app
+      - id: appmeta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/enuesaa/speakit/speakit-app
+          tags: type=raw,value=latest,enable=true
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.appmeta.outputs.tags }}
+      
+      # admin
+      - id: adminmeta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/enuesaa/speakit/speakit-admin
+          tags: type=raw,value=latest,enable=true
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: ./apps/admin
+          push: true
+          tags: ${{ steps.adminmeta.outputs.tags }}

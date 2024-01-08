@@ -8,9 +8,9 @@ import (
 )
 
 type ProgramSchema struct {
-	Title string `json:"title"`
-	Content string `json:"content"`
-	Converted bool `json:"converted"`
+	Title     string `json:"title"`
+	Content   string `json:"content"`
+	Converted bool   `json:"converted"`
 }
 
 type ProgramsController struct {
@@ -30,14 +30,14 @@ func (ctl *ProgramsController) List(c *fiber.Ctx) error {
 
 	programSrv := service.NewProgramService(ctl.repos)
 	for _, program := range programSrv.List() {
-		res.Items = append(res.Items, WithMetadata[ProgramSchema] {
+		res.Items = append(res.Items, WithMetadata[ProgramSchema]{
 			Id: program.Id,
-			Data: ProgramSchema {
-				Title: program.Title,
-				Content: program.Content,
+			Data: ProgramSchema{
+				Title:     program.Title,
+				Content:   program.Content,
 				Converted: program.Converted,
 			},
-			Created: "",
+			Created:  "",
 			Modified: "",
 		})
 	}
@@ -50,14 +50,14 @@ func (ctl *ProgramsController) Get(c *fiber.Ctx) error {
 
 	programSrv := service.NewProgramService(ctl.repos)
 	program := programSrv.Get(id)
-	res := WithMetadata[ProgramSchema] {
+	res := WithMetadata[ProgramSchema]{
 		Id: program.Id,
-		Data: ProgramSchema {
-			Title: program.Title,
-			Content: program.Content,
+		Data: ProgramSchema{
+			Title:     program.Title,
+			Content:   program.Content,
 			Converted: program.Converted,
 		},
-		Created: "",
+		Created:  "",
 		Modified: "",
 	}
 
@@ -73,7 +73,8 @@ func (ctl *ProgramsController) Delete(c *fiber.Ctx) error {
 	return c.JSON(EmptySchema{})
 }
 
-type ConvertSchema struct {}
+type ConvertSchema struct{}
+
 func (ctl *ProgramsController) Convert(c *fiber.Ctx) error {
 	body := new(ConvertSchema)
 	if err := c.BodyParser(body); err != nil {

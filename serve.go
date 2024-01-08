@@ -10,7 +10,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
-
 func serve() {
 	env := repository.Env{
 		MINIO_BUCKET: os.Getenv("MINIO_BUCKET"),

@@ -27,10 +27,9 @@ func (repo *VoicevoxRepository) Post(url string, body io.Reader) (string, error)
 	return string(b), nil
 }
 
-
 func (repo *VoicevoxRepository) AudioQuery(text string) (string, error) {
 	body, err := repo.Post(
-		"http://voicevox:50021/audio_query?speaker=2&text=" + url.QueryEscape(text),
+		"http://voicevox:50021/audio_query?speaker=2&text="+url.QueryEscape(text),
 		strings.NewReader(""),
 	)
 	if err != nil {

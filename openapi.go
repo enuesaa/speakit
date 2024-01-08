@@ -19,46 +19,46 @@ func emitOpenapi() {
 	spec = appendSchema(spec, "empty", &struct{}{})
 	spec = appendSchema(spec, "feeds", &controller.FeedSchema{})
 	spec = appendSchema(spec, "feeds-with-metadata", &controller.WithMetadata[controller.FeedSchema]{})
-	spec = appendOperation(spec, "GET", "/feeds", OperationConfig {
+	spec = appendOperation(spec, "GET", "/feeds", OperationConfig{
 		ListResponseSchema: "feeds-with-metadata",
 	})
-	spec = appendOperation(spec, "GET", "/feeds/{id}", OperationConfig {
+	spec = appendOperation(spec, "GET", "/feeds/{id}", OperationConfig{
 		ResponseSchema: "feeds-with-metadata",
-		PathParams: []string{"id"},
+		PathParams:     []string{"id"},
 	})
-	spec = appendOperation(spec, "POST", "/feeds", OperationConfig {
-		RequestSchema: "feeds",
+	spec = appendOperation(spec, "POST", "/feeds", OperationConfig{
+		RequestSchema:  "feeds",
 		ResponseSchema: "empty",
 	})
-	spec = appendOperation(spec, "DELETE", "/feeds/{id}", OperationConfig {
-		PathParams: []string{"id"},
+	spec = appendOperation(spec, "DELETE", "/feeds/{id}", OperationConfig{
+		PathParams:     []string{"id"},
 		ResponseSchema: "empty",
 	})
 
 	spec = appendSchema(spec, "fetch", &controller.FeedfetchSchema{})
-	spec = appendOperation(spec, "POST", "/feeds/{id}/fetch", OperationConfig {
-		PathParams: []string{"id"},
-		RequestSchema: "fetch",
+	spec = appendOperation(spec, "POST", "/feeds/{id}/fetch", OperationConfig{
+		PathParams:     []string{"id"},
+		RequestSchema:  "fetch",
 		ResponseSchema: "empty",
 	})
 
 	spec = appendSchema(spec, "programs-with-metadata", &controller.WithMetadata[controller.ProgramSchema]{})
-	spec = appendOperation(spec, "GET", "/programs", OperationConfig {
+	spec = appendOperation(spec, "GET", "/programs", OperationConfig{
 		ListResponseSchema: "programs-with-metadata",
 	})
-	spec = appendOperation(spec, "GET", "/programs/{id}", OperationConfig {
-		PathParams: []string{"id"},
+	spec = appendOperation(spec, "GET", "/programs/{id}", OperationConfig{
+		PathParams:     []string{"id"},
 		ResponseSchema: "programs-with-metadata",
 	})
-	spec = appendOperation(spec, "DELETE", "/programs/{id}", OperationConfig {
-		PathParams: []string{"id"},
+	spec = appendOperation(spec, "DELETE", "/programs/{id}", OperationConfig{
+		PathParams:     []string{"id"},
 		ResponseSchema: "empty",
 	})
 
 	spec = appendSchema(spec, "convert", &controller.ConvertSchema{})
-	spec = appendOperation(spec, "POST", "/programs/{id}/convert", OperationConfig {
-		PathParams: []string{"id"},
-		RequestSchema: "convert",
+	spec = appendOperation(spec, "POST", "/programs/{id}/convert", OperationConfig{
+		PathParams:     []string{"id"},
+		RequestSchema:  "convert",
 		ResponseSchema: "empty",
 	})
 
@@ -68,17 +68,17 @@ func emitOpenapi() {
 func configure(spec openapi3.T) openapi3.T {
 	spec.OpenAPI = "3.0.3"
 	spec.Info = &openapi3.Info{
-		Title: "Speakit API",
+		Title:   "Speakit API",
 		Version: "0.1.0",
 	}
 	spec.AddServer(&openapi3.Server{
-		URL: "http://localhost:3000/api/",
+		URL:         "http://localhost:3000/api/",
 		Description: "local server",
 	})
 	spec.Components = &openapi3.Components{
 		Schemas: openapi3.Schemas{},
 	}
-	spec.Paths = openapi3.Paths {}
+	spec.Paths = openapi3.Paths{}
 
 	return spec
 }
@@ -90,11 +90,12 @@ func appendSchema(spec openapi3.T, name string, schema interface{}) openapi3.T {
 }
 
 type OperationConfig struct {
-	PathParams []string
-	RequestSchema string
-	ResponseSchema string
+	PathParams         []string
+	RequestSchema      string
+	ResponseSchema     string
 	ListResponseSchema string
 }
+
 func appendOperation(spec openapi3.T, method string, path string, config OperationConfig) openapi3.T {
 	if spec.Paths[path] == nil {
 		spec.Paths[path] = &openapi3.PathItem{}
@@ -110,7 +111,7 @@ func appendOperation(spec openapi3.T, method string, path string, config Operati
 		for _, pathParamName := range config.PathParams {
 			operation.Parameters = append(operation.Parameters, &openapi3.ParameterRef{
 				Value: &openapi3.Parameter{
-					In: "path",
+					In:   "path",
 					Name: pathParamName,
 					Schema: &openapi3.SchemaRef{
 						Value: &openapi3.Schema{

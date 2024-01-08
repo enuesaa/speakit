@@ -5,9 +5,9 @@ import (
 )
 
 type Program struct {
-	Id string
-	Title string
-	Content string
+	Id        string
+	Title     string
+	Content   string
 	Converted bool
 }
 
@@ -40,7 +40,7 @@ func (srv *ProgramService) Get(id string) Program {
 func (srv *ProgramService) Create(program Program) string {
 	program.Id = createId()
 	// srv.repos.Storage.Upload(id+".wav", body)
-	srv.repos.Redis.Set("programs:" + program.Id, toJson(program))
+	srv.repos.Redis.Set("programs:"+program.Id, toJson(program))
 	return program.Id
 }
 
@@ -49,7 +49,7 @@ func (srv *ProgramService) Delete(id string) {
 }
 
 func (srv *ProgramService) Upload(id string, body string) error {
-	if err := srv.repos.Storage.Upload(id + ".wav", body); err != nil {
+	if err := srv.repos.Storage.Upload(id+".wav", body); err != nil {
 		return err
 	}
 	srv.AddConvertedFlag(id)
@@ -59,15 +59,14 @@ func (srv *ProgramService) Upload(id string, body string) error {
 func (srv *ProgramService) AddConvertedFlag(id string) {
 	program := srv.Get(id)
 	program.Converted = true
-	srv.repos.Redis.Set("programs:" + id, toJson(program))
+	srv.repos.Redis.Set("programs:"+id, toJson(program))
 }
 
 func (srv *ProgramService) Download(id string) (string, error) {
 	return srv.repos.Storage.Download(id + ".wav")
 }
 
-
-func (srv *ProgramService) Convert(id string) (error) {
+func (srv *ProgramService) Convert(id string) error {
 	program := srv.Get(id)
 
 	audioquery, err := srv.repos.Voicevox.AudioQuery(program.Title)

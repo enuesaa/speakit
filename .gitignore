@@ -4,9 +4,6 @@
 # editor
 .vscode
 
-/apps/voicevox/*
-!/apps/voicevox/.gitkeep
-
 # app
 /build
 /apps/redis

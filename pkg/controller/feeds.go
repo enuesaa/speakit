@@ -32,13 +32,13 @@ func (ctl *FeedsController) List(c *fiber.Ctx) error {
 
 	feedSrv := service.NewFeedSevice(ctl.repos)
 	for _, feed := range feedSrv.List() {
-		res.Items = append(res.Items, WithMetadata[FeedSchema] {
+		res.Items = append(res.Items, WithMetadata[FeedSchema]{
 			Id: feed.Id,
-			Data: FeedSchema {
+			Data: FeedSchema{
 				Name: feed.Name,
-				Url: feed.Url,
+				Url:  feed.Url,
 			},
-			Created: "",
+			Created:  "",
 			Modified: "",
 		})
 	}
@@ -51,13 +51,13 @@ func (ctl *FeedsController) Get(c *fiber.Ctx) error {
 
 	feedSrv := service.NewFeedSevice(ctl.repos)
 	feed := feedSrv.Get(id)
-	res := WithMetadata[FeedSchema] {
+	res := WithMetadata[FeedSchema]{
 		Id: feed.Id,
-		Data: FeedSchema {
+		Data: FeedSchema{
 			Name: feed.Name,
-			Url: feed.Url,
+			Url:  feed.Url,
 		},
-		Created: "",
+		Created:  "",
 		Modified: "",
 	}
 
@@ -80,7 +80,9 @@ func (ctl *FeedsController) Create(c *fiber.Ctx) error {
 		Url:  body.Url,
 	})
 
-	return c.JSON(struct { Id string `json:"id"` } { Id: id })
+	return c.JSON(struct {
+		Id string `json:"id"`
+	}{Id: id})
 }
 
 func (ctl *FeedsController) Delete(c *fiber.Ctx) error {
@@ -92,8 +94,7 @@ func (ctl *FeedsController) Delete(c *fiber.Ctx) error {
 	return c.JSON(EmptySchema{})
 }
 
-
-type FeedfetchSchema struct {}
+type FeedfetchSchema struct{}
 
 func (ctl *FeedsController) Fetch(c *fiber.Ctx) error {
 	body := new(FeedfetchSchema)
@@ -112,11 +113,11 @@ func (ctl *FeedsController) Fetch(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	
+
 	for _, realfeeditem := range realfeed.Items {
 		programSrv.Create(service.Program{
-			Title: realfeeditem.Title,
-			Content: realfeeditem.Content,
+			Title:     realfeeditem.Title,
+			Content:   realfeeditem.Content,
 			Converted: false,
 		})
 	}

@@ -6,7 +6,7 @@ import (
 )
 
 type Feed struct {
-	Id string `json:"id"`
+	Id   string `json:"id"`
 	Name string `json:"name"`
 	Url  string `json:"url"`
 }
@@ -17,6 +17,7 @@ type Realfeed struct {
 type FeedService struct {
 	repos repository.Repos
 }
+
 func NewFeedSevice(repos repository.Repos) FeedService {
 	return FeedService{
 		repos,
@@ -41,7 +42,7 @@ func (srv *FeedService) Get(id string) Feed {
 
 func (srv *FeedService) Create(feed Feed) string {
 	feed.Id = createId()
-	srv.repos.Redis.Set("feeds:" + feed.Id, toJson(feed))
+	srv.repos.Redis.Set("feeds:"+feed.Id, toJson(feed))
 	return feed.Id
 }
 
@@ -59,5 +60,5 @@ func (srv *FeedService) Refetch(id string) (*Realfeed, error) {
 		return nil, err
 	}
 
-	return &Realfeed{ *realfeed }, nil
+	return &Realfeed{*realfeed}, nil
 }

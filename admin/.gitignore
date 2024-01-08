@@ -14,8 +14,6 @@
 
 # debug
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 .pnpm-debug.log*
 .pnpm-store
 
@@ -23,15 +21,9 @@ yarn-error.log*
 .env*.local
 .env
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# editor
-.vscode
 
 # pandacss
 src/styled-system

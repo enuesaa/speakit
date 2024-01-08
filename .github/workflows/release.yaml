@@ -1,18 +1,18 @@
 name: release
 
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - '*'
 
 permissions:
-  contents: read
-  packages: write
+  contents: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-go@v4
         with:
           go-version: '1.21'
@@ -25,42 +25,9 @@ jobs:
 
       - run: go generate ./...
       - run: go install
-
       - uses: goreleaser/goreleaser-action@v5
         with:
           version: latest
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - uses: docker/login-action@v3
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
-
-      # # app
-      # - id: appmeta
-      #   uses: docker/metadata-action@v5
-      #   with:
-      #     images: ghcr.io/enuesaa/speakit/speakit-app
-      #     tags: type=raw,value=latest,enable=true
-
-      # - uses: docker/build-push-action@v5
-      #   with:
-      #     context: .
-      #     push: true
-      #     tags: ${{ steps.appmeta.outputs.tags }}
-      
-      # # admin
-      # - id: adminmeta
-      #   uses: docker/metadata-action@v5
-      #   with:
-      #     images: ghcr.io/enuesaa/speakit/speakit-admin
-      #     tags: type=raw,value=latest,enable=true
-
-      # - uses: docker/build-push-action@v5
-      #   with:
-      #     context: ./apps/admin
-      #     push: true
-      #     tags: ${{ steps.adminmeta.outputs.tags }}
