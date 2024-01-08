@@ -1,6 +1,6 @@
 //go:build dev
 
-package web
+package admin
 
 func init() {
 	go RunDevCmd()

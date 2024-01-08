@@ -13,3 +13,6 @@
 /apps/minio
 *.wav
 openapi.yaml
+
+docker/minio/data
+docker/redis/data

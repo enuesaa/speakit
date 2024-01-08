@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	web "github.com/enuesaa/speakit/admin"
+	"github.com/enuesaa/speakit/admin"
 	"github.com/enuesaa/speakit/pkg/controller"
 	"github.com/enuesaa/speakit/pkg/repository"
 	"github.com/gofiber/fiber/v2"
@@ -12,7 +12,6 @@ import (
 
 
 func serve() {
-	// env
 	env := repository.Env{
 		MINIO_BUCKET: os.Getenv("MINIO_BUCKET"),
 		MINIO_HOST:   os.Getenv("MINIO_HOST"),
@@ -23,7 +22,6 @@ func serve() {
 	app := fiber.New()
 	app.Use(cors.New())
 
-	// api route
 	feeds := controller.NewFeedsController(repos)
 	app.Get("/api/feeds", feeds.List)
 	app.Get("/api/feeds/:id", feeds.Get)
@@ -37,7 +35,7 @@ func serve() {
 	app.Delete("/api/programs/:id", programs.Delete)
 	app.Post("/api/programs/:id/convert", programs.Convert)
 	app.Get("/api/programs/:id/audio", programs.GetAudio)
-	app.Get("/*", web.Serve)
+	app.Get("/*", admin.Serve)
 
 	app.Listen(":3000")
 }

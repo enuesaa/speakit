@@ -6,3 +6,13 @@ tasks:
     desc: emit openapi
     cmds:
       - go run . -emit-openapi > ./admin/openapi.yaml
+
+  dev:
+    desc: start dev server
+    env:
+      MINIO_BUCKET: sample
+      MINIO_HOST: localhost:9000
+      REDIS_HOST: localhost:6379
+    cmds:
+      - docker compose up -d
+      - go run -tags dev .

@@ -1,4 +1,4 @@
-package web
+package admin
 
 import (
 	"embed"
@@ -22,7 +22,7 @@ var dist embed.FS
 
 func RunDevCmd() {
 	cmd := exec.Command("pnpm", "dev")
-	cmd.Dir = "./web"
+	cmd.Dir = "./admin"
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
