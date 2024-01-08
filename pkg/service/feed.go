@@ -62,3 +62,13 @@ func (srv *FeedService) Refetch(id string) (*Realfeed, error) {
 
 	return &Realfeed{*realfeed}, nil
 }
+
+func (srv *FeedService) TryFetch(url string) (Realfeed, error) {
+	fp := gofeed.NewParser()
+	realfeed, err := fp.ParseURL(url)
+	if err != nil {
+		return Realfeed{}, err
+	}
+
+	return Realfeed{*realfeed}, nil
+}
