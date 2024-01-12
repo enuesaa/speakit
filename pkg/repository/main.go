@@ -10,6 +10,7 @@ type Repos struct {
 	Redis    RedisRepositoryInterface
 	Storage  StorageRepositoryInterface
 	Voicevox VoicevoxRepositoryInterface
+	Fs       FsRepositoryInterface
 }
 
 func NewRepos(env Env) Repos {
@@ -22,5 +23,6 @@ func NewRepos(env Env) Repos {
 			Endpoint: env.MINIO_HOST,
 		},
 		Voicevox: &VoicevoxRepository{},
+		Fs: &FsRepository{},
 	}
 }

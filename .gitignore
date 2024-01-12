@@ -10,6 +10,7 @@
 /apps/minio
 *.wav
 openapi.yaml
+speakit.json
 
 docker/minio/data
 docker/redis/data
