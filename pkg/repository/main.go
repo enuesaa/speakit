@@ -23,6 +23,6 @@ func NewRepos(env Env) Repos {
 			Endpoint: env.MINIO_HOST,
 		},
 		Voicevox: &VoicevoxRepository{},
-		Fs: &FsRepository{},
+		Fs:       &FsRepository{},
 	}
 }

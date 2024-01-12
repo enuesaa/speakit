@@ -11,31 +11,23 @@ import (
 )
 
 type SpeakitConfig struct {
-	Url string `json:"url"`
-	OpenAiApiKey string `json:"openAiApiKey"`
-	PromptTemplate string `json:"promptTemplate"`
-	Results []SpeakitResult `json:"speakitResults"`
+	Url            string          `json:"url"`
+	OpenAiApiKey   string          `json:"openAiApiKey"`
+	PromptTemplate string          `json:"promptTemplate"`
+	Results        []SpeakitResult `json:"speakitResults"`
 }
 
 type SpeakitResult struct {
-	Id string `json:"id"`
+	Id     string `json:"id"`
 	Output string `json:"output"`
-	Title string `json:"title"`
-	Url string `json:"url"`
+	Title  string `json:"title"`
+	Url    string `json:"url"`
 }
 
 func TryFetch() {
 	env := repository.Env{}
 	repos := repository.NewRepos(env)
-
-	if !repos.Fs.IsExist("speakit.json") {
-		newconf := SpeakitConfig{
-			Results: make([]SpeakitResult, 0),
-		}
-		if err := createSpeakitJson(newconf); err != nil {
-			log.Fatalf("Error: %s", err.Error())			
-		}
-	}
+	repos.Voicevox.SetBaseUrl("http://localhost:50021")
 
 	config, err := readSpeakitJson()
 	if err != nil {
@@ -56,11 +48,12 @@ func TryFetch() {
 		log.Fatalf("Error: %s", err.Error())
 	}
 
-	repos.Voicevox.SetBaseUrl("http://localhost:50021")
-
 	aiSrv := service.NewAiService(repos)
 	config.Results = make([]SpeakitResult, 0)
 	for i, feeditem := range feeds.Items {
+		if i > 2 {
+			break
+		}
 		fmt.Printf("found: %s\n", feeditem.Title)
 		message := fmt.Sprintf(config.PromptTemplate, feeditem.Link)
 		fmt.Printf("message: %s\n", message)
@@ -69,42 +62,34 @@ func TryFetch() {
 			fmt.Printf("Error: %s\n", err.Error())
 			response = ""
 		}
+		fmt.Printf("response: %s\n", response)
 		id := uuid.NewString()
 		config.Results = append(config.Results, SpeakitResult{
-			Id: id,
-			Title: feeditem.Title,
-			Url: feeditem.Link,
+			Id:     id,
+			Title:  feeditem.Title,
+			Url:    feeditem.Link,
 			Output: response,
 		})
 		fmt.Printf("try audioquery\n")
 		audioquery, err := repos.Voicevox.AudioQuery(feeditem.Title + "。 " + response)
 		if err != nil {
 			fmt.Printf("Error: %s\n", err.Error())
-			if i >= 0 {
-				break
-			}
 			continue
 		}
 		fmt.Printf("try sythesis\n")
 		converted, err := repos.Voicevox.Synthesis(audioquery)
 		if err != nil {
 			fmt.Printf("Error: %s\n", err.Error())
-			if i >= 0 {
-				break
-			}
 			continue
 		}
 		filename := fmt.Sprintf("data/%s.wav", id)
 		if err := repos.Fs.Create(filename, []byte(converted)); err != nil {
 			fmt.Printf("Error: %s\n", err.Error())
 		}
-		if i >= 0 {
-			break
-		}
 	}
 
 	if err := createSpeakitJson(config); err != nil {
-		log.Fatalf("Error: %s", err.Error())			
+		log.Fatalf("Error: %s", err.Error())
 	}
 }
 
@@ -117,7 +102,7 @@ func createSpeakitJson(config SpeakitConfig) error {
 		return err
 	}
 	if err := repos.Fs.Create("speakit.json", b); err != nil {
-		return err		
+		return err
 	}
 	return nil
 }
