@@ -49,19 +49,60 @@ func TryFetch() {
 		log.Fatalf("Error: %s", err.Error())
 	}
 
+	if err := repos.Fs.Remove("data"); err != nil {
+		log.Fatalf("Error: %s", err.Error())
+	}
+	if err := repos.Fs.CreateDir("data"); err != nil {
+		log.Fatalf("Error: %s", err.Error())
+	}
+
+	repos.Voicevox.SetBaseUrl("http://localhost:50021")
+
+	aiSrv := service.NewAiService(repos)
 	config.Results = make([]SpeakitResult, 0)
 	for i, feeditem := range feeds.Items {
 		fmt.Printf("found: %s\n", feeditem.Title)
+		message := fmt.Sprintf(config.PromptTemplate, feeditem.Link)
+		fmt.Printf("message: %s\n", message)
+		response, err := aiSrv.Call(config.OpenAiApiKey, message)
+		if err != nil {
+			fmt.Printf("Error: %s\n", err.Error())
+			response = ""
+		}
+		id := uuid.NewString()
 		config.Results = append(config.Results, SpeakitResult{
-			Id: uuid.NewString(),
+			Id: id,
 			Title: feeditem.Title,
 			Url: feeditem.Link,
-			Output: "",
+			Output: response,
 		})
-		if i > 4 {
+		fmt.Printf("try audioquery\n")
+		audioquery, err := repos.Voicevox.AudioQuery(feeditem.Title + "。 " + response)
+		if err != nil {
+			fmt.Printf("Error: %s\n", err.Error())
+			if i >= 0 {
+				break
+			}
+			continue
+		}
+		fmt.Printf("try sythesis\n")
+		converted, err := repos.Voicevox.Synthesis(audioquery)
+		if err != nil {
+			fmt.Printf("Error: %s\n", err.Error())
+			if i >= 0 {
+				break
+			}
+			continue
+		}
+		filename := fmt.Sprintf("data/%s.wav", id)
+		if err := repos.Fs.Create(filename, []byte(converted)); err != nil {
+			fmt.Printf("Error: %s\n", err.Error())
+		}
+		if i >= 0 {
 			break
 		}
 	}
+
 	if err := createSpeakitJson(config); err != nil {
 		log.Fatalf("Error: %s", err.Error())			
 	}

@@ -45,6 +45,7 @@ require (
 	github.com/perimeterx/marshmallow v1.1.4 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rs/xid v1.5.0 // indirect
+	github.com/sashabaranov/go-openai v1.17.11 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.48.0 // indirect
