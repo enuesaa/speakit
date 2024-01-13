@@ -5,7 +5,7 @@ tasks:
   openapi:
     desc: emit openapi
     cmds:
-      - go run . -emit-openapi > ./admin/openapi.yaml
+      - go run . -emitopenapi > ./admin/openapi.yaml
 
   dev:
     desc: start dev server

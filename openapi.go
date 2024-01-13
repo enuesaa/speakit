@@ -10,8 +10,6 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-// run following command.
-// go run . -emit-openapi > ./apps/admin/openapi.yaml
 func emitOpenapi() {
 	spec := openapi3.T{}
 	spec = configure(spec)

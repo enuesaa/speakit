@@ -5,9 +5,6 @@
 .vscode
 
 # app
-/build
-/apps/redis
-/apps/minio
 *.wav
 openapi.yaml
 speakit.json

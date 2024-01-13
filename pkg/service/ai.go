@@ -19,7 +19,6 @@ func NewAiService(repos repository.Repos) *AiService {
 }
 
 func (srv *AiService) Call(token string, message string) (string, error) {
-	// see https://github.com/sashabaranov/go-openai
 	client := openai.NewClient(token)
 	res, err := client.CreateChatCompletion(
 		context.Background(),
