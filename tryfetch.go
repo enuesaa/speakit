@@ -48,30 +48,21 @@ func TryFetch() {
 		log.Fatalf("Error: %s", err.Error())
 	}
 
-	aiSrv := service.NewAiService(repos)
 	config.Results = make([]SpeakitResult, 0)
 	for i, feeditem := range feeds.Items {
 		if i > 2 {
 			break
 		}
 		fmt.Printf("found: %s\n", feeditem.Title)
-		message := fmt.Sprintf(config.PromptTemplate, feeditem.Link)
-		fmt.Printf("message: %s\n", message)
-		response, err := aiSrv.Call(config.OpenAiApiKey, message)
-		if err != nil {
-			fmt.Printf("Error: %s\n", err.Error())
-			response = ""
-		}
-		fmt.Printf("response: %s\n", response)
 		id := uuid.NewString()
 		config.Results = append(config.Results, SpeakitResult{
 			Id:     id,
 			Title:  feeditem.Title,
 			Url:    feeditem.Link,
-			Output: response,
+			Output: "",
 		})
 		fmt.Printf("try audioquery\n")
-		audioquery, err := repos.Voicevox.AudioQuery(feeditem.Title + "。 " + response)
+		audioquery, err := repos.Voicevox.AudioQuery(feeditem.Title + "。 " + feeditem.Description)
 		if err != nil {
 			fmt.Printf("Error: %s\n", err.Error())
 			continue
