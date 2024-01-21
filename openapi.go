@@ -8,62 +8,67 @@ import (
 	"github.com/getkin/kin-openapi/openapi3gen"
 	"github.com/go-yaml/yaml"
 	"github.com/iancoleman/strcase"
+	"github.com/spf13/cobra"
 )
 
-func emitOpenapi() {
-	spec := openapi3.T{}
-	spec = configure(spec)
-
-	spec = appendSchema(spec, "empty", &struct{}{})
-	spec = appendSchema(spec, "feeds", &controller.FeedSchema{})
-	spec = appendSchema(spec, "feeds-with-metadata", &controller.WithMetadata[controller.FeedSchema]{})
-	spec = appendOperation(spec, "GET", "/feeds", OperationConfig{
-		ListResponseSchema: "feeds-with-metadata",
-	})
-	spec = appendOperation(spec, "GET", "/feeds/{id}", OperationConfig{
-		ResponseSchema: "feeds-with-metadata",
-		PathParams:     []string{"id"},
-	})
-	spec = appendOperation(spec, "POST", "/feeds", OperationConfig{
-		RequestSchema:  "feeds",
-		ResponseSchema: "empty",
-	})
-	spec = appendOperation(spec, "DELETE", "/feeds/{id}", OperationConfig{
-		PathParams:     []string{"id"},
-		ResponseSchema: "empty",
-	})
-
-	spec = appendSchema(spec, "fetch", &controller.FeedfetchSchema{})
-	spec = appendOperation(spec, "POST", "/feeds/{id}/fetch", OperationConfig{
-		PathParams:     []string{"id"},
-		RequestSchema:  "fetch",
-		ResponseSchema: "empty",
-	})
-
-	spec = appendSchema(spec, "programs-with-metadata", &controller.WithMetadata[controller.ProgramSchema]{})
-	spec = appendOperation(spec, "GET", "/programs", OperationConfig{
-		ListResponseSchema: "programs-with-metadata",
-	})
-	spec = appendOperation(spec, "GET", "/programs/{id}", OperationConfig{
-		PathParams:     []string{"id"},
-		ResponseSchema: "programs-with-metadata",
-	})
-	spec = appendOperation(spec, "DELETE", "/programs/{id}", OperationConfig{
-		PathParams:     []string{"id"},
-		ResponseSchema: "empty",
-	})
-
-	spec = appendSchema(spec, "convert", &controller.ConvertSchema{})
-	spec = appendOperation(spec, "POST", "/programs/{id}/convert", OperationConfig{
-		PathParams:     []string{"id"},
-		RequestSchema:  "convert",
-		ResponseSchema: "empty",
-	})
-
-	writeYaml(spec)
+var emitOpenapiCmd = &cobra.Command{
+	Use:   "emit-openapi",
+	Short: "create openapi.yaml",
+	Run: func(cmd *cobra.Command, args []string) {
+		spec := openapi3.T{}
+		spec = configureOpenapi(spec)
+	
+		spec = appendSchema(spec, "empty", &struct{}{})
+		spec = appendSchema(spec, "feeds", &controller.FeedSchema{})
+		spec = appendSchema(spec, "feeds-with-metadata", &controller.WithMetadata[controller.FeedSchema]{})
+		spec = appendOperation(spec, "GET", "/feeds", OperationConfig{
+			ListResponseSchema: "feeds-with-metadata",
+		})
+		spec = appendOperation(spec, "GET", "/feeds/{id}", OperationConfig{
+			ResponseSchema: "feeds-with-metadata",
+			PathParams:     []string{"id"},
+		})
+		spec = appendOperation(spec, "POST", "/feeds", OperationConfig{
+			RequestSchema:  "feeds",
+			ResponseSchema: "empty",
+		})
+		spec = appendOperation(spec, "DELETE", "/feeds/{id}", OperationConfig{
+			PathParams:     []string{"id"},
+			ResponseSchema: "empty",
+		})
+	
+		spec = appendSchema(spec, "fetch", &controller.FeedfetchSchema{})
+		spec = appendOperation(spec, "POST", "/feeds/{id}/fetch", OperationConfig{
+			PathParams:     []string{"id"},
+			RequestSchema:  "fetch",
+			ResponseSchema: "empty",
+		})
+	
+		spec = appendSchema(spec, "programs-with-metadata", &controller.WithMetadata[controller.ProgramSchema]{})
+		spec = appendOperation(spec, "GET", "/programs", OperationConfig{
+			ListResponseSchema: "programs-with-metadata",
+		})
+		spec = appendOperation(spec, "GET", "/programs/{id}", OperationConfig{
+			PathParams:     []string{"id"},
+			ResponseSchema: "programs-with-metadata",
+		})
+		spec = appendOperation(spec, "DELETE", "/programs/{id}", OperationConfig{
+			PathParams:     []string{"id"},
+			ResponseSchema: "empty",
+		})
+	
+		spec = appendSchema(spec, "convert", &controller.ConvertSchema{})
+		spec = appendOperation(spec, "POST", "/programs/{id}/convert", OperationConfig{
+			PathParams:     []string{"id"},
+			RequestSchema:  "convert",
+			ResponseSchema: "empty",
+		})
+	
+		writeYaml(spec)
+	},
 }
 
-func configure(spec openapi3.T) openapi3.T {
+func configureOpenapi(spec openapi3.T) openapi3.T {
 	spec.OpenAPI = "3.0.3"
 	spec.Info = &openapi3.Info{
 		Title:   "Speakit API",

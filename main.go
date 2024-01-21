@@ -1,25 +1,25 @@
 package main
 
 import (
-	"flag"
+	"github.com/spf13/cobra"
 )
 
-var emitOpenapiFlag bool
-var tryFetchFlag bool
-
-func init() {
-	flag.BoolVar(&emitOpenapiFlag, "emitopenapi", false, "create openapi.yaml")
-	flag.BoolVar(&tryFetchFlag, "tryfetch", false, "try to fetch rss feed. please provide url.")
-}
-
 func main() {
-	flag.Parse()
-
-	if emitOpenapiFlag {
-		emitOpenapi()
-	} else if tryFetchFlag {
-		TryFetch()
-	} else {
-		serve()
+	app := &cobra.Command{
+		Use:     "speakit",
+		Short:   "Toy app to read aloud rss feed",
+		Version: "0.0.2",
 	}
+	app.AddCommand(emitOpenapiCmd)
+	app.AddCommand(tryFetchCmd)
+	app.AddCommand(serveCmd)
+
+	// disable default
+	app.SetHelpCommand(&cobra.Command{Hidden: true})
+	app.CompletionOptions.DisableDefaultCmd = true
+	app.SilenceUsage = true
+	app.PersistentFlags().SortFlags = false
+	app.PersistentFlags().BoolP("help", "", false, "Show help information")
+	app.PersistentFlags().BoolP("version", "", false, "Show version")
+	app.Execute()
 }
