@@ -1,5 +1,4 @@
 'use client'
-import { Metadata } from 'next'
 import { ReactNode } from 'react'
 import { WithSidebar } from './WithSidebar'
 import { Fira_Code } from 'next/font/google'
@@ -29,9 +28,4 @@ export default function Layout({ children }: Props) {
       </body>
     </html>
   )
-}
- 
-export const metadata: Metadata = {
-  title: 'speakit',
-  description: 'speakit',
 }
