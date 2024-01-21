@@ -18,11 +18,11 @@ var collectCmd = &cobra.Command{
 			MINIO_BUCKET: os.Getenv("MINIO_BUCKET"),
 			MINIO_HOST:   os.Getenv("MINIO_HOST"),
 			REDIS_HOST:   os.Getenv("REDIS_HOST"),
+			VOICEVOX_BASE_URL: os.Getenv("VOICEVOX_BASE_URL"),
 		}
 		fmt.Printf("%s", os.Getenv("REDIS_HOST"))
 
 		repos := repository.NewRepos(env)
-		repos.Voicevox.SetBaseUrl("http://localhost:50021")
 		feedSrv := service.NewFeedSevice(repos)
 		programSrv := service.NewProgramService(repos)
 

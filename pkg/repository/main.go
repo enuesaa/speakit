@@ -4,6 +4,7 @@ type Env struct {
 	MINIO_BUCKET string
 	MINIO_HOST   string
 	REDIS_HOST   string
+	VOICEVOX_BASE_URL string
 }
 
 type Repos struct {
@@ -22,7 +23,9 @@ func NewRepos(env Env) Repos {
 			Bucket:   env.MINIO_BUCKET,
 			Endpoint: env.MINIO_HOST,
 		},
-		Voicevox: &VoicevoxRepository{},
+		Voicevox: &VoicevoxRepository{
+			BaseUrl: env.VOICEVOX_BASE_URL,
+		},
 		Fs:       &FsRepository{},
 	}
 }

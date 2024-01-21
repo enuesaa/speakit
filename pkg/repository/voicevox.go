@@ -9,7 +9,6 @@ import (
 )
 
 type VoicevoxRepositoryInterface interface {
-	SetBaseUrl(url string)
 	Post(url string, body io.Reader) (string, error)
 	AudioQuery(text string) (string, error)
 	Synthesis(query string) (string, error)
@@ -17,10 +16,6 @@ type VoicevoxRepositoryInterface interface {
 
 type VoicevoxRepository struct {
 	BaseUrl string
-}
-
-func (repo *VoicevoxRepository) SetBaseUrl(url string) {
-	repo.BaseUrl = url
 }
 
 func (repo *VoicevoxRepository) Post(url string, body io.Reader) (string, error) {

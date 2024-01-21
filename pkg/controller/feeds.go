@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"fmt"
-
 	"github.com/enuesaa/speakit/pkg/repository"
 	"github.com/enuesaa/speakit/pkg/service"
 	"github.com/go-playground/validator/v10"
@@ -25,7 +23,6 @@ func NewFeedsController(repos repository.Repos) FeedsController {
 }
 
 func (ctl *FeedsController) List(c *fiber.Ctx) error {
-	fmt.Printf("aaa\n")
 	res := ListSchema[WithMetadata[FeedSchema]]{
 		Items: make([]WithMetadata[FeedSchema], 0),
 	}

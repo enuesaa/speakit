@@ -2,19 +2,14 @@
 version: '3'
 
 tasks:
-  openapi:
-    desc: emit openapi
-    cmds:
-      - go run . emit-openapi > ./admin/openapi.yaml
-
-  dev:
+  serve:
     desc: start dev server
     env:
       MINIO_BUCKET: sample
       MINIO_HOST: localhost:9000
       REDIS_HOST: localhost:6379
+      VOICEVOX_BASE_URL: http://localhost:50021
     cmds:
-      - docker compose up -d
       - go run -tags dev . serve
 
   collect:
@@ -23,6 +18,31 @@ tasks:
       MINIO_BUCKET: sample
       MINIO_HOST: localhost:9000
       REDIS_HOST: localhost:6379
+      VOICEVOX_BASE_URL: http://localhost:50021
     cmds:
-      - docker compose up -d
       - go run . collect
+
+  openapi:
+    desc: emit openapi
+    cmds:
+      - go run . emit-openapi > ./admin/openapi.yaml
+
+  serve-prod:
+    desc: serve
+    env:
+      MINIO_BUCKET: sample
+      MINIO_HOST: localhost:9000
+      REDIS_HOST: localhost:6379
+      VOICEVOX_BASE_URL: http://localhost:50021
+    cmds:
+      - speakit serve
+
+  collect-prod:
+    desc: collect
+    env:
+      MINIO_BUCKET: sample
+      MINIO_HOST: localhost:9000
+      REDIS_HOST: localhost:6379
+      VOICEVOX_BASE_URL: http://localhost:50021
+    cmds:
+      - speakit collect
