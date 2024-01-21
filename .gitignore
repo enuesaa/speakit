@@ -7,7 +7,6 @@
 # app
 *.wav
 openapi.yaml
-speakit.json
 data
 
 docker/minio/data

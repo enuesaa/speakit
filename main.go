@@ -11,8 +11,8 @@ func main() {
 		Version: "0.0.2",
 	}
 	app.AddCommand(emitOpenapiCmd)
-	app.AddCommand(tryFetchCmd)
 	app.AddCommand(serveCmd)
+	app.AddCommand(collectCmd)
 
 	// disable default
 	app.SetHelpCommand(&cobra.Command{Hidden: true})
