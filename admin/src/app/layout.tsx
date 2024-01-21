@@ -1,9 +1,9 @@
 import { Metadata } from 'next'
 import { QueryProvider } from './query'
-import '../styles/global.css'
-import { FiraCode } from '../styles/font'
+import { FiraCode } from './font'
 import { ReactNode } from 'react'
 import { WithSidebar } from './WithSidebar'
+import './globalStyle.css'
 
 type Props = {
   children: ReactNode,

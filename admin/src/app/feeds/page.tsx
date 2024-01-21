@@ -1,5 +1,5 @@
 'use client'
-import { PageTitle } from '@/components/PageTitle'
+import { PageTitle } from '../PageTitle'
 import { useGetfeeds } from '@/lib/api'
 import { FeedCard } from './FeedCard'
 

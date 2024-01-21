@@ -1,4 +1,4 @@
-import { css } from '@/styled-system/css'
+import styles from './ProgramCard.css'
 import { PlayStartButton } from './PlayStartButton'
 import { ConvertButton } from './ConvertButton'
 import { DeleteProgramButton } from './DeleteProgramButton'
@@ -9,26 +9,6 @@ type Props = {
   id: string;
 }
 export const ProgramCard = ({ title, converted, id }: Props) => {
-  const styles = {
-    main: css({
-      border: 'solid 1px rgba(255,255,255,0.3)',
-      padding: '3',
-      borderRadius: '2px',
-      color: 'indigo.200',
-      margin: '10px 0',
-      display: 'flex',
-    }),
-    left: css({
-      flex: '1 1 auto',
-    }),
-    right: css({
-      flex: '0 0 80px',
-    }),
-    delete: css({
-      flex: '0 0 20px',
-    })
-  }
-
   return (
     <div className={styles.main}>
       <div className={styles.left}>

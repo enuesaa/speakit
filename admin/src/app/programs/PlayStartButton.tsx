@@ -1,7 +1,7 @@
 'use client'
-import { css } from '@/styled-system/css'
 import { MouseEventHandler } from 'react'
 import { BsFillPlayFill } from 'react-icons/bs'
+import styles from './PlayStartButton.css'
 
 export const PlayStartButton = ({ id }: {id: string}) => {
   const handlePlayStart: MouseEventHandler<HTMLButtonElement> = async (e) => {
@@ -15,20 +15,6 @@ export const PlayStartButton = ({ id }: {id: string}) => {
     source.buffer = audioBuffer
     source.connect(audioContext.destination)
     source.start();
-  }
-
-  const styles = {
-    main: css({
-      background: 'orange.700',
-      fontWeight: 'bold',
-      color: '#fafafa',
-      padding: '3',
-      cursor: 'pointer',
-      borderRadius: '5px',
-      _hover: {
-        background: 'orange.600',
-      },
-    }),
   }
 
   return (

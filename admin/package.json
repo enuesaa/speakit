@@ -4,28 +4,28 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "prepare": "panda codegen",
     "gen:openapi": "orval --config ./orval.config.ts",
     "dev": "next dev --port 3001",
     "build": "next build",
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
-    "@tanstack/react-query": "^4.32.6",
-    "next": "^13.4.16",
+    "@tanstack/react-query": "^5.17.19",
+    "@vanilla-extract/css": "^1.14.0",
+    "@vanilla-extract/next-plugin": "^2.3.3",
+    "next": "^14.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.45.4",
-    "react-icons": "^4.11.0",
-    "react-use": "^17.4.0"
+    "react-hook-form": "^7.49.3",
+    "react-icons": "^5.0.1",
+    "react-use": "^17.4.4"
   },
   "devDependencies": {
-    "@pandacss/dev": "^0.9.0",
-    "@types/node": "20.4.8",
-    "@types/react": "18.2.18",
-    "@types/react-dom": "18.2.7",
-    "orval": "^6.17.0",
-    "prettier": "^3.0.2",
-    "typescript": "5.1.6"
+    "@types/node": "20.11.5",
+    "@types/react": "18.2.48",
+    "@types/react-dom": "18.2.18",
+    "orval": "^6.23.0",
+    "prettier": "^3.2.4",
+    "typescript": "5.3.3"
   }
 }
