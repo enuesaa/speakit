@@ -1,10 +1,10 @@
 'use client'
 import { ReactNode } from 'react'
-import { WithSidebar } from './WithSidebar'
 import { Fira_Code } from 'next/font/google'
 import './globalStyle.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
- 
+import { Sidebar } from './Sidebar'
+
 const FiraCode = Fira_Code({
   weight: ['400', '500', '700'],
   display: 'swap',
@@ -21,9 +21,12 @@ export default function Layout({ children }: Props) {
     <html lang='ja' className={FiraCode.className}>
       <body>
         <QueryClientProvider client={client}>
-          <WithSidebar>
-            {children}
-          </WithSidebar>
+          <main style={{display: 'flex'}}>
+            <Sidebar />
+            <section>
+              {children}
+            </section>
+          </main>
         </QueryClientProvider>
       </body>
     </html>
