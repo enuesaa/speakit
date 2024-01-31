@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/spf13/cobra"
 )
 
@@ -18,8 +20,11 @@ func main() {
 	app.SetHelpCommand(&cobra.Command{Hidden: true})
 	app.CompletionOptions.DisableDefaultCmd = true
 	app.SilenceUsage = true
+	app.SilenceErrors = true
 	app.PersistentFlags().SortFlags = false
 	app.PersistentFlags().BoolP("help", "", false, "Show help information")
 	app.PersistentFlags().BoolP("version", "", false, "Show version")
-	app.Execute()
+	if err := app.Execute(); err != nil {
+		log.Fatalf("Error: %s", err.Error())
+	}
 }

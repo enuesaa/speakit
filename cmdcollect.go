@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"os"
 
 	"github.com/enuesaa/speakit/pkg/repository"
 	"github.com/enuesaa/speakit/pkg/service"
@@ -13,16 +11,8 @@ import (
 var collectCmd = &cobra.Command{
 	Use:   "collect",
 	Short: "collect",
-	Run: func(cmd *cobra.Command, args []string) {
-		env := repository.Env{
-			MINIO_BUCKET: os.Getenv("MINIO_BUCKET"),
-			MINIO_HOST:   os.Getenv("MINIO_HOST"),
-			REDIS_HOST:   os.Getenv("REDIS_HOST"),
-			VOICEVOX_BASE_URL: os.Getenv("VOICEVOX_BASE_URL"),
-		}
-		fmt.Printf("%s", os.Getenv("REDIS_HOST"))
-
-		repos := repository.NewRepos(env)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		repos := repository.NewRepos()
 		feedSrv := service.NewFeedSevice(repos)
 		programSrv := service.NewProgramService(repos)
 
@@ -31,7 +21,7 @@ var collectCmd = &cobra.Command{
 			fmt.Printf("found: %s\n", feed.Url)
 			realfeed, err := feedSrv.Refetch(feed.Id)
 			if err != nil {
-				log.Fatalf("Error: %s", err.Error())
+				return err
 			}
 	
 			for _, realfeeditem := range realfeed.Items {
@@ -42,10 +32,12 @@ var collectCmd = &cobra.Command{
 				})
 				fmt.Printf("program %s created. title: %s\n", id, realfeeditem.Title)
 				if err := programSrv.Convert(id); err != nil {
-					log.Fatalf("Error: %s", err.Error())
+					return err
 				}
 				fmt.Printf("program %s converted.\n", id)
 			}
 		}
+
+		return nil
 	},
 }

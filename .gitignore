@@ -7,7 +7,6 @@
 # app
 *.wav
 openapi.yaml
-data
 
 docker/minio/data
 docker/redis/data

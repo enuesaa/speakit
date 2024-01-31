@@ -12,7 +12,7 @@ require (
 	github.com/minio/minio-go/v7 v7.0.61
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/redis/go-redis/v9 v9.0.5
-	github.com/sashabaranov/go-openai v1.17.11
+	github.com/spf13/cobra v1.8.0
 )
 
 require (
@@ -48,7 +48,6 @@ require (
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rs/xid v1.5.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
-	github.com/spf13/cobra v1.8.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.48.0 // indirect

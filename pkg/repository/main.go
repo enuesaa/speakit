@@ -1,5 +1,7 @@
 package repository
 
+import "os"
+
 type Env struct {
 	MINIO_BUCKET string
 	MINIO_HOST   string
@@ -14,7 +16,14 @@ type Repos struct {
 	Fs       FsRepositoryInterface
 }
 
-func NewRepos(env Env) Repos {
+func NewRepos() Repos {
+	env := Env{
+		MINIO_BUCKET: os.Getenv("MINIO_BUCKET"),
+		MINIO_HOST:   os.Getenv("MINIO_HOST"),
+		REDIS_HOST:   os.Getenv("REDIS_HOST"),
+		VOICEVOX_BASE_URL: os.Getenv("VOICEVOX_BASE_URL"),
+	}
+
 	return Repos{
 		Redis: &RedisRepository{
 			Addr: env.REDIS_HOST,

@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-
 	"github.com/enuesaa/speakit/admin"
 	"github.com/enuesaa/speakit/pkg/controller"
 	"github.com/enuesaa/speakit/pkg/repository"
@@ -14,13 +12,8 @@ import (
 var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "serve",
-	Run: func(cmd *cobra.Command, args []string) {
-		env := repository.Env{
-			MINIO_BUCKET: os.Getenv("MINIO_BUCKET"),
-			MINIO_HOST:   os.Getenv("MINIO_HOST"),
-			REDIS_HOST:   os.Getenv("REDIS_HOST"),
-		}
-		repos := repository.NewRepos(env)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		repos := repository.NewRepos()
 
 		app := fiber.New()
 		app.Use(cors.New())
@@ -40,6 +33,6 @@ var serveCmd = &cobra.Command{
 		app.Get("/api/programs/:id/audio", programs.GetAudio)
 		app.Get("/*", admin.Serve)
 
-		app.Listen(":3000")
+		return app.Listen(":3000")
 	},
 }

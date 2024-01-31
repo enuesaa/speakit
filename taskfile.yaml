@@ -1,48 +1,29 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
 
+env:
+  MINIO_BUCKET: sample
+  MINIO_HOST: localhost:9000
+  REDIS_HOST: localhost:6379
+  VOICEVOX_BASE_URL: http://localhost:50021
+
 tasks:
   serve:
     desc: start dev server
-    env:
-      MINIO_BUCKET: sample
-      MINIO_HOST: localhost:9000
-      REDIS_HOST: localhost:6379
-      VOICEVOX_BASE_URL: http://localhost:50021
-    cmds:
-      - go run -tags dev . serve
+    cmd: go run -tags dev . serve
 
   collect:
     desc: collect
-    env:
-      MINIO_BUCKET: sample
-      MINIO_HOST: localhost:9000
-      REDIS_HOST: localhost:6379
-      VOICEVOX_BASE_URL: http://localhost:50021
-    cmds:
-      - go run . collect
+    cmd: go run . collect
 
   openapi:
     desc: emit openapi
-    cmds:
-      - go run . emit-openapi > ./admin/openapi.yaml
+    cmd: go run . emit-openapi > ./admin/openapi.yaml
 
   serve-prod:
     desc: serve
-    env:
-      MINIO_BUCKET: sample
-      MINIO_HOST: localhost:9000
-      REDIS_HOST: localhost:6379
-      VOICEVOX_BASE_URL: http://localhost:50021
-    cmds:
-      - speakit serve
+    cmd: speakit serve
 
   collect-prod:
     desc: collect
-    env:
-      MINIO_BUCKET: sample
-      MINIO_HOST: localhost:9000
-      REDIS_HOST: localhost:6379
-      VOICEVOX_BASE_URL: http://localhost:50021
-    cmds:
-      - speakit collect
+    cmd: speakit collect

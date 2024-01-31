@@ -14,7 +14,7 @@ import (
 var emitOpenapiCmd = &cobra.Command{
 	Use:   "emit-openapi",
 	Short: "create openapi.yaml",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		spec := openapi3.T{}
 		spec = configureOpenapi(spec)
 	
@@ -63,8 +63,9 @@ var emitOpenapiCmd = &cobra.Command{
 			RequestSchema:  "convert",
 			ResponseSchema: "empty",
 		})
-	
+
 		writeYaml(spec)
+		return nil
 	},
 }
 
