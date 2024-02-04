@@ -12,20 +12,18 @@ type FeedSchema struct {
 	Url  string `json:"url" validate:"required"`
 }
 
-type FeedsController struct {
-	repos repository.Repos
-}
-
 func NewFeedsController(repos repository.Repos) FeedsController {
 	return FeedsController{
 		repos,
 	}
 }
 
+type FeedsController struct {
+	repos repository.Repos
+}
+
 func (ctl *FeedsController) List(c *fiber.Ctx) error {
-	res := ListSchema[WithMetadata[FeedSchema]]{
-		Items: make([]WithMetadata[FeedSchema], 0),
-	}
+	res := createListResponse[FeedSchema]()
 
 	feedSrv := service.NewFeedSevice(ctl.repos)
 	for _, feed := range feedSrv.List() {
@@ -77,9 +75,7 @@ func (ctl *FeedsController) Create(c *fiber.Ctx) error {
 		Url:  body.Url,
 	})
 
-	return c.JSON(struct {
-		Id string `json:"id"`
-	}{Id: id})
+	return c.JSON(IdSchema{Id: id})
 }
 
 func (ctl *FeedsController) Delete(c *fiber.Ctx) error {

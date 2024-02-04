@@ -13,20 +13,18 @@ type ProgramSchema struct {
 	Converted bool   `json:"converted"`
 }
 
-type ProgramsController struct {
-	repos repository.Repos
-}
-
 func NewProgramsController(repos repository.Repos) ProgramsController {
 	return ProgramsController{
 		repos,
 	}
 }
 
+type ProgramsController struct {
+	repos repository.Repos
+}
+
 func (ctl *ProgramsController) List(c *fiber.Ctx) error {
-	res := ListSchema[WithMetadata[ProgramSchema]]{
-		Items: make([]WithMetadata[ProgramSchema], 0),
-	}
+	res := createListResponse[ProgramSchema]()
 
 	programSrv := service.NewProgramService(ctl.repos)
 	for _, program := range programSrv.List() {
