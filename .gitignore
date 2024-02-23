@@ -10,3 +10,4 @@ openapi.yaml
 
 docker/minio/data
 docker/redis/data
+tmp

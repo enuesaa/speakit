@@ -10,11 +10,11 @@ func main() {
 	app := &cobra.Command{
 		Use:     "speakit",
 		Short:   "Toy app to read aloud rss feed",
-		Version: "0.0.2",
+		Version: "0.0.3",
 	}
-	app.AddCommand(emitOpenapiCmd)
+	app.AddCommand(collectCmd) // deprecated
 	app.AddCommand(serveCmd)
-	app.AddCommand(collectCmd)
+	app.AddCommand(emitOpenapiCmd)
 
 	// disable default
 	app.SetHelpCommand(&cobra.Command{Hidden: true})
@@ -24,6 +24,7 @@ func main() {
 	app.PersistentFlags().SortFlags = false
 	app.PersistentFlags().BoolP("help", "", false, "Show help information")
 	app.PersistentFlags().BoolP("version", "", false, "Show version")
+
 	if err := app.Execute(); err != nil {
 		log.Fatalf("Error: %s", err.Error())
 	}
