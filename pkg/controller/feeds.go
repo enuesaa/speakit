@@ -3,7 +3,6 @@ package controller
 import (
 	"github.com/enuesaa/speakit/pkg/repository"
 	"github.com/enuesaa/speakit/pkg/service"
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -23,12 +22,11 @@ type FeedsController struct {
 }
 
 func (ctl *FeedsController) List(c *fiber.Ctx) error {
-	res := createListResponse[FeedSchema]()
-	c.Locals("data", "a")
-
 	feedSrv := service.NewFeedSevice(ctl.repos)
+
+	items := make([]WithMetadata[FeedSchema], 0)
 	for _, feed := range feedSrv.List() {
-		res.Items = append(res.Items, WithMetadata[FeedSchema]{
+		items = append(items, WithMetadata[FeedSchema]{
 			Id: feed.Id,
 			Data: FeedSchema{
 				Name: feed.Name,
@@ -38,8 +36,7 @@ func (ctl *FeedsController) List(c *fiber.Ctx) error {
 			Modified: "",
 		})
 	}
-
-	return c.JSON(res)
+	return WithItems(c, items)
 }
 
 func (ctl *FeedsController) Get(c *fiber.Ctx) error {
@@ -57,17 +54,13 @@ func (ctl *FeedsController) Get(c *fiber.Ctx) error {
 		Modified: "",
 	}
 
-	return c.JSON(res)
+	return WithData(c, res)
 }
 
 func (ctl *FeedsController) Create(c *fiber.Ctx) error {
 	body := new(FeedSchema)
-	if err := c.BodyParser(body); err != nil {
+	if err := Validate(c, &body); err != nil {
 		return err
-	}
-	validate := validator.New()
-	if err := validate.Struct(body); err != nil {
-		return err.(validator.ValidationErrors)
 	}
 
 	feedSrv := service.NewFeedSevice(ctl.repos)
@@ -76,7 +69,7 @@ func (ctl *FeedsController) Create(c *fiber.Ctx) error {
 		Url:  body.Url,
 	})
 
-	return c.JSON(IdSchema{Id: id})
+	return WithData(c, IdSchema{Id: id})
 }
 
 func (ctl *FeedsController) Delete(c *fiber.Ctx) error {
@@ -85,21 +78,17 @@ func (ctl *FeedsController) Delete(c *fiber.Ctx) error {
 	feedSrv := service.NewFeedSevice(ctl.repos)
 	feedSrv.Delete(id)
 
-	return c.JSON(EmptySchema{})
+	return WithData(c, EmptySchema{})
 }
 
 type FeedfetchSchema struct{}
 
 func (ctl *FeedsController) Fetch(c *fiber.Ctx) error {
+	id := c.Params("id")
 	body := new(FeedfetchSchema)
-	if err := c.BodyParser(body); err != nil {
+	if err := Validate(c, &body); err != nil {
 		return err
 	}
-	validate := validator.New()
-	if err := validate.Struct(body); err != nil {
-		return err.(validator.ValidationErrors)
-	}
-	id := c.Params("id")
 
 	feedSrv := service.NewFeedSevice(ctl.repos)
 	programSrv := service.NewProgramService(ctl.repos)
@@ -116,5 +105,5 @@ func (ctl *FeedsController) Fetch(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(EmptySchema{})
+	return WithData(c, EmptySchema{})
 }

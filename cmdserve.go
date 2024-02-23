@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/enuesaa/speakit/admin"
 	"github.com/enuesaa/speakit/pkg/controller"
 	"github.com/enuesaa/speakit/pkg/repository"
@@ -21,18 +19,7 @@ var serveCmd = &cobra.Command{
 		app := fiber.New()
 		app.Use(cors.New())
 		app.Use(logger.New())
-
-		app.Use(func(c *fiber.Ctx) error {
-			if err := c.Next(); err != nil {
-				return err
-			}
-			fmt.Println(c.Locals("data"))
-			body := c.Response().Body()
-			fmt.Printf("%s\n", string(body))
-			c.JSON("{}")
-			c.Set("X-Custom-Header", "Hello, World")
-			return nil
-		})
+		app.Use(controller.HandleData)
 
 		feeds := controller.NewFeedsController(repos)
 		app.Get("/api/feeds", feeds.List)

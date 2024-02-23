@@ -3,7 +3,6 @@ package controller
 import (
 	"github.com/enuesaa/speakit/pkg/repository"
 	"github.com/enuesaa/speakit/pkg/service"
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -24,11 +23,11 @@ type ProgramsController struct {
 }
 
 func (ctl *ProgramsController) List(c *fiber.Ctx) error {
-	res := createListResponse[ProgramSchema]()
-
 	programSrv := service.NewProgramService(ctl.repos)
+
+	items := make([]WithMetadata[ProgramSchema], 0)
 	for _, program := range programSrv.List() {
-		res.Items = append(res.Items, WithMetadata[ProgramSchema]{
+		items = append(items, WithMetadata[ProgramSchema]{
 			Id: program.Id,
 			Data: ProgramSchema{
 				Title:     program.Title,
@@ -40,7 +39,7 @@ func (ctl *ProgramsController) List(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(res)
+	return WithItems(c, items)
 }
 
 func (ctl *ProgramsController) Get(c *fiber.Ctx) error {
@@ -59,7 +58,7 @@ func (ctl *ProgramsController) Get(c *fiber.Ctx) error {
 		Modified: "",
 	}
 
-	return c.JSON(res)
+	return WithData(c, res)
 }
 
 func (ctl *ProgramsController) Delete(c *fiber.Ctx) error {
@@ -68,26 +67,22 @@ func (ctl *ProgramsController) Delete(c *fiber.Ctx) error {
 	programSrv := service.NewProgramService(ctl.repos)
 	programSrv.Delete(id)
 
-	return c.JSON(EmptySchema{})
+	return WithData(c, EmptySchema{})
 }
 
 type ConvertSchema struct{}
 
 func (ctl *ProgramsController) Convert(c *fiber.Ctx) error {
+	id := c.Params("id")
 	body := new(ConvertSchema)
-	if err := c.BodyParser(body); err != nil {
+	if err := Validate(c, &body); err != nil {
 		return err
 	}
-	validate := validator.New()
-	if err := validate.Struct(body); err != nil {
-		return err.(validator.ValidationErrors)
-	}
-	id := c.Params("id")
 
 	programSrv := service.NewProgramService(ctl.repos)
 	programSrv.Convert(id)
 
-	return c.JSON(EmptySchema{})
+	return WithData(c, EmptySchema{})
 }
 
 func (ctl *ProgramsController) GetAudio(c *fiber.Ctx) error {
@@ -96,7 +91,7 @@ func (ctl *ProgramsController) GetAudio(c *fiber.Ctx) error {
 
 	obj, err := programsSrv.Download(id)
 	if err != nil {
-		return c.JSON(EmptySchema{})
+		return WithData(c, EmptySchema{})
 	}
 
 	c.Response().SetBodyRaw([]byte(obj))
