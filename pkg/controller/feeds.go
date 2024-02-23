@@ -24,6 +24,7 @@ type FeedsController struct {
 
 func (ctl *FeedsController) List(c *fiber.Ctx) error {
 	res := createListResponse[FeedSchema]()
+	c.Locals("data", "a")
 
 	feedSrv := service.NewFeedSevice(ctl.repos)
 	for _, feed := range feedSrv.List() {
