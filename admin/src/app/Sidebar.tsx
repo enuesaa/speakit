@@ -10,7 +10,7 @@ export const Sidebar = () => {
         <Link href='/'><AiFillHome /></Link>
       </h1>
       <div className={styles.sideLinks}>
-        <Link href='/feeds'>Feeds</Link>
+        {/* <Link href='/feeds'>Feeds</Link> */}
         <Link href='/programs'>Programs</Link>
       </div>
     </nav>
