@@ -12,7 +12,7 @@ services:
 
   admin:
     build:
-      context: admin
+      context: .
       dockerfile: admin/Dockerfile
     ports:
       - 3000:3000

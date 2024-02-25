@@ -1,6 +1,6 @@
 // see https://github.com/anymaniax/orval/blob/master/samples/react-query/custom-client/src/api/mutator/custom-client.ts
 
-const baseurl = 'http://localhost:3000/api'
+const baseurl = 'http://app:3000/api'
 
 type Args = {
   url: string

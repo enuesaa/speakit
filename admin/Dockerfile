@@ -2,7 +2,7 @@ FROM node:20
 
 WORKDIR /app
 
-COPY . .
+COPY admin .
 
 RUN npm install -g pnpm
 RUN pnpm install
