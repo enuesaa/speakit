@@ -7,6 +7,7 @@
     "gen:openapi": "orval --config ./orval.config.ts",
     "dev": "next dev --port 3001",
     "build": "next build",
+    "start": "next start",
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {

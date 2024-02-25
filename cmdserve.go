@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/enuesaa/speakit/admin"
 	"github.com/enuesaa/speakit/pkg/controller"
 	"github.com/enuesaa/speakit/pkg/repository"
 	"github.com/gofiber/fiber/v2"
@@ -46,7 +45,6 @@ var serveCmd = &cobra.Command{
 		app.Delete("/api/programs/:id", programs.Delete)
 		app.Post("/api/programs/:id/convert", programs.Convert)
 		app.Get("/api/programs/:id/audio", programs.GetAudio)
-		app.Get("/*", admin.Serve)
 
 		return app.Listen(":3000")
 	},

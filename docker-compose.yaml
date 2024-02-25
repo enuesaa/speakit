@@ -5,30 +5,26 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - 3000:3000
-    tty: true
     depends_on:
       - voicevox
       - redis
+    tty: true
 
-  # admin:
-  #   build:
-  #     context: .
-  #     dockerfile: admin/Dockerfile
-  #   ports:
-  #     - 3000:3000
-  #   tty: true
+  admin:
+    build:
+      context: admin
+      dockerfile: admin/Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - app
+    tty: true
 
   voicevox:
     image: voicevox/voicevox_engine
-    ports:
-      - 50021:50021
     tty: true
 
   redis:
     image: redis
-    ports:
-      - 6379:6379
     volumes:
       - ./docker/redis/data:/data
