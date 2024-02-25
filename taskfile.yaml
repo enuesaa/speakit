@@ -1,18 +1,14 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
 
-env:
-  REDIS_HOST: localhost:6379
-  VOICEVOX_BASE_URL: http://localhost:50021
-
 tasks:
   collect:
     desc: collect
-    cmd: go run . collect
+    cmd: go run . collect --redis localhost:6379 --voicevox localhost:50021
 
   serve:
     desc: start dev server
-    cmd: go run -tags dev . serve
+    cmd: go run -tags dev . serve --redis localhost:6379 --voicevox localhost:50021
 
   openapi:
     desc: emit openapi

@@ -8,11 +8,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// TODO: refactor
+func init() {
+	collectCmd.Flags().StringVar(&redisHost, "redis", "localhost:6379", "redis host")
+	collectCmd.Flags().StringVar(&voicevoxHost, "voicevox", "localhost:50021", "voicevox host")
+}
+
 var collectCmd = &cobra.Command{
 	Use:   "collect",
 	Short: "collect",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		repos := repository.NewRepos()
+		env := repository.Env{
+			REDIS_HOST:    redisHost,
+			VOICEVOX_HOST: voicevoxHost,
+		}
+		repos := repository.NewRepos(env)
 		feedSrv := service.NewFeedSevice(repos)
 		programSrv := service.NewProgramService(repos)
 

@@ -1,10 +1,12 @@
 package repository
 
-import "os"
+import (
+	"fmt"
+)
 
 type Env struct {
 	REDIS_HOST   string
-	VOICEVOX_BASE_URL string
+	VOICEVOX_HOST string
 }
 
 type Repos struct {
@@ -14,19 +16,14 @@ type Repos struct {
 	Fs       FsRepositoryInterface
 }
 
-func NewRepos() Repos {
-	env := Env{
-		REDIS_HOST:   os.Getenv("REDIS_HOST"),
-		VOICEVOX_BASE_URL: os.Getenv("VOICEVOX_BASE_URL"),
-	}
-
+func NewRepos(env Env) Repos {
 	return Repos{
 		Redis: &RedisRepository{
 			Addr: env.REDIS_HOST,
 		},
 		Storage: &StoragefsRepository{},
 		Voicevox: &VoicevoxRepository{
-			BaseUrl: env.VOICEVOX_BASE_URL,
+			BaseUrl: fmt.Sprintf("https://%s", env.VOICEVOX_HOST),
 		},
 		Fs:       &FsRepository{},
 	}
