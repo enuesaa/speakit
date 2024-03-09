@@ -15,6 +15,7 @@ func main() {
 	app.AddCommand(collectCmd) // deprecated
 	app.AddCommand(serveCmd)
 	app.AddCommand(emitOpenapiCmd)
+	app.AddCommand(speakCmd) // PoC
 
 	// disable default
 	app.SetHelpCommand(&cobra.Command{Hidden: true})
