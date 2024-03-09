@@ -10,11 +10,11 @@ import (
 )
 
 var redisHost string
-var voicevoxHost string
+var voicevoxBaseUrl string
 
 func init() {
 	serveCmd.Flags().StringVar(&redisHost, "redis", "localhost:6379", "redis host")
-	serveCmd.Flags().StringVar(&voicevoxHost, "voicevox", "localhost:50021", "voicevox host")
+	serveCmd.Flags().StringVar(&voicevoxBaseUrl, "voicevox", "http://localhost:50021", "voicevox host")
 }
 
 var serveCmd = &cobra.Command{
@@ -23,7 +23,7 @@ var serveCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		env := repository.Env{
 			REDIS_HOST:    redisHost,
-			VOICEVOX_HOST: voicevoxHost,
+			VOICEVOX_BASE_URL: voicevoxBaseUrl,
 		}
 		repos := repository.NewRepos(env)
 

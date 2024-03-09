@@ -1,12 +1,8 @@
 package repository
 
-import (
-	"fmt"
-)
-
 type Env struct {
 	REDIS_HOST   string
-	VOICEVOX_HOST string
+	VOICEVOX_BASE_URL string
 }
 
 type Repos struct {
@@ -23,8 +19,8 @@ func NewRepos(env Env) Repos {
 		},
 		Storage: &StoragefsRepository{},
 		Voicevox: &VoicevoxRepository{
-			BaseUrl: fmt.Sprintf("https://%s", env.VOICEVOX_HOST),
+			BaseUrl: env.VOICEVOX_BASE_URL,
 		},
-		Fs:       &FsRepository{},
+		Fs: &FsRepository{},
 	}
 }

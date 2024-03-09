@@ -79,3 +79,11 @@ func (srv *ProgramService) Convert(id string) error {
 	}
 	return srv.Upload(id, converted)
 }
+
+func (srv *ProgramService) TryConvert(text string) (string, error) {
+	audioquery, err := srv.repos.Voicevox.AudioQuery(text)
+	if err != nil {
+		return "", err
+	}
+	return srv.repos.Voicevox.Synthesis(audioquery)
+}

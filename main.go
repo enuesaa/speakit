@@ -12,10 +12,9 @@ func main() {
 		Short:   "Toy app to read aloud rss feed",
 		Version: "0.0.3",
 	}
-	app.AddCommand(collectCmd) // deprecated
+	app.AddCommand(collectCmd) // poc
 	app.AddCommand(serveCmd)
 	app.AddCommand(emitOpenapiCmd)
-	app.AddCommand(speakCmd) // PoC
 
 	// disable default
 	app.SetHelpCommand(&cobra.Command{Hidden: true})
