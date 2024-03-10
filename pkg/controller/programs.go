@@ -74,7 +74,7 @@ type ConvertSchema struct{}
 
 func (ctl *ProgramsController) Convert(c *fiber.Ctx) error {
 	id := c.Params("id")
-	body := new(ConvertSchema)
+	body := ConvertSchema{}
 	if err := Validate(c, &body); err != nil {
 		return err
 	}

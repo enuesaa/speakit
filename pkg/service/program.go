@@ -22,7 +22,7 @@ func NewProgramService(repos repository.Repos) ProgramService {
 }
 
 func (srv *ProgramService) List() []Program {
-	ids := srv.repos.Data.Keys("programs:*")
+	ids := srv.repos.Data.Keys("programs:")
 	list := make([]Program, 0)
 
 	for _, id := range ids {

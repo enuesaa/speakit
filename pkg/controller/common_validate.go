@@ -12,7 +12,7 @@ func Validate(c *fiber.Ctx, body interface{}) error {
 
 	validate := validator.New()
 	if err := validate.Struct(body); err != nil {
-		return err.(validator.ValidationErrors)
+		return err.(*validator.InvalidValidationError)
 	}
 
 	return nil

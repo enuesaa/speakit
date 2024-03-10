@@ -58,7 +58,7 @@ func (ctl *FeedsController) Get(c *fiber.Ctx) error {
 }
 
 func (ctl *FeedsController) Create(c *fiber.Ctx) error {
-	body := new(FeedSchema)
+	body := FeedSchema{}
 	if err := Validate(c, &body); err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ type FeedfetchSchema struct{}
 
 func (ctl *FeedsController) Fetch(c *fiber.Ctx) error {
 	id := c.Params("id")
-	body := new(FeedfetchSchema)
+	body := FeedfetchSchema{}
 	if err := Validate(c, &body); err != nil {
 		return err
 	}
