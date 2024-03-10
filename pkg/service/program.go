@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/enuesaa/speakit/pkg/repository"
 )
 
@@ -59,6 +61,7 @@ func (srv *ProgramService) Upload(id string, body string) error {
 func (srv *ProgramService) AddConvertedFlag(id string) {
 	program := srv.Get(id)
 	program.Converted = true
+	fmt.Printf("flag: %+v\n", program)
 	srv.repos.Data.Set("programs:"+id, toJson(program))
 }
 
@@ -77,6 +80,7 @@ func (srv *ProgramService) Convert(id string) error {
 	if err != nil {
 		return err
 	}
+	fmt.Printf("converted: %s\n", id)
 	return srv.Upload(id, converted)
 }
 

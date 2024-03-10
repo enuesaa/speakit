@@ -80,7 +80,9 @@ func (ctl *ProgramsController) Convert(c *fiber.Ctx) error {
 	}
 
 	programSrv := service.NewProgramService(ctl.repos)
-	programSrv.Convert(id)
+	if err := programSrv.Convert(id); err != nil {
+		return err
+	}
 
 	return WithData(c, EmptySchema{})
 }
