@@ -1,22 +1,21 @@
 package repository
 
 type Env struct {
-	REDIS_HOST   string
 	VOICEVOX_BASE_URL string
 }
 
 type Repos struct {
+	Data     DataRepositoryInterface
 	Storage  StorageRepositoryInterface
 	Voicevox VoicevoxRepositoryInterface
-	Fs       FsRepositoryInterface
 }
 
 func NewRepos(env Env) Repos {
 	return Repos{
-		Storage: &StoragefsRepository{},
+		Data: &DataRepository{},
+		Storage: &StorageRepository{},
 		Voicevox: &VoicevoxRepository{
 			BaseUrl: env.VOICEVOX_BASE_URL,
 		},
-		Fs: &FsRepository{},
 	}
 }

@@ -25,7 +25,7 @@ func NewFeedSevice(repos repository.Repos) FeedService {
 }
 
 func (srv *FeedService) List() []Feed {
-	keys := srv.repos.Redis.Keys("feeds:*")
+	keys := srv.repos.Data.Keys("feeds:")
 	list := make([]Feed, 0)
 
 	for _, key := range keys {
@@ -35,19 +35,19 @@ func (srv *FeedService) List() []Feed {
 }
 
 func (srv *FeedService) Get(id string) Feed {
-	value := srv.repos.Redis.Get("feeds:" + id)
+	value := srv.repos.Data.Get("feeds:" + id)
 
 	return parseJson[Feed](value)
 }
 
 func (srv *FeedService) Create(feed Feed) string {
 	feed.Id = createId()
-	srv.repos.Redis.Set("feeds:"+feed.Id, toJson(feed))
+	srv.repos.Data.Set("feeds:"+feed.Id, toJson(feed))
 	return feed.Id
 }
 
 func (srv *FeedService) Delete(id string) {
-	srv.repos.Redis.Delete("feeds:" + id)
+	srv.repos.Data.Delete("feeds:" + id)
 }
 
 func (srv *FeedService) Refetch(id string) (*Realfeed, error) {

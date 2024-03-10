@@ -22,7 +22,7 @@ func NewProgramService(repos repository.Repos) ProgramService {
 }
 
 func (srv *ProgramService) List() []Program {
-	ids := srv.repos.Redis.Keys("programs:*")
+	ids := srv.repos.Data.Keys("programs:*")
 	list := make([]Program, 0)
 
 	for _, id := range ids {
@@ -33,19 +33,19 @@ func (srv *ProgramService) List() []Program {
 
 // TODO: should return error
 func (srv *ProgramService) Get(id string) Program {
-	value := srv.repos.Redis.Get("programs:" + id)
+	value := srv.repos.Data.Get("programs:" + id)
 	return parseJson[Program](value)
 }
 
 func (srv *ProgramService) Create(program Program) string {
 	program.Id = createId()
 	// srv.repos.Storage.Upload(id+".wav", body)
-	srv.repos.Redis.Set("programs:"+program.Id, toJson(program))
+	srv.repos.Data.Set("programs:"+program.Id, toJson(program))
 	return program.Id
 }
 
 func (srv *ProgramService) Delete(id string) {
-	srv.repos.Redis.Delete("programs:" + id)
+	srv.repos.Data.Delete("programs:" + id)
 }
 
 func (srv *ProgramService) Upload(id string, body string) error {
@@ -59,7 +59,7 @@ func (srv *ProgramService) Upload(id string, body string) error {
 func (srv *ProgramService) AddConvertedFlag(id string) {
 	program := srv.Get(id)
 	program.Converted = true
-	srv.repos.Redis.Set("programs:"+id, toJson(program))
+	srv.repos.Data.Set("programs:"+id, toJson(program))
 }
 
 func (srv *ProgramService) Download(id string) (string, error) {
