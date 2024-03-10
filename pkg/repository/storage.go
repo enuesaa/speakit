@@ -1,12 +1,10 @@
 package repository
 
 import (
-	"context"
+	"fmt"
 	"io"
-	"strings"
-
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/credentials"
+	"os"
+	"path/filepath"
 )
 
 type StorageRepositoryInterface interface {
@@ -14,48 +12,34 @@ type StorageRepositoryInterface interface {
 	Download(key string) (string, error)
 }
 
-type StorageRepository struct {
-	Bucket   string
-	Endpoint string
-}
+type StoragefsRepository struct {}
 
-func (repo *StorageRepository) client() (*minio.Client, error) {
-	return minio.New(repo.Endpoint, &minio.Options{
-		Creds: credentials.NewEnvMinio(),
-	})
-}
-
-func (repo *StorageRepository) Upload(key string, value string) error {
-	client, err := repo.client()
+func (repo *StoragefsRepository) Upload(key string, value string) error {
+	path := fmt.Sprintf("./tmp/%s", key)
+	if err := os.MkdirAll(filepath.Dir(path), os.ModePerm); err != nil {
+		return err
+	}
+	file, err := os.Create(path)
 	if err != nil {
 		return err
 	}
-
-	ctx := context.Background()
-	reader := strings.NewReader(value)
-	size := reader.Size()
-	options := minio.PutObjectOptions{}
-	if _, err := client.PutObject(ctx, repo.Bucket, key, reader, size, options); err != nil {
+	defer file.Close()
+	if _, err := file.Write([]byte(value)); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (repo *StorageRepository) Download(key string) (string, error) {
-	client, err := repo.client()
+func (repo *StoragefsRepository) Download(key string) (string, error) {
+	path := fmt.Sprintf("./tmp/%s", key)
+	f, err := os.Open(path)
 	if err != nil {
 		return "", err
 	}
-
-	ctx := context.Background()
-	options := minio.GetObjectOptions{}
-	obj, err := client.GetObject(ctx, repo.Bucket, key, options)
+	defer f.Close()
+	body, err := io.ReadAll(f)
 	if err != nil {
 		return "", err
 	}
-	value, err := io.ReadAll(obj)
-	if err != nil {
-		return "", err
-	}
-	return string(value), nil
+	return string(body), nil
 }

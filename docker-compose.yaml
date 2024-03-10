@@ -1,32 +1,8 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 3001:3000
-    depends_on:
-      - voicevox
-      - redis
-    tty: true
-
-  admin:
-    build:
-      context: .
-      dockerfile: admin/Dockerfile
-    ports:
-      - 3000:3000
-    tty: true
-
   voicevox:
     image: voicevox/voicevox_engine
     ports:
       - 50021:50021
     tty: true
-
-  redis:
-    image: redis
-    volumes:
-      - ./docker/redis/data:/data

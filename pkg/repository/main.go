@@ -6,7 +6,6 @@ type Env struct {
 }
 
 type Repos struct {
-	Redis    RedisRepositoryInterface
 	Storage  StorageRepositoryInterface
 	Voicevox VoicevoxRepositoryInterface
 	Fs       FsRepositoryInterface
@@ -14,9 +13,6 @@ type Repos struct {
 
 func NewRepos(env Env) Repos {
 	return Repos{
-		Redis: &RedisRepository{
-			Addr: env.REDIS_HOST,
-		},
 		Storage: &StoragefsRepository{},
 		Voicevox: &VoicevoxRepository{
 			BaseUrl: env.VOICEVOX_BASE_URL,

@@ -9,11 +9,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var redisHost string
 var voicevoxBaseUrl string
 
 func init() {
-	serveCmd.Flags().StringVar(&redisHost, "redis", "localhost:6379", "redis host")
 	serveCmd.Flags().StringVar(&voicevoxBaseUrl, "voicevox", "http://localhost:50021", "voicevox host")
 }
 
@@ -22,7 +20,6 @@ var serveCmd = &cobra.Command{
 	Short: "serve",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		env := repository.Env{
-			REDIS_HOST:    redisHost,
 			VOICEVOX_BASE_URL: voicevoxBaseUrl,
 		}
 		repos := repository.NewRepos(env)
