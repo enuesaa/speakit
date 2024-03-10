@@ -13,7 +13,7 @@ func main() {
 		Version: "0.0.3",
 	}
 	app.AddCommand(serveCmd)
-	app.AddCommand(emitOpenapiCmd)
+	// app.AddCommand(emitOpenapiCmd)
 
 	// disable default
 	app.SetHelpCommand(&cobra.Command{Hidden: true})
