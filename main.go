@@ -12,7 +12,6 @@ func main() {
 		Short:   "Toy app to read aloud rss feed",
 		Version: "0.0.3",
 	}
-	app.AddCommand(collectCmd) // poc
 	app.AddCommand(serveCmd)
 	app.AddCommand(emitOpenapiCmd)
 
