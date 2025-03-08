@@ -1,7 +1,6 @@
 package repository
 
 type Env struct {
-	VOICEVOX_BASE_URL string
 	OPENAI_API_KEY string
 }
 

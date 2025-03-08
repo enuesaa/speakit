@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"slices"
 	"strings"
 )
 
@@ -17,11 +18,13 @@ type DataRepository struct {
 
 func (repo *DataRepository) Keys(pattern string) []string {
 	list := make([]string, 0)
-	for key, _ := range repo.Items {
+	for key := range repo.Items {
 		if strings.HasPrefix(key, pattern) {
 			list = append(list, key)
 		}
 	}
+	slices.Sort(list)
+
 	return list
 }
 
