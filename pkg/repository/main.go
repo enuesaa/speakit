@@ -2,12 +2,13 @@ package repository
 
 type Env struct {
 	VOICEVOX_BASE_URL string
+	OPENAI_API_KEY string
 }
 
 type Repos struct {
 	Data     DataRepositoryInterface
 	Storage  StorageRepositoryInterface
-	Voicevox VoicevoxRepositoryInterface
+	OpenAI   OpenAIRepositoryInterface
 }
 
 func NewRepos(env Env) Repos {
@@ -18,8 +19,8 @@ func NewRepos(env Env) Repos {
 		Storage: &StorageRepository{
 			Items: make(map[string]string),
 		},
-		Voicevox: &VoicevoxRepository{
-			BaseUrl: env.VOICEVOX_BASE_URL,
+		OpenAI: &OpenAIRepository{
+			APIKey: env.OPENAI_API_KEY,
 		},
 	}
 }

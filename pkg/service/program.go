@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/enuesaa/speakit/pkg/repository"
 )
@@ -72,22 +73,16 @@ func (srv *ProgramService) Download(id string) (string, error) {
 func (srv *ProgramService) Convert(id string) error {
 	program := srv.Get(id)
 
-	audioquery, err := srv.repos.Voicevox.AudioQuery(program.Title)
-	if err != nil {
-		return err
-	}
-	converted, err := srv.repos.Voicevox.Synthesis(audioquery)
+	converted, err := srv.repos.OpenAI.Speech(program.Title)
 	if err != nil {
 		return err
 	}
 	fmt.Printf("converted: %s\n", id)
-	return srv.Upload(id, converted)
-}
 
-func (srv *ProgramService) TryConvert(text string) (string, error) {
-	audioquery, err := srv.repos.Voicevox.AudioQuery(text)
+	data, err := io.ReadAll(converted)
 	if err != nil {
-		return "", err
+		return err
 	}
-	return srv.repos.Voicevox.Synthesis(audioquery)
+
+	return srv.Upload(id, string(data))
 }
