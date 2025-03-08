@@ -25,6 +25,7 @@ jobs:
 
       - run: go generate ./...
       - run: go install
+
       - uses: goreleaser/goreleaser-action@v5
         with:
           version: latest
