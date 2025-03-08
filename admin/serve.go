@@ -24,6 +24,9 @@ func ServeDist(c *fiber.Ctx) error {
 		path += "index.html"
 	}
 
+	if _, err := dist.ReadFile(path); err != nil {
+		path = "dist/index.html"
+	}
 	f, err := dist.ReadFile(path)
 	if err != nil {
 		return err
