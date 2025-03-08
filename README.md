@@ -7,7 +7,5 @@ Toy app to read aloud rss feed.
 - で、要約とかもして欲しい
 
 ## Future plan
-- 読み上げ方法の変更. OpenAI Whisper を使えないか
-- UI をなくす
-  - 普通のスピーカーで流せないか
-  - もしくは Podcast のように。
+- OpenAI Speech To Text で読み上げる
+- UI の簡素化
