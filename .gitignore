@@ -6,6 +6,7 @@
 
 # app
 *.wav
+*.mp3
 openapi.yaml
 
 tmp
