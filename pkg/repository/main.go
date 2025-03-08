@@ -16,7 +16,7 @@ func NewRepos(env Env) Repos {
 			Items: make(map[string]string),
 		},
 		Storage: &StorageRepository{
-			Items: make(map[string]string),
+			Items: make(map[string][]byte),
 		},
 		OpenAI: &OpenAIRepository{
 			APIKey: env.OPENAI_API_KEY,

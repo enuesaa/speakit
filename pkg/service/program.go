@@ -51,8 +51,8 @@ func (srv *ProgramService) Delete(id string) {
 	srv.repos.Data.Delete("programs:" + id)
 }
 
-func (srv *ProgramService) Upload(id string, body string) error {
-	if err := srv.repos.Storage.Upload(id+".mp3", body); err != nil {
+func (srv *ProgramService) Upload(id string, body []byte) error {
+	if err := srv.repos.Storage.Upload(id, body); err != nil {
 		return err
 	}
 	srv.AddConvertedFlag(id)
@@ -66,8 +66,8 @@ func (srv *ProgramService) AddConvertedFlag(id string) {
 	srv.repos.Data.Set("programs:"+id, toJson(program))
 }
 
-func (srv *ProgramService) Download(id string) (string, error) {
-	return srv.repos.Storage.Download(id + ".mp3")
+func (srv *ProgramService) Download(id string) ([]byte, error) {
+	return srv.repos.Storage.Download(id)
 }
 
 func (srv *ProgramService) Convert(id string) error {
@@ -84,5 +84,5 @@ func (srv *ProgramService) Convert(id string) error {
 		return err
 	}
 
-	return srv.Upload(id, string(data))
+	return srv.Upload(id, data)
 }
