@@ -11,5 +11,5 @@ export default {
     ':hover': {
       background: '#4338ca',
     },
-  })
+  }),
 }

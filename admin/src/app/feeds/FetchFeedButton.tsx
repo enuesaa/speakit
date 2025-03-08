@@ -12,6 +12,8 @@ export const FetchFeedButton = ({ id }: { id: string }) => {
   }
 
   return (
-    <button onClick={handleFeedFetch} className={styles.main}>fetch</button>
+    <button onClick={handleFeedFetch} className={styles.main}>
+      fetch
+    </button>
   )
 }

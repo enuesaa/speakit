@@ -11,7 +11,7 @@ export default function Page() {
     <>
       <PageTitle title='Feeds' />
       <AddFeedArea />
-      {data?.items?.map((v,i) => (
+      {data?.items?.map((v, i) => (
         <FeedCard key={i} name={v.data?.name ?? ''} url={v.data?.url ?? ''} id={v.id ?? ''} />
       ))}
     </>

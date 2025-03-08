@@ -5,9 +5,9 @@ type Env struct {
 }
 
 type Repos struct {
-	Data     DataRepositoryInterface
-	Storage  StorageRepositoryInterface
-	OpenAI   OpenAIRepositoryInterface
+	Data    DataRepositoryInterface
+	Storage StorageRepositoryInterface
+	OpenAI  OpenAIRepositoryInterface
 }
 
 func NewRepos(env Env) Repos {

@@ -1,6 +1,0 @@
-services:
-  voicevox:
-    image: voicevox/voicevox_engine
-    ports:
-      - 50021:50021
-    tty: true

@@ -7,7 +7,9 @@ export const Sidebar = () => {
     <nav className={styles.main}>
       <h1 className={styles.h1}>
         speakit
-        <Link href='/'><AiFillHome /></Link>
+        <Link href='/'>
+          <AiFillHome />
+        </Link>
       </h1>
       <div className={styles.sideLinks}>
         <Link href='/feeds'>Feeds</Link>

@@ -9,7 +9,7 @@ export default function Page() {
   return (
     <>
       <PageTitle title='Programs' />
-      {data?.items?.map((v,i) => (
+      {data?.items?.map((v, i) => (
         <ProgramCard key={i} id={v.id ?? ''} title={v.data?.title ?? ''} converted={v.data?.converted ?? false} />
       ))}
     </>

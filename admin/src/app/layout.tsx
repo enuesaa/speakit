@@ -9,10 +9,10 @@ const FiraCode = Fira_Code({
   weight: ['400', '500', '700'],
   display: 'swap',
   subsets: ['latin'],
-  variable: '--font-fira-code'
+  variable: '--font-fira-code',
 })
 type Props = {
-  children: ReactNode,
+  children: ReactNode
 }
 export default function Layout({ children }: Props) {
   const client = new QueryClient()
@@ -21,11 +21,9 @@ export default function Layout({ children }: Props) {
     <html lang='ja' className={FiraCode.className}>
       <body>
         <QueryClientProvider client={client}>
-          <main style={{display: 'flex'}}>
+          <main style={{ display: 'flex' }}>
             <Sidebar />
-            <section>
-              {children}
-            </section>
+            <section>{children}</section>
           </main>
         </QueryClientProvider>
       </body>

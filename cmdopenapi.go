@@ -17,7 +17,7 @@ var emitOpenapiCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		spec := openapi3.T{}
 		spec = configureOpenapi(spec)
-	
+
 		spec = appendSchema(spec, "empty", &struct{}{})
 		spec = appendSchema(spec, "feeds", &controller.FeedSchema{})
 		spec = appendSchema(spec, "feeds-with-metadata", &controller.WithMetadata[controller.FeedSchema]{})
@@ -36,14 +36,14 @@ var emitOpenapiCmd = &cobra.Command{
 			PathParams:     []string{"id"},
 			ResponseSchema: "empty",
 		})
-	
+
 		spec = appendSchema(spec, "fetch", &controller.FeedfetchSchema{})
 		spec = appendOperation(spec, "POST", "/feeds/{id}/fetch", OperationConfig{
 			PathParams:     []string{"id"},
 			RequestSchema:  "fetch",
 			ResponseSchema: "empty",
 		})
-	
+
 		spec = appendSchema(spec, "programs-with-metadata", &controller.WithMetadata[controller.ProgramSchema]{})
 		spec = appendOperation(spec, "GET", "/programs", OperationConfig{
 			ListResponseSchema: "programs-with-metadata",
@@ -56,7 +56,7 @@ var emitOpenapiCmd = &cobra.Command{
 			PathParams:     []string{"id"},
 			ResponseSchema: "empty",
 		})
-	
+
 		spec = appendSchema(spec, "convert", &controller.ConvertSchema{})
 		spec = appendOperation(spec, "POST", "/programs/{id}/convert", OperationConfig{
 			PathParams:     []string{"id"},

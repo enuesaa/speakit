@@ -1,12 +1,8 @@
 import styles from './PageTitle.css'
 
 type Props = {
-  title: string;
+  title: string
 }
 export const PageTitle = ({ title }: Props) => {
-  return (
-    <h3 className={styles.main}>
-      {title}
-    </h3>
-  )
+  return <h3 className={styles.main}>{title}</h3>
 }

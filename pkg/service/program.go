@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"io"
 
 	"github.com/enuesaa/speakit/pkg/repository"
@@ -42,7 +41,6 @@ func (srv *ProgramService) Get(id string) Program {
 
 func (srv *ProgramService) Create(program Program) string {
 	program.Id = createId()
-	// srv.repos.Storage.Upload(id+".mp3", body)
 	srv.repos.Data.Set("programs:"+program.Id, toJson(program))
 	return program.Id
 }
@@ -62,7 +60,6 @@ func (srv *ProgramService) Upload(id string, body []byte) error {
 func (srv *ProgramService) AddConvertedFlag(id string) {
 	program := srv.Get(id)
 	program.Converted = true
-	fmt.Printf("flag: %+v\n", program)
 	srv.repos.Data.Set("programs:"+id, toJson(program))
 }
 
@@ -77,12 +74,9 @@ func (srv *ProgramService) Convert(id string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("converted: %s\n", id)
-
 	data, err := io.ReadAll(converted)
 	if err != nil {
 		return err
 	}
-
 	return srv.Upload(id, data)
 }

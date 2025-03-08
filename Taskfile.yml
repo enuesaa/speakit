@@ -2,14 +2,6 @@
 version: '3'
 
 tasks:
-  collect:
-    desc: collect
-    cmd: go run . collect --voicevox localhost:50021
-
-  serve:
-    desc: start dev server
-    cmd: go run -tags dev . serve --voicevox localhost:50021
-
   openapi:
     desc: emit openapi
     cmd: go run . emit-openapi > ./admin/openapi.yaml

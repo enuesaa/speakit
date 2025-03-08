@@ -6,7 +6,7 @@ import { FaTrash } from 'react-icons/fa'
 import styles from './DeleteProgramButton.css'
 
 type Props = {
-  id: string;
+  id: string
 }
 export const DeleteProgramButton = ({ id }: Props) => {
   const queryClient = useQueryClient()
@@ -15,10 +15,12 @@ export const DeleteProgramButton = ({ id }: Props) => {
   const handleDelete: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault()
     await deleteProgram(id)
-    await queryClient.invalidateQueries({queryKey: ['/programs']})
+    await queryClient.invalidateQueries({ queryKey: ['/programs'] })
   }
 
   return (
-    <button onClick={handleDelete} className={styles.main}><FaTrash /></button>
+    <button onClick={handleDelete} className={styles.main}>
+      <FaTrash />
+    </button>
   )
 }

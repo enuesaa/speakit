@@ -4,7 +4,7 @@ import { BsFillPlayFill } from 'react-icons/bs'
 import styles from './PlayStartButton.css'
 import { baseurl } from '@/lib/client'
 
-export const PlayStartButton = ({ id }: {id: string}) => {
+export const PlayStartButton = ({ id }: { id: string }) => {
   const handlePlayStart: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault()
     const res = await fetch(`${baseurl}/programs/${id}/audio`)
@@ -12,13 +12,15 @@ export const PlayStartButton = ({ id }: {id: string}) => {
     const audioContext = new AudioContext()
     const audioBuffer = await audioContext.decodeAudioData(body)
 
-    const source = audioContext.createBufferSource();
+    const source = audioContext.createBufferSource()
     source.buffer = audioBuffer
     source.connect(audioContext.destination)
-    source.start();
+    source.start()
   }
 
   return (
-    <button onClick={handlePlayStart} className={styles.main}><BsFillPlayFill /></button>
+    <button onClick={handlePlayStart} className={styles.main}>
+      <BsFillPlayFill />
+    </button>
   )
 }

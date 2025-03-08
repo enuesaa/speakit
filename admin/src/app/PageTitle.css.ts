@@ -6,5 +6,5 @@ export default {
     fontWeight: 'bold',
     color: '#c7d2fe',
     margin: '20px 0',
-  })
+  }),
 }

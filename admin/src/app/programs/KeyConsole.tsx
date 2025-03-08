@@ -1,5 +1,5 @@
 'use client'
-import {useKey} from 'react-use'
+import { useKey } from 'react-use'
 
 export const KeyConsole = () => {
   useKey('ArrowRight', () => {
