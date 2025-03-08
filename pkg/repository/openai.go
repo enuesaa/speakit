@@ -23,7 +23,7 @@ func (repo *OpenAIRepository) Speech(text string) (io.Reader, error) {
 		Input: text,
 		Voice: openai.VoiceFable,
 		Speed: 1.7,
-		ResponseFormat: openai.SpeechResponseFormatWav,
+		ResponseFormat: openai.SpeechResponseFormatMp3,
 	}
 	res, err := client.CreateSpeech(context.Background(), request)
 	if err != nil {

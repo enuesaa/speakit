@@ -42,7 +42,7 @@ func (srv *ProgramService) Get(id string) Program {
 
 func (srv *ProgramService) Create(program Program) string {
 	program.Id = createId()
-	// srv.repos.Storage.Upload(id+".wav", body)
+	// srv.repos.Storage.Upload(id+".mp3", body)
 	srv.repos.Data.Set("programs:"+program.Id, toJson(program))
 	return program.Id
 }
@@ -52,7 +52,7 @@ func (srv *ProgramService) Delete(id string) {
 }
 
 func (srv *ProgramService) Upload(id string, body string) error {
-	if err := srv.repos.Storage.Upload(id+".wav", body); err != nil {
+	if err := srv.repos.Storage.Upload(id+".mp3", body); err != nil {
 		return err
 	}
 	srv.AddConvertedFlag(id)
@@ -67,7 +67,7 @@ func (srv *ProgramService) AddConvertedFlag(id string) {
 }
 
 func (srv *ProgramService) Download(id string) (string, error) {
-	return srv.repos.Storage.Download(id + ".wav")
+	return srv.repos.Storage.Download(id + ".mp3")
 }
 
 func (srv *ProgramService) Convert(id string) error {

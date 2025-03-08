@@ -10,11 +10,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var voicevoxBaseUrl string
 var openaiApiKey string
 
 func init() {
-	serveCmd.Flags().StringVar(&voicevoxBaseUrl, "voicevox", "http://localhost:50021", "voicevox host")
 	serveCmd.Flags().StringVar(&openaiApiKey, "openai", "", "OpenAI API Key")
 }
 
@@ -23,7 +21,6 @@ var serveCmd = &cobra.Command{
 	Short: "serve",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		env := repository.Env{
-			VOICEVOX_BASE_URL: voicevoxBaseUrl,
 			OPENAI_API_KEY: openaiApiKey,
 		}
 		repos := repository.NewRepos(env)
