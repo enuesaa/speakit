@@ -31,41 +31,47 @@ var speechCmd = &cobra.Command{
 			return err
 		}
 
-		var texts []string
+		prompt := `TTSで読み上げ用のニュース原稿を作ってください。
+出力された原稿をそのまま読み上げます。
+「ニュース番号」はあなたのために振ってます。そのため番号を出力しないでください。
+
+ニュース番組のナレーションのように、自然な話し言葉にしてください。
+1つのニュースにつき50文字程度でポイントをまとめてください。
+要約ではなく、読み上げやすい原稿にしてください。
+タイトルは変えず、内容の要点をまとめてください。
+読み終わったら、次のニュースに続けてください。
+`
 
 		for i, realfeeditem := range realfeed.Items {
-			prompt := fmt.Sprintf(
-				"tssで読み上げるので要約して。話し言葉で。ニュースのナレーターのように。全体で50文字程度。タイトルはあんまり変えないで。要約というよりポイントをまとめて: \nタイトル: %s\n概要: %s",
+			prompt += fmt.Sprintf(
+				"\nニュース%d:%s\n%s\n\n",
+				i,
 				realfeeditem.Title,
 				realfeeditem.Description,
 			)
-			chatres, err := client.CreateChatCompletion(context.Background(), openai.ChatCompletionRequest{
-					Model: openai.GPT3Dot5Turbo,
-					Messages: []openai.ChatCompletionMessage{
-						{
-							Role:    openai.ChatMessageRoleUser,
-							Content: prompt,
-						},
-					},
-				},
-			)
-			if err != nil {
-				return err
-			}
-			
-			text := chatres.Choices[0].Message.Content
-			fmt.Println(text)
-			texts = append(texts, text)
-
 			if i > 5 {
 				break
 			}	
 		}
+		fmt.Println(prompt)
 
-		text := ""
-		for _, t := range texts {
-			text += t
+		chatres, err := client.CreateChatCompletion(context.Background(), openai.ChatCompletionRequest{
+				Model: openai.GPT3Dot5Turbo,
+				Messages: []openai.ChatCompletionMessage{
+					{
+						Role:    openai.ChatMessageRoleUser,
+						Content: prompt,
+					},
+				},
+			},
+		)
+		if err != nil {
+			return err
 		}
+		text := chatres.Choices[0].Message.Content
+		fmt.Printf("\n\n")
+		fmt.Println(text)
+
 		request := openai.CreateSpeechRequest{
 			Model: openai.TTSModel1,
 			Input: text,
