@@ -7,5 +7,7 @@ Toy app to read aloud rss feed.
 - で、要約とかもして欲しい
 
 ## Future plan
-- OpenAI Speech To Text で読み上げる
 - UI の簡素化
+  - 話しているように？
+- 次へ
+- 深掘り
