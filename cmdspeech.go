@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -19,6 +20,15 @@ func init() {
 	speechCmd.Flags().StringVar(&rssfeed, "rss", "", "")
 }
 
+type SpeechItem struct {
+	Site string `json:"site"`
+	Title string `json:"title"`
+	Description string `json:"description"`
+}
+type SpeechItems struct {
+	News []SpeechItem `json:"news"`
+}
+
 var speechCmd = &cobra.Command{
 	Use:   "speech",
 	Short: "speech",
@@ -31,28 +41,38 @@ var speechCmd = &cobra.Command{
 			return err
 		}
 
-		prompt := `TTSで読み上げ用のニュース原稿を作ってください。
-出力された原稿をそのまま読み上げます。
-「ニュース番号」はあなたのために振ってます。そのため番号を出力しないでください。
+		prompt := `読み上げ原稿を作って下さい。
 
-ニュース番組のナレーションのように、自然な話し言葉にしてください。
-1つのニュースにつき50文字程度でポイントをまとめてください。
-要約ではなく、読み上げやすい原稿にしてください。
-タイトルは変えず、内容の要点をまとめてください。
-読み終わったら、次のニュースに続けてください。
+下記はニュース記事の一覧です
+これをニュースキャスターが読み上げるふうに文章を構成して下さい。
+この文章を TTS で読み上げるので、自然と読み上げられるよう接続詞などに気を配って下さい。
+口語調にして下さい。
+
+フォーマット:
+では、ニュースをお伝えします。xxで、、続いて xx で、、最後に xx で。ニュースをお伝えしました
+
+データ:
 `
 
+		items := SpeechItems{
+			News: make([]SpeechItem, 0),
+		}
+
 		for i, realfeeditem := range realfeed.Items {
-			prompt += fmt.Sprintf(
-				"\nニュース%d:%s\n%s\n\n",
-				i,
-				realfeeditem.Title,
-				realfeeditem.Description,
-			)
+			items.News = append(items.News, SpeechItem{
+				Site: realfeeditem.Link,
+				Title: realfeeditem.Title,
+			})
 			if i > 5 {
 				break
-			}	
+			}
 		}
+		itemsjson, err := json.Marshal(items)
+		if err != nil {
+			return err
+		}
+		prompt += "\n"
+		prompt += string(itemsjson)
 		fmt.Println(prompt)
 
 		chatres, err := client.CreateChatCompletion(context.Background(), openai.ChatCompletionRequest{
