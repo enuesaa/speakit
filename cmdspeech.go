@@ -21,8 +21,8 @@ func init() {
 }
 
 type SpeechItem struct {
-	Site string `json:"site"`
-	Title string `json:"title"`
+	Site        string `json:"site"`
+	Title       string `json:"title"`
 	Description string `json:"description"`
 }
 type SpeechItems struct {
@@ -60,7 +60,7 @@ var speechCmd = &cobra.Command{
 
 		for i, realfeeditem := range realfeed.Items {
 			items.News = append(items.News, SpeechItem{
-				Site: realfeeditem.Link,
+				Site:  realfeeditem.Link,
 				Title: realfeeditem.Title,
 			})
 			if i > 5 {
@@ -76,14 +76,14 @@ var speechCmd = &cobra.Command{
 		fmt.Println(prompt)
 
 		chatres, err := client.CreateChatCompletion(context.Background(), openai.ChatCompletionRequest{
-				Model: openai.GPT3Dot5Turbo,
-				Messages: []openai.ChatCompletionMessage{
-					{
-						Role:    openai.ChatMessageRoleUser,
-						Content: prompt,
-					},
+			Model: openai.GPT3Dot5Turbo,
+			Messages: []openai.ChatCompletionMessage{
+				{
+					Role:    openai.ChatMessageRoleUser,
+					Content: prompt,
 				},
 			},
+		},
 		)
 		if err != nil {
 			return err
@@ -93,10 +93,10 @@ var speechCmd = &cobra.Command{
 		fmt.Println(text)
 
 		request := openai.CreateSpeechRequest{
-			Model: openai.TTSModel1,
-			Input: text,
-			Voice: openai.VoiceShimmer,
-			Speed: 1.3,
+			Model:          openai.TTSModel1,
+			Input:          text,
+			Voice:          openai.VoiceShimmer,
+			Speed:          1.3,
 			ResponseFormat: openai.SpeechResponseFormatMp3,
 		}
 		res, err := client.CreateSpeech(context.Background(), request)
