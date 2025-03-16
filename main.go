@@ -15,6 +15,7 @@ func main() {
 	app.AddCommand(serveCmd)
 	app.AddCommand(emitOpenapiCmd)
 	app.AddCommand(speechCmd)
+	app.AddCommand(captureCmd)
 
 	// disable default
 	app.SetHelpCommand(&cobra.Command{Hidden: true})

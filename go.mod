@@ -10,6 +10,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/mmcdole/gofeed v1.3.0
+	github.com/playwright-community/playwright-go v0.5001.0
 	github.com/sashabaranov/go-openai v1.38.0
 	github.com/spf13/cobra v1.8.0
 )
@@ -18,11 +19,14 @@ require (
 	github.com/PuerkitoBio/goquery v1.9.1 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
+	github.com/deckarep/golang-set/v2 v2.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
+	github.com/go-jose/go-jose/v3 v3.0.3 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/invopop/yaml v0.2.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
