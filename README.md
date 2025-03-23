@@ -11,3 +11,4 @@ Toy app to read aloud rss feed.
   - 話しているように？
 - 次へ
 - 深掘り
+- Bluetooth 接続云々で考えてたが、OS に任せた方が良さそう
