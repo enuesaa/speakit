@@ -9,18 +9,6 @@ import (
 	"time"
 )
 
-// see https://stackoverflow.com/questions/19579409/how-to-subscribe-to-upnp-events
-// curl -v http://192.168.3.25:1400/MediaRenderer/RenderingControl/Event \
-// -H "callback: <http://m4.local:1234/sonos-event>" \
-// -H "NT: upnp:event" \
-// -H "Timeout: Second-1800" -X SUBSCRIBE
-
-type Receiver struct {}
-func (r *Receiver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	fmt.Printf("req: %+v\n", request)
-	writer.Write(nil)
-}
-
 func getLocalIpAddress() (string, error) {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
 	if err != nil {
@@ -39,19 +27,6 @@ func subscribeSonos() {
 		panic(err)
 	}
 
-	go func ()  {
-		server := &http.Server{
-			Addr:    ":2989",
-			Handler: &Receiver{},
-		}
-		server.ListenAndServe()
-	}()
-
-
-	time.Sleep(2 * time.Second)
-
-	// see https://stackoverflow.com/questions/19579409/how-to-subscribe-to-upnp-events
-
 	sonosIP := discover()
 	fmt.Println(sonosIP)
 	url := fmt.Sprintf("http://%s:1400/MediaRenderer/RenderingControl/Event", sonosIP)
@@ -64,6 +39,7 @@ func subscribeSonos() {
 	req.Header.Set("NT", "upnp:event")
 	req.Header.Set("Timeout", "Second-1800")
 
+	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
 		panic(err)
@@ -73,15 +49,11 @@ func subscribeSonos() {
 	fmt.Printf("res: %+v\n", res)
 	resbody, _ := io.ReadAll(res.Body)
 	fmt.Printf("resbody: %s\n", string(resbody))
-
-	time.Sleep(100 * time.Second)
 }
 
-
-var streamURL = "" // something mp3 url
-var client = &http.Client{}
-
 func makeSetUriRequest(sonosIP string) {
+	var streamURL = "" // something mp3 url
+
 	body := fmt.Sprintf(`
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
   <s:Body>
@@ -95,6 +67,8 @@ func makeSetUriRequest(sonosIP string) {
 
 	req, _ := http.NewRequest("POST", fmt.Sprintf("http://%s:1400/MediaRenderer/AVTransport/Control", sonosIP), strings.NewReader(body))
 	req.Header.Set("SOAPACTION", `"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"`)
+
+	client := &http.Client{}
 
 	res, err := client.Do(req)
 	if err != nil {
