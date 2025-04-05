@@ -15,6 +15,12 @@ import (
 // -H "NT: upnp:event" \
 // -H "Timeout: Second-1800" -X SUBSCRIBE
 
+type Receiver struct {}
+func (r *Receiver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	fmt.Printf("req: %+v\n", request)
+	writer.Write(nil)
+}
+
 func getLocalIpAddress() (string, error) {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
 	if err != nil {
@@ -27,32 +33,18 @@ func getLocalIpAddress() (string, error) {
 	return addr.IP.To4().String(), nil
 }
 
-func listen2989() {
-	ln, err := net.Listen("tcp", ":2989")
+func subscribeSonos() {
+	localIp, err := getLocalIpAddress()
 	if err != nil {
 		panic(err)
 	}
-	defer ln.Close()
 
-	for {
-		conn, err := ln.Accept()
-		if err != nil {
-			continue
-		}
-		fmt.Println("a")
-		request, err := io.ReadAll(conn)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Printf("req: %s\n", request)
-		conn.Write([]byte("HTTP/1.1 200 OK\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"))
-		conn.Close()
-	}
-}
-
-func subscribeSonos() {
 	go func ()  {
-		listen2989()
+		server := &http.Server{
+			Addr:    ":2989",
+			Handler: &Receiver{},
+		}
+		server.ListenAndServe()
 	}()
 
 
@@ -68,7 +60,7 @@ func subscribeSonos() {
 	if err != nil {
 		panic(err)
 	}
-	req.Header.Set("callback", "<http://m4.local:2989>")
+	req.Header.Set("callback", fmt.Sprintf("<http://%s:2989>", localIp))
 	req.Header.Set("NT", "upnp:event")
 	req.Header.Set("Timeout", "Second-1800")
 
@@ -88,14 +80,6 @@ func subscribeSonos() {
 
 var streamURL = "" // something mp3 url
 var client = &http.Client{}
-
-func controlSonos() {
-	sonosIP := discover()
-	fmt.Println(sonosIP)
-
-	makeSetUriRequest(sonosIP)
-	makePlayRequest(sonosIP)
-}
 
 func makeSetUriRequest(sonosIP string) {
 	body := fmt.Sprintf(`
