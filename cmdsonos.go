@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"io"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -19,9 +21,16 @@ var sonosCmd = &cobra.Command{
 		}
 
 		sonos := NewSonos(sonosIpAddr)
-		if err := sonos.subscribeSonos(); err != nil {
+		res, err := sonos.subscribeSonos()
+		if err != nil {
 			return err
 		}
+		fmt.Printf("res: %+v\n", res)
+		resbody, err := io.ReadAll(res.Body)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("resbody: %s\n", string(resbody))
 
 		time.Sleep(100 * time.Second)
 

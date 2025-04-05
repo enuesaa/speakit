@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"net"
 	"net/http"
 	"strings"
@@ -10,11 +9,13 @@ import (
 
 func NewSonos(ipAddr string) Sonos {
 	return Sonos{
+		clinet: &http.Client{},
 		ipAddr: ipAddr,
 	}
 }
 
 type Sonos struct {
+	clinet *http.Client
 	ipAddr string
 }
 
@@ -30,36 +31,25 @@ func (s *Sonos) getLocalIpAddress() (string, error) {
 	return addr.IP.To4().String(), nil
 }
 
-func (s *Sonos) subscribeSonos() error {
+func (s *Sonos) subscribeSonos() (*http.Response, error) {
 	localIp, err := s.getLocalIpAddress()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	url := fmt.Sprintf("http://%s:1400/MediaRenderer/RenderingControl/Event", s.ipAddr)
 
 	req, err := http.NewRequest("SUBSCRIBE", url, nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	req.Header.Set("callback", fmt.Sprintf("<http://%s:2989>", localIp))
 	req.Header.Set("NT", "upnp:event")
 	req.Header.Set("Timeout", "Second-1800")
 
-	client := &http.Client{}
-	res, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
-
-	fmt.Printf("res: %+v\n", res)
-	resbody, _ := io.ReadAll(res.Body)
-	fmt.Printf("resbody: %s\n", string(resbody))
-
-	return nil
+	return s.clinet.Do(req)
 }
 
-func (s *Sonos) makeSetUriRequest() error {
+func (s *Sonos) makeSetUriRequest() (*http.Response, error) {
 	var streamURL = "" // something mp3 url
 
 	body := fmt.Sprintf(`
@@ -76,21 +66,10 @@ func (s *Sonos) makeSetUriRequest() error {
 	req, _ := http.NewRequest("POST", fmt.Sprintf("http://%s:1400/MediaRenderer/AVTransport/Control", s.ipAddr), strings.NewReader(body))
 	req.Header.Set("SOAPACTION", `"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"`)
 
-	client := &http.Client{}
-
-	res, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
-	fmt.Printf("res: %+v\n", res)
-
-	resbody, _ := io.ReadAll(res.Body)
-	fmt.Printf("resbody: %s\n", string(resbody))
-	return nil
+	return s.clinet.Do(req)
 }
 
-func (s *Sonos) makePlayRequest() error {
+func (s *Sonos) makePlayRequest() (*http.Response, error) {
 	body := `
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
   <s:Body>
@@ -104,13 +83,5 @@ func (s *Sonos) makePlayRequest() error {
 	req, _ := http.NewRequest("POST", fmt.Sprintf("http://%s:1400/MediaRenderer/AVTransport/Control", s.ipAddr), strings.NewReader(body))
 	req.Header.Set("SOAPACTION", `"urn:schemas-upnp-org:service:AVTransport:1#Play"`)
 
-	client := &http.Client{}
-	res, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
-	fmt.Printf("res: %+v\n", res)
-
-	return nil
+	return s.clinet.Do(req)
 }
