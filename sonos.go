@@ -2,12 +2,45 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net"
+	"net/http"
 	"strings"
 	"time"
-	"io"
-	"net/http"
 )
+
+// see https://stackoverflow.com/questions/19579409/how-to-subscribe-to-upnp-events
+// curl -v http://:1400/MediaRenderer/RenderingControl/Event \
+// -H "callback: <http://:1234/sonos-event>" \
+// -H "NT: upnp:event" \
+// -H "Timeout: Second-1800" -X SUBSCRIBE
+
+
+func subscribeSonos() {
+	sonosIP := discover()
+
+	url := fmt.Sprintf("http://%s:1400/MediaRenderer/RenderingControl/Event", sonosIP)
+
+	req, err := http.NewRequest("SUBSCRIBE", url, nil)
+	if err != nil {
+		panic(err)
+	}
+	req.Header.Set("SOAPACTION", "urn:schemas-upnp-org:service:RenderingControl:1#Subscribe") // ダブルクォート不要
+	req.Header.Set("callback", "https://example.com/sonos-event")
+	req.Header.Set("NT", "upnp:event")
+	req.Header.Set("Timeout", "Second-3600")
+
+	res, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer res.Body.Close()
+
+	fmt.Printf("res: %+v\n", res)
+	resbody, _ := io.ReadAll(res.Body)
+	fmt.Printf("resbody: %s\n", string(resbody))
+}
+
 
 var streamURL = "" // something mp3 url
 var client = &http.Client{}

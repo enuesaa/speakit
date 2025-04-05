@@ -16,6 +16,7 @@ func main() {
 	app.AddCommand(emitOpenapiCmd)
 	app.AddCommand(speechCmd)
 	app.AddCommand(captureCmd)
+	app.AddCommand(sonosCmd)
 
 	// disable default
 	app.SetHelpCommand(&cobra.Command{Hidden: true})
