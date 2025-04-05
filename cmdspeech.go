@@ -68,7 +68,8 @@ var speechCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			f, err := os.Create("a.mp3")
+			path := fmt.Sprintf("speechdata/a%d.mp3", i)
+			f, err := os.Create(path)
 			if err != nil {
 				return err
 			}
@@ -77,8 +78,6 @@ var speechCmd = &cobra.Command{
 			if _, err := io.Copy(f, res); err != nil {
 				return err
 			}
-			break
-
 
 			if i > 5 {
 				break

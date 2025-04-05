@@ -87,11 +87,11 @@ type SetAVTransportURI struct {
 	CurrentURIMetaData string   `xml:"CurrentURIMetaData"`
 }
 
-func (s *Sonos) SetUriRequest() (*http.Response, error) {
+func (s *Sonos) SetUriRequest(url string) (*http.Response, error) {
 	body := SetAVTransportURI{
 		XmlnsU:             "urn:schemas-upnp-org:service:AVTransport:1",
 		InstanceID:         0,
-		CurrentURI:         "https://www.ne.jp/asahi/music/myuu/wave/menuettm.mp3",
+		CurrentURI:         url,
 		CurrentURIMetaData: "",
 	}
 	req, err := s.makePost("/MediaRenderer/AVTransport/Control", body)
