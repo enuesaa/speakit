@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"strings"
 )
 
 func NewSonos(ipAddr string) Sonos {
@@ -52,31 +51,31 @@ func (s *Sonos) subscribeSonos() (*http.Response, error) {
 }
 
 type Envelope struct {
-	XMLName      xml.Name `xml:"s:Envelope"`
-	XmlnsS       string   `xml:"xmlns:s,attr"`
+	XMLName       xml.Name `xml:"s:Envelope"`
+	XmlnsS        string   `xml:"xmlns:s,attr"`
 	EncodingStyle string   `xml:"s:encodingStyle,attr"`
-	Body         Body     `xml:"s:Body"`
+	Body          any      `xml:"s:Body"`
 }
 
-type Body struct {
+type SetAVTransportURIBody struct {
 	SetAVTransportURI SetAVTransportURI `xml:"u:SetAVTransportURI"`
 }
 
 type SetAVTransportURI struct {
-	XMLName             xml.Name `xml:"u:SetAVTransportURI"`
-	XmlnsU              string   `xml:"xmlns:u,attr"`
-	InstanceID          int      `xml:"InstanceID"`
-	CurrentURI          string   `xml:"CurrentURI"`
-	CurrentURIMetaData  string   `xml:"CurrentURIMetaData"`
+	XMLName            xml.Name `xml:"u:SetAVTransportURI"`
+	XmlnsU             string   `xml:"xmlns:u,attr"`
+	InstanceID         int      `xml:"InstanceID"`
+	CurrentURI         string   `xml:"CurrentURI"`
+	CurrentURIMetaData string   `xml:"CurrentURIMetaData"`
 }
 
 func (s *Sonos) makeSetUriRequest() (*http.Response, error) {
-	var streamURL = "" // something mp3 url
+	var streamURL = "https://www.ne.jp/asahi/music/myuu/wave/menuettm.mp3"
 
 	envelope := Envelope{
 		XmlnsS:        "http://schemas.xmlsoap.org/soap/envelope/",
 		EncodingStyle: "http://schemas.xmlsoap.org/soap/encoding/",
-		Body: Body{
+		Body: SetAVTransportURIBody{
 			SetAVTransportURI: SetAVTransportURI{
 				XmlnsU:             "urn:schemas-upnp-org:service:AVTransport:1",
 				InstanceID:         0,
@@ -96,18 +95,35 @@ func (s *Sonos) makeSetUriRequest() (*http.Response, error) {
 	return s.clinet.Do(req)
 }
 
-func (s *Sonos) makePlayRequest() (*http.Response, error) {
-	body := `
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-  <s:Body>
-    <u:Play xmlns:u="urn:schemas-upnp-org:service:AVTransport:1">
-      <InstanceID>0</InstanceID>
-      <Speed>1</Speed>
-    </u:Play>
-  </s:Body>
-</s:Envelope>`
+type PlayBody struct {
+	Play Play `xml:"u:Play"`
+}
 
-	req, _ := http.NewRequest("POST", fmt.Sprintf("http://%s:1400/MediaRenderer/AVTransport/Control", s.ipAddr), strings.NewReader(body))
+type Play struct {
+	XMLName    xml.Name `xml:"u:Play"`
+	XmlnsU     string   `xml:"xmlns:u,attr"`
+	InstanceID int      `xml:"InstanceID"`
+	Speed      string   `xml:"Speed"`
+}
+
+func (s *Sonos) makePlayRequest() (*http.Response, error) {
+	envelope := Envelope{
+		XmlnsS:        "http://schemas.xmlsoap.org/soap/envelope/",
+		EncodingStyle: "http://schemas.xmlsoap.org/soap/encoding/",
+		Body: PlayBody{
+			Play: Play{
+				XmlnsU:     "urn:schemas-upnp-org:service:AVTransport:1",
+				InstanceID: 0,
+				Speed:      "1",
+			},
+		},
+	}
+	envelopbytes, err := xml.Marshal(envelope)
+	if err != nil {
+		return nil, err
+	}
+
+	req, _ := http.NewRequest("POST", fmt.Sprintf("http://%s:1400/MediaRenderer/AVTransport/Control", s.ipAddr), bytes.NewBuffer(envelopbytes))
 	req.Header.Set("SOAPACTION", `"urn:schemas-upnp-org:service:AVTransport:1#Play"`)
 
 	return s.clinet.Do(req)

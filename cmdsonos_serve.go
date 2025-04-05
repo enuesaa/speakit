@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-type Receiver struct {}
+type Receiver struct{}
 
 func (r *Receiver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	fmt.Printf("req: %+v\n", request)

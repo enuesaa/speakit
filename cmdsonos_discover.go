@@ -41,7 +41,7 @@ func Discover() (string, error) {
 			break
 		}
 		res := string(buf[:n])
-	
+
 		if strings.Contains(res, "Sonos") {
 			return strings.Split(addr.String(), ":")[0], nil
 		}
