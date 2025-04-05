@@ -10,25 +10,67 @@ import (
 )
 
 // see https://stackoverflow.com/questions/19579409/how-to-subscribe-to-upnp-events
-// curl -v http://:1400/MediaRenderer/RenderingControl/Event \
-// -H "callback: <http://:1234/sonos-event>" \
+// curl -v http://192.168.3.25:1400/MediaRenderer/RenderingControl/Event \
+// -H "callback: <http://m4.local:1234/sonos-event>" \
 // -H "NT: upnp:event" \
 // -H "Timeout: Second-1800" -X SUBSCRIBE
 
+func getLocalIpAddress() (string, error) {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if err != nil {
+		return "", err
+	}
+	defer conn.Close()
+
+	addr := conn.LocalAddr().(*net.UDPAddr)
+
+	return addr.IP.To4().String(), nil
+}
+
+func listen2989() {
+	ln, err := net.Listen("tcp", ":2989")
+	if err != nil {
+		panic(err)
+	}
+	defer ln.Close()
+
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			continue
+		}
+		fmt.Println("a")
+		request, err := io.ReadAll(conn)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("req: %s\n", request)
+		conn.Write([]byte("HTTP/1.1 200 OK\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"))
+		conn.Close()
+	}
+}
 
 func subscribeSonos() {
-	sonosIP := discover()
+	go func ()  {
+		listen2989()
+	}()
 
+
+	time.Sleep(2 * time.Second)
+
+	// see https://stackoverflow.com/questions/19579409/how-to-subscribe-to-upnp-events
+
+	sonosIP := discover()
+	fmt.Println(sonosIP)
 	url := fmt.Sprintf("http://%s:1400/MediaRenderer/RenderingControl/Event", sonosIP)
 
 	req, err := http.NewRequest("SUBSCRIBE", url, nil)
 	if err != nil {
 		panic(err)
 	}
-	req.Header.Set("SOAPACTION", "urn:schemas-upnp-org:service:RenderingControl:1#Subscribe") // ダブルクォート不要
-	req.Header.Set("callback", "https://example.com/sonos-event")
+	req.Header.Set("callback", "<http://m4.local:2989>")
 	req.Header.Set("NT", "upnp:event")
-	req.Header.Set("Timeout", "Second-3600")
+	req.Header.Set("Timeout", "Second-1800")
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -39,6 +81,8 @@ func subscribeSonos() {
 	fmt.Printf("res: %+v\n", res)
 	resbody, _ := io.ReadAll(res.Body)
 	fmt.Printf("resbody: %s\n", string(resbody))
+
+	time.Sleep(100 * time.Second)
 }
 
 
