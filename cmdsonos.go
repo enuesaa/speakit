@@ -21,12 +21,12 @@ var sonosCmd = &cobra.Command{
 		}
 
 		sonos := NewSonos(sonosIpAddr)
-		res, err := sonos.makeSetUriRequest()
+		res, err := sonos.SetUriRequest()
 		if err != nil {
 			return err
 		}
 		fmt.Printf("res: %+v\n", res)
-		res, err = sonos.makePlayRequest()
+		res, err = sonos.PlayRequest()
 		if err != nil {
 			return err
 		}

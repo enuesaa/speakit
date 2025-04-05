@@ -20,7 +20,7 @@ type Sonos struct {
 	ipAddr string
 }
 
-func (s *Sonos) getLocalIpAddress() (string, error) {
+func (s *Sonos) getLocalIpAddr() (string, error) {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
 	if err != nil {
 		return "", err
@@ -32,14 +32,32 @@ func (s *Sonos) getLocalIpAddress() (string, error) {
 	return addr.IP.To4().String(), nil
 }
 
-func (s *Sonos) subscribeSonos() (*http.Response, error) {
-	localIp, err := s.getLocalIpAddress()
+func (s *Sonos) makeSubscribe(endpoint string) (*http.Request, error) {
+	url := fmt.Sprintf("http://%s:1400%s", s.ipAddr, endpoint)
+	return http.NewRequest("SUBSCRIBE", url, nil)
+}
+
+func (s *Sonos) makePost(endpoint string, body any) (*http.Request, error) {
+	url := fmt.Sprintf("http://%s:1400%s", s.ipAddr, endpoint)
+
+	envelope := Envelope{
+		XmlnsS:        "http://schemas.xmlsoap.org/soap/envelope/",
+		EncodingStyle: "http://schemas.xmlsoap.org/soap/encoding/",
+		Body:          body,
+	}
+	envelopbytes, err := xml.Marshal(envelope)
 	if err != nil {
 		return nil, err
 	}
-	url := fmt.Sprintf("http://%s:1400/MediaRenderer/RenderingControl/Event", s.ipAddr)
+	return http.NewRequest("POST", url, bytes.NewBuffer(envelopbytes))
+}
 
-	req, err := http.NewRequest("SUBSCRIBE", url, nil)
+func (s *Sonos) SubscribeVolumeControl() (*http.Response, error) {
+	localIp, err := s.getLocalIpAddr()
+	if err != nil {
+		return nil, err
+	}
+	req, err := s.makeSubscribe("/MediaRenderer/RenderingControl/Event")
 	if err != nil {
 		return nil, err
 	}
@@ -69,27 +87,19 @@ type SetAVTransportURI struct {
 	CurrentURIMetaData string   `xml:"CurrentURIMetaData"`
 }
 
-func (s *Sonos) makeSetUriRequest() (*http.Response, error) {
-	var streamURL = "https://www.ne.jp/asahi/music/myuu/wave/menuettm.mp3"
-
-	envelope := Envelope{
-		XmlnsS:        "http://schemas.xmlsoap.org/soap/envelope/",
-		EncodingStyle: "http://schemas.xmlsoap.org/soap/encoding/",
-		Body: SetAVTransportURIBody{
-			SetAVTransportURI: SetAVTransportURI{
-				XmlnsU:             "urn:schemas-upnp-org:service:AVTransport:1",
-				InstanceID:         0,
-				CurrentURI:         streamURL,
-				CurrentURIMetaData: "",
-			},
+func (s *Sonos) SetUriRequest() (*http.Response, error) {
+	body := SetAVTransportURIBody{
+		SetAVTransportURI: SetAVTransportURI{
+			XmlnsU:             "urn:schemas-upnp-org:service:AVTransport:1",
+			InstanceID:         0,
+			CurrentURI:         "https://www.ne.jp/asahi/music/myuu/wave/menuettm.mp3",
+			CurrentURIMetaData: "",
 		},
 	}
-	envelopbytes, err := xml.Marshal(envelope)
+	req, err := s.makePost("/MediaRenderer/AVTransport/Control", body)
 	if err != nil {
 		return nil, err
 	}
-
-	req, _ := http.NewRequest("POST", fmt.Sprintf("http://%s:1400/MediaRenderer/AVTransport/Control", s.ipAddr), bytes.NewBuffer(envelopbytes))
 	req.Header.Set("SOAPACTION", `"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"`)
 
 	return s.clinet.Do(req)
@@ -106,24 +116,18 @@ type Play struct {
 	Speed      string   `xml:"Speed"`
 }
 
-func (s *Sonos) makePlayRequest() (*http.Response, error) {
-	envelope := Envelope{
-		XmlnsS:        "http://schemas.xmlsoap.org/soap/envelope/",
-		EncodingStyle: "http://schemas.xmlsoap.org/soap/encoding/",
-		Body: PlayBody{
-			Play: Play{
-				XmlnsU:     "urn:schemas-upnp-org:service:AVTransport:1",
-				InstanceID: 0,
-				Speed:      "1",
-			},
+func (s *Sonos) PlayRequest() (*http.Response, error) {
+	body := PlayBody{
+		Play: Play{
+			XmlnsU:     "urn:schemas-upnp-org:service:AVTransport:1",
+			InstanceID: 0,
+			Speed:      "1",
 		},
 	}
-	envelopbytes, err := xml.Marshal(envelope)
+	req, err := s.makePost("/MediaRenderer/AVTransport/Control", body)
 	if err != nil {
 		return nil, err
 	}
-
-	req, _ := http.NewRequest("POST", fmt.Sprintf("http://%s:1400/MediaRenderer/AVTransport/Control", s.ipAddr), bytes.NewBuffer(envelopbytes))
 	req.Header.Set("SOAPACTION", `"urn:schemas-upnp-org:service:AVTransport:1#Play"`)
 
 	return s.clinet.Do(req)
