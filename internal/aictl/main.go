@@ -10,10 +10,10 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-var Data [][]byte
+var Data map[string][]byte
 
 func Run(openaiApiKey string, rssfeed string) error {
-	Data = make([][]byte, 0)
+	Data = make(map[string][]byte)
 
 	client := openai.NewClient(openaiApiKey)
 
@@ -64,7 +64,8 @@ func Run(openaiApiKey string, rssfeed string) error {
 		if err != nil {
 			return err
 		}
-		Data = append(Data, buf)
+		filename := fmt.Sprintf("feed%d.mp3", i)
+		Data[filename] = buf
 
 		if i > 5 {
 			break

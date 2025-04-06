@@ -5,15 +5,31 @@ package sonosctl
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/enuesaa/speakit/internal/aictl"
+	"github.com/gorilla/mux"
 )
 
 func Serve() {
-	mux := http.NewServeMux()
+	router := mux.NewRouter()
 
-	mux.HandleFunc("/events/volume", func(w http.ResponseWriter, req *http.Request) {
+	router.HandleFunc("/storage/{filename}", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		filename := vars["filename"]
+		fmt.Println(filename)
+
+		buf, ok := aictl.Data[filename]
+		if ok {
+			w.Write(buf)
+			return
+		}
+		w.Write(nil)
+	})
+
+	router.HandleFunc("/events/volume", func(w http.ResponseWriter, req *http.Request) {
 		fmt.Printf("reqa: %+v\n", req)
 		w.Write(nil)
 	})
 
-	http.ListenAndServe(":2989", mux)
+	http.ListenAndServe(":2989", router)
 }
