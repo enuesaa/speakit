@@ -8,6 +8,7 @@ import (
 	// "io"
 	"time"
 
+	"github.com/enuesaa/speakit/internal/sonosctl"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/cobra"
 )
@@ -16,10 +17,10 @@ var sonosCmd = &cobra.Command{
 	Use:   "sonos",
 	Short: "sonos",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		go Serve()
+		go sonosctl.Serve()
 		time.Sleep(2 * time.Second)
 
-		sonosIpAddr, err := Discover()
+		sonosIpAddr, err := sonosctl.Discover()
 		if err != nil {
 			return err
 		}
@@ -30,7 +31,7 @@ var sonosCmd = &cobra.Command{
 			return err
 		}
 
-		sonos := NewSonos(sonosIpAddr)
+		sonos := sonosctl.NewSonos(sonosIpAddr)
 
 		go func ()  {
 			app := fiber.New()

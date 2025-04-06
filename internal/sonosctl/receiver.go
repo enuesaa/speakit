@@ -1,4 +1,4 @@
-package main
+package sonosctl
 
 // see https://stackoverflow.com/questions/19579409/how-to-subscribe-to-upnp-events
 
