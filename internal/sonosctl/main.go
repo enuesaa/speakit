@@ -24,4 +24,6 @@ type Sonos struct {
 	clinet *http.Client
 	ipAddr string
 	localIpAddr string
+
+	OnMediaControl func()
 }

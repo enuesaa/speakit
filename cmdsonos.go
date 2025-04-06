@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 	"io"
-	// "os"
+	"os"
 	"time"
 
-	// "github.com/enuesaa/speakit/internal/aictl"
+	"github.com/enuesaa/speakit/internal/aictl"
 	"github.com/enuesaa/speakit/internal/sonosctl"
 	"github.com/spf13/cobra"
 )
@@ -15,12 +15,12 @@ var sonosCmd = &cobra.Command{
 	Use:   "sonos",
 	Short: "sonos",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// openaiToken := os.Getenv("OPENAI_TOKEN")
-		// rssfeed := os.Getenv("RSS")
+		openaiToken := os.Getenv("OPENAI_TOKEN")
+		rssfeed := os.Getenv("RSS")
 
-		// if err := aictl.Run(openaiToken, rssfeed); err != nil {
-		// 	return err
-		// }
+		if err := aictl.Run(openaiToken, rssfeed); err != nil {
+			return err
+		}
 
 		sonos, err := sonosctl.New()
 		if err != nil {
@@ -41,20 +41,28 @@ var sonosCmd = &cobra.Command{
 		}
 		fmt.Printf("resbody: %s\n", string(resbody))
 
-		// receiverHost := sonos.GetReceiverHost()
+		i := 0
+		sonos.OnMediaControl = func() {
+			receiverHost := sonos.GetReceiverHost()
 
-		// url := fmt.Sprintf("http://%s/storage/1.mp3", receiverHost)
-		// res, err := sonos.SetUri(url)
-		// if err != nil {
-		// 	return err
-		// }
-		// fmt.Printf("res: %+v\n", res)
+			url := fmt.Sprintf("http://%s/storage/%d.mp3", receiverHost, i)
+			res, err := sonos.SetUri(url)
+			if err != nil {
+				fmt.Printf("Error: %s\n", err.Error())
+				return
+			}
+			fmt.Printf("res: %+v\n", res)
 
-		// res, err = sonos.Play()
-		// if err != nil {
-		// 	return err
-		// }
-		// fmt.Printf("res: %+v\n", res)
+			res, err = sonos.Play()
+			if err != nil {
+				fmt.Printf("Error: %s\n", err.Error())
+				return
+			}
+			fmt.Printf("res: %+v\n", res)
+			i++
+		}
+
+		sonos.OnMediaControl()
 
 		time.Sleep(100 * time.Second)
 

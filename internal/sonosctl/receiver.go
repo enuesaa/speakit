@@ -4,6 +4,7 @@ package sonosctl
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/enuesaa/speakit/internal/aictl"
@@ -33,6 +34,13 @@ func (s *Sonos) StartReceiver() {
 
 	router.HandleFunc("/events/media", func(w http.ResponseWriter, req *http.Request) {
 		fmt.Printf("req: %+v\n", req)
+		reqbody, _ := io.ReadAll(req.Body)
+
+		fmt.Printf("reqbody: %s\n", string(reqbody))
+
+		if s.OnMediaControl != nil {
+			// s.OnMediaControl()
+		}
 		w.Write(nil)
 	})
 
