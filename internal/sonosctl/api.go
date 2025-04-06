@@ -13,14 +13,14 @@ type SetAVTransportURI struct {
 	CurrentURIMetaData string   `xml:"CurrentURIMetaData"`
 }
 
-func (s *Sonos) SetUriRequest(url string) (*http.Response, error) {
+func (s *Sonos) SetUri(url string) (*http.Response, error) {
 	body := SetAVTransportURI{
 		XmlnsU:             "urn:schemas-upnp-org:service:AVTransport:1",
 		InstanceID:         0,
 		CurrentURI:         url,
 		CurrentURIMetaData: "",
 	}
-	req, err := s.makePost("/MediaRenderer/AVTransport/Control", body)
+	req, err := s.post("/MediaRenderer/AVTransport/Control", body)
 	if err != nil {
 		return nil, err
 	}
@@ -36,13 +36,13 @@ type Play struct {
 	Speed      string   `xml:"Speed"`
 }
 
-func (s *Sonos) PlayRequest() (*http.Response, error) {
+func (s *Sonos) Play() (*http.Response, error) {
 	body := Play{
 		XmlnsU:     "urn:schemas-upnp-org:service:AVTransport:1",
 		InstanceID: 0,
 		Speed:      "1",
 	}
-	req, err := s.makePost("/MediaRenderer/AVTransport/Control", body)
+	req, err := s.post("/MediaRenderer/AVTransport/Control", body)
 	if err != nil {
 		return nil, err
 	}

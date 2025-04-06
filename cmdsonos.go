@@ -45,12 +45,12 @@ var sonosCmd = &cobra.Command{
 			url := fmt.Sprintf("http://:3000/%s", filename)
 			fmt.Println(url)
 
-			res, err := sonos.SetUriRequest(url)
+			res, err := sonos.SetUri(url)
 			if err != nil {
 				return err
 			}
 			fmt.Printf("res: %+v\n", res)
-			res, err = sonos.PlayRequest()
+			res, err = sonos.Play()
 			if err != nil {
 				return err
 			}
@@ -58,17 +58,6 @@ var sonosCmd = &cobra.Command{
 
 			time.Sleep(5 * time.Second)
 		}
-
-		// res, err := sonos.subscribeSonos()
-		// if err != nil {
-		// 	return err
-		// }
-		// fmt.Printf("res: %+v\n", res)
-		// resbody, err := io.ReadAll(res.Body)
-		// if err != nil {
-		// 	return err
-		// }
-		// fmt.Printf("resbody: %s\n", string(resbody))
 
 		time.Sleep(100 * time.Second)
 

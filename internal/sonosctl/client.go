@@ -7,9 +7,12 @@ import (
 	"net/http"
 )
 
-func (s *Sonos) makeSubscribe(endpoint string) (*http.Request, error) {
-	url := fmt.Sprintf("http://%s:1400%s", s.ipAddr, endpoint)
-	return http.NewRequest("SUBSCRIBE", url, nil)
+func (s *Sonos) calcUrl(endpoint string) string {
+	return fmt.Sprintf("http://%s:1400%s", s.ipAddr, endpoint)
+}
+
+func (s *Sonos) subscribe(endpoint string) (*http.Request, error) {
+	return http.NewRequest("SUBSCRIBE", s.calcUrl(endpoint), nil)
 }
 
 type Envelope struct {
@@ -23,8 +26,7 @@ type Body struct {
 	Action any `xml:",any"`
 }
 
-func (s *Sonos) makePost(endpoint string, body any) (*http.Request, error) {
-	url := fmt.Sprintf("http://%s:1400%s", s.ipAddr, endpoint)
+func (s *Sonos) post(endpoint string, body any) (*http.Request, error) {
 	envelope := Envelope{
 		XmlnsS:        "http://schemas.xmlsoap.org/soap/envelope/",
 		EncodingStyle: "http://schemas.xmlsoap.org/soap/encoding/",
@@ -36,5 +38,5 @@ func (s *Sonos) makePost(endpoint string, body any) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
-	return http.NewRequest("POST", url, bytes.NewBuffer(envelopbytes))
+	return http.NewRequest("POST", s.calcUrl(endpoint), bytes.NewBuffer(envelopbytes))
 }
