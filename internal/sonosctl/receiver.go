@@ -27,7 +27,12 @@ func (s *Sonos) StartReceiver() {
 	})
 
 	router.HandleFunc("/events/volume", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Printf("reqa: %+v\n", req)
+		fmt.Printf("req: %+v\n", req)
+		w.Write(nil)
+	})
+
+	router.HandleFunc("/events/media", func(w http.ResponseWriter, req *http.Request) {
+		fmt.Printf("req: %+v\n", req)
 		w.Write(nil)
 	})
 
