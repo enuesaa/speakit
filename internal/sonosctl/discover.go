@@ -7,16 +7,15 @@ import (
 	"time"
 )
 
-func Discover() (string, error) {
-	msg := strings.Join([]string{
-		"M-SEARCH * HTTP/1.1",
-		"HOST: 239.255.255.250:1900",
-		"MAN: \"ssdp:discover\"",
-		"MX: 1",
-		"ST: urn:schemas-upnp-org:device:ZonePlayer:1",
-		"", "",
-	}, "\r\n")
+var discoverMsg = `M-SEARCH * HTTP/1.1
+HOST: 239.255.255.250:1900
+MAN: "ssdp:discover"
+MX: 1
+ST: urn:schemas-upnp-org:device:ZonePlayer:1
 
+`
+
+func DiscoverSonosIPAddr() (string, error) {
 	conn, err := net.ListenPacket("udp4", ":0")
 	if err != nil {
 		return "", err
@@ -27,12 +26,12 @@ func Discover() (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	_, err = conn.WriteTo([]byte(msg), dst)
-	if err != nil {
+	if _, err := conn.WriteTo([]byte(discoverMsg), dst); err != nil {
 		return "", err
 	}
-	conn.SetDeadline(time.Now().Add(2 * time.Second))
+	if err := conn.SetDeadline(time.Now().Add(2 * time.Second)); err != nil {
+		return "", err
+	}
 
 	buf := make([]byte, 2048)
 	for {
@@ -40,9 +39,9 @@ func Discover() (string, error) {
 		if err != nil {
 			break
 		}
-		res := string(buf[:n])
+		data := string(buf[:n])
 
-		if strings.Contains(res, "Sonos") {
+		if strings.Contains(data, "Sonos") {
 			return strings.Split(addr.String(), ":")[0], nil
 		}
 	}

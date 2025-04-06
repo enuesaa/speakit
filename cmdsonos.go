@@ -20,7 +20,7 @@ var sonosCmd = &cobra.Command{
 		go sonosctl.Serve()
 		time.Sleep(2 * time.Second)
 
-		sonosIpAddr, err := sonosctl.Discover()
+		sonosIpAddr, err := sonosctl.DiscoverSonosIPAddr()
 		if err != nil {
 			return err
 		}
