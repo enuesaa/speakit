@@ -7,17 +7,13 @@ import (
 	"net/http"
 )
 
-type Receiver struct{}
+func Serve2() {
+	mux := http.NewServeMux()
 
-func (r *Receiver) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	fmt.Printf("req: %+v\n", request)
-	writer.Write(nil)
-}
+	mux.HandleFunc("/events/volume", func(w http.ResponseWriter, req *http.Request) {
+		fmt.Printf("reqa: %+v\n", req)
+		w.Write(nil)
+	})
 
-func Serve() {
-	server := &http.Server{
-		Addr:    ":2989",
-		Handler: &Receiver{},
-	}
-	server.ListenAndServe()
+	http.ListenAndServe(":2989", mux)
 }

@@ -10,7 +10,7 @@ func (s *Sonos) SubscribeVolumeControl() (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("callback", fmt.Sprintf("<http://%s:2989>", s.localIpAddr))
+	req.Header.Set("callback", fmt.Sprintf("<http://%s:2989/events/volume>", s.localIpAddr))
 	req.Header.Set("NT", "upnp:event")
 	req.Header.Set("Timeout", "Second-1800")
 
