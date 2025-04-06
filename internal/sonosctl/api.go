@@ -78,3 +78,21 @@ func (s *Sonos) Play() (*http.Response, error) {
 
 	return s.clinet.Do(req)
 }
+
+type Next struct {
+	XMLName    xml.Name `xml:"u:Next"`
+	InstanceID int      `xml:"InstanceID"`
+}
+
+func (s *Sonos) Next() (*http.Response, error) {
+	body := Next{
+		InstanceID: 0,
+	}
+	req, err := s.post("/MediaRenderer/AVTransport/Control", body)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("SOAPACTION", `"urn:schemas-upnp-org:service:AVTransport:1#Next"`)
+
+	return s.clinet.Do(req)
+}

@@ -39,7 +39,7 @@ func (s *Sonos) StartReceiver() {
 		fmt.Printf("reqbody: %s\n", string(reqbody))
 
 		if s.OnMediaControl != nil {
-			// s.OnMediaControl()
+			s.OnMediaControl()
 		}
 		w.Write(nil)
 	})
