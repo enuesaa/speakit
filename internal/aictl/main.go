@@ -64,10 +64,10 @@ func Run(openaiApiKey string, rssfeed string) error {
 		if err != nil {
 			return err
 		}
-		filename := fmt.Sprintf("feed%d.mp3", i)
+		filename := fmt.Sprintf("%d.mp3", i)
 		Data[filename] = buf
 
-		if i > 5 {
+		if i > 2 {
 			break
 		}
 	}

@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func Serve() {
+func (s *Sonos) StartReceiver() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/storage/{filename}", func(w http.ResponseWriter, r *http.Request) {
@@ -32,4 +32,8 @@ func Serve() {
 	})
 
 	http.ListenAndServe(":2989", router)
+}
+
+func (s *Sonos) GetReceiverHost() string {
+	return fmt.Sprintf("%s:2989", s.localIpAddr)
 }
