@@ -16,7 +16,7 @@ var sonosCmd = &cobra.Command{
 	Use:   "sonos",
 	Short: "sonos",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		go sonosctl.Serve2()
+		go sonosctl.Serve()
 		time.Sleep(2 * time.Second)
 
 		// entries, err := os.ReadDir("speechdata")

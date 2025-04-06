@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func Serve2() {
+func Serve() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/events/volume", func(w http.ResponseWriter, req *http.Request) {
