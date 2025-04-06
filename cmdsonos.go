@@ -41,28 +41,48 @@ var sonosCmd = &cobra.Command{
 		}
 		fmt.Printf("resbody: %s\n", string(resbody))
 
-		i := 0
-		sonos.OnMediaControl = func() {
+		for i := range 3 {
 			receiverHost := sonos.GetReceiverHost()
 
 			url := fmt.Sprintf("http://%s/storage/%d.mp3", receiverHost, i)
-			res, err := sonos.SetUri(url)
+			fmt.Println(url)
+			res, err := sonos.AddURIToQueue(url)
 			if err != nil {
-				fmt.Printf("Error: %s\n", err.Error())
-				return
+				return err
 			}
 			fmt.Printf("res: %+v\n", res)
 
-			res, err = sonos.Play()
-			if err != nil {
-				fmt.Printf("Error: %s\n", err.Error())
-				return
+			if i == 0 {
+				res, err = sonos.Play()
+				if err != nil {
+					return err
+				}
+				fmt.Printf("res: %+v\n", res)
 			}
-			fmt.Printf("res: %+v\n", res)
-			i++
 		}
 
-		sonos.OnMediaControl()
+		// i := 0
+		// sonos.OnMediaControl = func() {
+		// 	receiverHost := sonos.GetReceiverHost()
+
+		// 	url := fmt.Sprintf("http://%s/storage/%d.mp3", receiverHost, i)
+		// 	res, err := sonos.SetUri(url)
+		// 	if err != nil {
+		// 		fmt.Printf("Error: %s\n", err.Error())
+		// 		return
+		// 	}
+		// 	fmt.Printf("res: %+v\n", res)
+
+		// 	res, err = sonos.Play()
+		// 	if err != nil {
+		// 		fmt.Printf("Error: %s\n", err.Error())
+		// 		return
+		// 	}
+		// 	fmt.Printf("res: %+v\n", res)
+		// 	i++
+		// }
+
+		// sonos.OnMediaControl()
 
 		time.Sleep(100 * time.Second)
 

@@ -29,6 +29,34 @@ func (s *Sonos) SetUri(url string) (*http.Response, error) {
 	return s.clinet.Do(req)
 }
 
+type AddURIToQueue struct {
+	XMLName                        xml.Name `xml:"u:AddURIToQueue"`
+	XmlnsU                         string   `xml:"xmlns:u,attr"`
+	InstanceID                     string   `xml:"InstanceID"`
+	EnqueuedURI                    string   `xml:"EnqueuedURI"`
+	EnqueuedURIMetaData           string   `xml:"EnqueuedURIMetaData"`
+	DesiredFirstTrackNumberEnqueued int `xml:"DesiredFirstTrackNumberEnqueued"`
+	EnqueueAsNext                 string   `xml:"EnqueueAsNext"`
+}
+
+func (s *Sonos) AddURIToQueue(url string) (*http.Response, error) {
+	body := AddURIToQueue{
+		XmlnsU: "urn:schemas-upnp-org:service:AVTransport:1",
+		InstanceID: "0",
+		EnqueuedURI: url,
+		EnqueuedURIMetaData: "",
+		DesiredFirstTrackNumberEnqueued: 0,
+		EnqueueAsNext: "1",
+	}
+	req, err := s.post("/MediaRenderer/AVTransport/Control", body)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("SOAPACTION", `"urn:schemas-upnp-org:service:AVTransport:1#AddURIToQueue"`)
+
+	return s.clinet.Do(req)
+}
+
 type Play struct {
 	XMLName    xml.Name `xml:"u:Play"`
 	XmlnsU     string   `xml:"xmlns:u,attr"`
