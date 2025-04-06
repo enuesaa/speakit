@@ -15,7 +15,7 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1
 
 `
 
-func DiscoverSonosIPAddr() (string, error) {
+func (s *Sonos) discover() (string, error) {
 	conn, err := net.ListenPacket("udp4", ":0")
 	if err != nil {
 		return "", err
@@ -42,8 +42,20 @@ func DiscoverSonosIPAddr() (string, error) {
 		data := string(buf[:n])
 
 		if strings.Contains(data, "Sonos") {
-			return strings.Split(addr.String(), ":")[0], nil
+			udpAddr := addr.(*net.UDPAddr)
+			return udpAddr.IP.To4().String(), nil
 		}
 	}
 	return "", fmt.Errorf("not found")
+}
+
+func (s *Sonos) getLocalIpAddr() (string, error) {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if err != nil {
+		return "", err
+	}
+	defer conn.Close()
+	udpAddr := conn.LocalAddr().(*net.UDPAddr)
+
+	return udpAddr.IP.To4().String(), nil
 }

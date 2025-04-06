@@ -20,18 +20,15 @@ var sonosCmd = &cobra.Command{
 		go sonosctl.Serve()
 		time.Sleep(2 * time.Second)
 
-		sonosIpAddr, err := sonosctl.DiscoverSonosIPAddr()
-		if err != nil {
-			return err
-		}
-
-
 		entries, err := os.ReadDir("speechdata")
 		if err != nil {
 			return err
 		}
 
-		sonos := sonosctl.NewSonos(sonosIpAddr)
+		sonos, err := sonosctl.New()
+		if err != nil {
+			return err
+		}
 
 		go func ()  {
 			app := fiber.New()
