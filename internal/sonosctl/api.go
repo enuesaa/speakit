@@ -29,6 +29,31 @@ func (s *Sonos) SetUri(url string) (*http.Response, error) {
 	return s.clinet.Do(req)
 }
 
+
+type SetNextAVTransportURI struct {
+	XMLName         xml.Name `xml:"u:SetNextAVTransportURI"`
+	XmlnsU          string   `xml:"xmlns:u,attr"`
+	InstanceID      int      `xml:"InstanceID"`
+	NextURI         string   `xml:"NextURI"`
+	NextURIMetaData string   `xml:"NextURIMetaData"`
+}
+
+func (s *Sonos) SetNextURI(url string) (*http.Response, error) {
+	body := SetNextAVTransportURI{
+		XmlnsU:          "urn:schemas-upnp-org:service:AVTransport:1",
+		InstanceID:      0,
+		NextURI:         url,
+		NextURIMetaData: "",
+	}
+	req, err := s.post("/MediaRenderer/AVTransport/Control", body)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("SOAPACTION", `"urn:schemas-upnp-org:service:AVTransport:1#SetNextAVTransportURI"`)
+
+	return s.clinet.Do(req)
+}
+
 type AddURIToQueue struct {
 	XMLName                        xml.Name `xml:"u:AddURIToQueue"`
 	XmlnsU                         string   `xml:"xmlns:u,attr"`
