@@ -8,11 +8,11 @@ import (
 func New() (Sonos, error) {
 	sonos := Sonos{}
 	sonos.clinet = &http.Client{}
-	sonosIpAddr, err := sonos.discover()
-	if err != nil {
-		return sonos, err
-	}
-	sonos.ipAddr = sonosIpAddr
+	// sonosIpAddr, err := sonos.discover()
+	// if err != nil {
+	// 	return sonos, err
+	// }
+	sonos.ipAddr = ""
 
 	localIpAddr, err := sonos.getLocalIpAddr()
 	if err != nil {

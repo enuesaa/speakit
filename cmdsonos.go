@@ -17,10 +17,6 @@ var sonosCmd = &cobra.Command{
 		openaiToken := os.Getenv("OPENAI_TOKEN")
 		rssfeed := os.Getenv("RSS")
 
-		if err := aictl.Run(openaiToken, rssfeed); err != nil {
-			return err
-		}
-
 		sonos, err := sonosctl.New()
 		if err != nil {
 			return err
@@ -28,6 +24,10 @@ var sonosCmd = &cobra.Command{
 		go sonos.StartReceiver()
 
 		if _, err := sonos.SubscribeMediaControl(); err != nil {
+			return err
+		}
+
+		if err := aictl.Run(openaiToken, rssfeed); err != nil {
 			return err
 		}
 
