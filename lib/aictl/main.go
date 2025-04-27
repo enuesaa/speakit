@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 
 	"github.com/enuesaa/speakit/pkg/repository"
 	"github.com/enuesaa/speakit/pkg/service"
@@ -50,10 +51,11 @@ func Run(openaiApiKey string, rssfeed string) error {
 		fmt.Println(text)
 
 		request := openai.CreateSpeechRequest{
-			Model:          openai.TTSModel1,
+			Model:          openai.TTSModelGPT4oMini,
 			Input:          text,
-			Voice:          openai.VoiceOnyx,
-			Speed:          1.3,
+			Voice:          openai.VoiceAsh,
+			Speed:          1.7,
+			Instructions:   "抑揚をつけて",
 			ResponseFormat: openai.SpeechResponseFormatMp3,
 		}
 		res, err := client.CreateSpeech(context.Background(), request)
@@ -66,6 +68,12 @@ func Run(openaiApiKey string, rssfeed string) error {
 		}
 		filename := fmt.Sprintf("%d.mp3", i)
 		Data[filename] = buf
+
+		a, err := os.Create(filename)
+		if err != nil {
+			break
+		}
+		a.Write(buf)
 
 		if i > 2 {
 			break
