@@ -12,10 +12,6 @@ func main() {
 		Short:   "Toy app to read aloud rss feed",
 		Version: "0.0.3",
 	}
-	app.AddCommand(serveCmd)
-	app.AddCommand(emitOpenapiCmd)
-	app.AddCommand(speechCmd)
-	app.AddCommand(captureCmd)
 	app.AddCommand(sonosCmd)
 
 	// disable default
