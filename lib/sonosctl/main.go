@@ -5,14 +5,10 @@ import (
 	"time"
 )
 
-func New() (Sonos, error) {
+func New(sonosIpAddr string) (Sonos, error) {
 	sonos := Sonos{}
 	sonos.clinet = &http.Client{}
-	// sonosIpAddr, err := sonos.discover()
-	// if err != nil {
-	// 	return sonos, err
-	// }
-	sonos.ipAddr = ""
+	sonos.ipAddr = sonosIpAddr
 
 	localIpAddr, err := sonos.getLocalIpAddr()
 	if err != nil {

@@ -16,8 +16,9 @@ var sonosCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		openaiToken := os.Getenv("OPENAI_TOKEN")
 		rssfeed := os.Getenv("RSS")
+		sonosIpAddr := os.Getenv("SONOS_IP_ADDR")
 
-		sonos, err := sonosctl.New()
+		sonos, err := sonosctl.New(sonosIpAddr)
 		if err != nil {
 			return err
 		}
