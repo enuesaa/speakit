@@ -55,7 +55,7 @@ func Run(openaiApiKey string, rssfeed string) error {
 			Input:          text,
 			Voice:          openai.VoiceAsh,
 			Speed:          1.7,
-			Instructions:   "抑揚をつけて",
+			Instructions:   "抑揚をつけて。めちゃくちゃ早口で",
 			ResponseFormat: openai.SpeechResponseFormatMp3,
 		}
 		res, err := client.CreateSpeech(context.Background(), request)

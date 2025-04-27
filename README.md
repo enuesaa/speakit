@@ -9,6 +9,7 @@
   - serve
   - ai
 - framework チック
+- スピード調整
 
 ```go
 func main() {
