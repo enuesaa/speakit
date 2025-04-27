@@ -9,3 +9,16 @@
   - serve
   - ai
 - framework チック
+
+```go
+func main() {
+  // signature は変えるかもだが、だいたいこんな感じで feed -> transform -> speaker みたいにデータを流していく
+  // statemachine チックかな？
+  app := speakit.New(
+    speakit.Feed(),
+    speakit.Transform(),
+    speakit.Speaker(),
+    speakit.Voice(),
+  )
+}
+```
