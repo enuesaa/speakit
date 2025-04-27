@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/enuesaa/speakit/internal/aictl"
-	"github.com/enuesaa/speakit/internal/sonosctl"
+	"github.com/enuesaa/speakit/lib/aictl"
+	"github.com/enuesaa/speakit/lib/sonosctl"
 	"github.com/spf13/cobra"
 )
 
