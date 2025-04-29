@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var sonosCmd = &cobra.Command{
+var SonosCmd = &cobra.Command{
 	Use:   "sonos",
 	Short: "sonos",
 	RunE: func(cmd *cobra.Command, args []string) error {
