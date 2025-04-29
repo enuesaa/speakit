@@ -18,3 +18,11 @@ func (a *App) Transform(transformer Transformer) {
 func (a *App) Speak(speaker Speaker) error {
 	return nil
 }
+
+func (a *App) Next() {}
+
+func (a *App) Stop() {}
+
+func (a *App) Close() {
+	
+}
