@@ -16,7 +16,7 @@ func main() {
   // signature は変えるかもだが、だいたいこんな感じで feed -> transform -> speaker みたいにデータを流していく
   // statemachine チックかな？
   app := speakit.New()
-  app.UseOrigin(speakit.NewFeedOrigin())
+  app.UseTextGenerator(speakit.NewFeedOrigin())
   app.UseTransformer(speakit.NewTransformer()) // text to mp3, voice settings.
   app.UseSpeaker(speakit.NewSonosSpeaker())
 
