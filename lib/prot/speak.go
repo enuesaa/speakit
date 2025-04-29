@@ -38,9 +38,8 @@ func (g *SonosSpeaker) Start() error {
 func (g *SonosSpeaker) serve() error {
 	router := mux.NewRouter()
 	router.HandleFunc("/storage/{filename}", func(w http.ResponseWriter, r *http.Request) {
-		vars := mux.Vars(r)
-		filename := vars["filename"]
-		fmt.Println("a")
+		filename := mux.Vars(r)["filename"]
+		fmt.Printf("requested: %s\n", filename)
 
 		data, ok := g.Storage[filename]
 		if ok {
@@ -55,9 +54,7 @@ func (g *SonosSpeaker) Next(record Record) error {
 	g.Storage[filename] = record.Voice
 
 	url := fmt.Sprintf("http://%s/storage/%s", g.sonos.GetReceiverHost(), filename)
-	fmt.Println(url)
-
-	if _, err := g.sonos.SetNextURI(url); err != nil {
+	if _, err := g.sonos.SetUri(url); err != nil {
 		return err
 	}
 	if _, err := g.sonos.Play(); err != nil {
