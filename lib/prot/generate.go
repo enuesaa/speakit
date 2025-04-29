@@ -11,6 +11,7 @@ type Generator interface {
 
 type RSSFeedGenerator struct {
 	Feed string
+	Count int
 }
 
 func (g *RSSFeedGenerator) Generate() ([]Record, error) {
@@ -21,7 +22,10 @@ func (g *RSSFeedGenerator) Generate() ([]Record, error) {
 	}
 	var list []Record
 
-	for _, item := range feeds.Items {
+	for i, item := range feeds.Items {
+		if i > g.Count {
+			break
+		}
 		list = append(list, Record{
 			Text: item.Title,
 		})

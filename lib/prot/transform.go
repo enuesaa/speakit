@@ -1,22 +1,55 @@
 package prot
 
+import (
+	"context"
+	"io"
+
+	"github.com/sashabaranov/go-openai"
+)
+
 type Transformer interface {
 	Start() error
 	Transform(record *Record) error
 	Close() error
 }
 
+type TTSTransformer struct {
+	OpenAIKey string
 
-type CustomTransformer struct {}
+	client *openai.Client
+}
 
-func (g *CustomTransformer) Start() error {
+func (g *TTSTransformer) Start() error {
+	g.client = openai.NewClient(g.OpenAIKey)
+
 	return nil
 }
 
-func (g *CustomTransformer) Transform(record *Record) error {
+func (g *TTSTransformer) Transform(record *Record) error {
+	ctx := context.Background()
+
+	request := openai.CreateSpeechRequest{
+		Model:          openai.TTSModelGPT4oMini,
+		Input:          record.Text,
+		Voice:          openai.VoiceAsh,
+		Speed:          1.7,
+		Instructions:   "抑揚をつけて。めちゃくちゃ早口で",
+		ResponseFormat: openai.SpeechResponseFormatMp3,
+	}
+	res, err := g.client.CreateSpeech(ctx, request)
+	if err != nil {
+		return err
+	}
+
+	buf, err := io.ReadAll(res)
+	if err != nil {
+		return err
+	}
+	record.Voice = buf
+
 	return nil
 }
 
-func (g *CustomTransformer) Close() error {
+func (g *TTSTransformer) Close() error {
 	return nil
 }

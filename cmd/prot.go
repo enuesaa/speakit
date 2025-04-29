@@ -14,14 +14,18 @@ func NewProtCmd() *cobra.Command {
 		Short: "prot",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			feed := os.Getenv("RSS")
-			if feed == "" {
+			openaiKey := os.Getenv("OPENAI_TOKEN")
+			if feed == "" || openaiKey == "" {
 				return fmt.Errorf("err")
 			}
 
 			app := prot.New(&prot.RSSFeedGenerator{
 				Feed: feed,
+				Count: 2,
 			})
-			app.Transform(&prot.CustomTransformer{})
+			app.Transform(&prot.TTSTransformer{
+				OpenAIKey: openaiKey,
+			})
 
 			return app.Speak(&prot.SonosSpeaker{})
 		},
