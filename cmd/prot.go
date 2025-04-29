@@ -21,7 +21,7 @@ func NewProtCmd() *cobra.Command {
 
 			app := prot.New(&prot.RSSFeedGenerator{
 				Feed: feed,
-				Count: 2,
+				Count: 1,
 			})
 			app.Transform(&prot.TTSTransformer{
 				OpenAIKey: openaiKey,

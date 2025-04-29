@@ -44,9 +44,9 @@ func (s *Sonos) StartReceiver() {
 		w.Write(nil)
 	})
 
-	http.ListenAndServe(":2989", router)
+	http.ListenAndServe(":3000", router)
 }
 
 func (s *Sonos) GetReceiverHost() string {
-	return fmt.Sprintf("%s:2989", s.localIpAddr)
+	return fmt.Sprintf("%s:3000", s.localIpAddr)
 }

@@ -1,6 +1,13 @@
 package prot
 
-import "github.com/enuesaa/speakit/lib/sonosctl"
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/enuesaa/speakit/lib/sonosctl"
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
+)
 
 type Speaker interface {
 	Start() error
@@ -11,6 +18,8 @@ type Speaker interface {
 
 type SonosSpeaker struct {
 	sonos sonosctl.Sonos
+
+	Storage map[string][]byte
 }
 
 func (g *SonosSpeaker) Start() error {
@@ -19,13 +28,41 @@ func (g *SonosSpeaker) Start() error {
 		return err
 	}
 	g.sonos = sonos
+	g.Storage = make(map[string][]byte)
 
-	// start web server
+	go g.serve()
 
 	return nil
 }
 
+func (g *SonosSpeaker) serve() error {
+	router := mux.NewRouter()
+	router.HandleFunc("/storage/{filename}", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		filename := vars["filename"]
+		fmt.Println("a")
+
+		data, ok := g.Storage[filename]
+		if ok {
+			w.Write(data)
+		}
+	})
+	return http.ListenAndServe(":3000", router)
+}
+
 func (g *SonosSpeaker) Next(record Record) error {
+	filename := fmt.Sprintf("%s.mp3", uuid.NewString())
+	g.Storage[filename] = record.Voice
+
+	url := fmt.Sprintf("http://%s/storage/%s", g.sonos.GetReceiverHost(), filename)
+	fmt.Println(url)
+
+	if _, err := g.sonos.SetNextURI(url); err != nil {
+		return err
+	}
+	if _, err := g.sonos.Play(); err != nil {
+		return err
+	}
 	return nil
 }
 
