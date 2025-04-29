@@ -9,6 +9,7 @@ func New() *cobra.Command {
 		Version: "0.0.3",
 	}
 	app.AddCommand(SonosCmd)
+	app.AddCommand(NewProtCmd())
 	
 	// disable default
 	app.SetHelpCommand(&cobra.Command{Hidden: true})

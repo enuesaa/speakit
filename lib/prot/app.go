@@ -1,5 +1,7 @@
 package prot
 
+import "fmt"
+
 type Record struct {
 	Text string
 	Voice []byte
@@ -16,13 +18,15 @@ func (a *App) Transform(transformer Transformer) {
 }
 
 func (a *App) Speak(speaker Speaker) error {
+	records, err := a.generator.Generate()
+	if err != nil {
+		return err
+	}
+	fmt.Printf("%+v", records)
+
 	return nil
 }
 
-func (a *App) Next() {}
-
-func (a *App) Stop() {}
-
-func (a *App) Close() {
-	
-}
+// func (a *App) Next() {}
+// func (a *App) Stop() {}
+// func (a *App) Close() {}
