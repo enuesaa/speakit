@@ -10,10 +10,10 @@ func NewProtCmd() *cobra.Command {
 		Use:   "prot",
 		Short: "prot",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			app := prot.New()
-			// Generate().
-			// Transform()
-			return nil
+			app := prot.New(&prot.RSSFeedGenerator{})
+			app.Transform(&prot.CustomTransformer{})
+
+			return app.Speak(&prot.SonosSpeaker{})
 		},
 	}
 	return cmd

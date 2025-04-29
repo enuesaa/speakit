@@ -1,7 +1,11 @@
 package prot
 
 type Generator interface {
-	Start() error
-	Generate() (Record, error)
-	Close() error
+	Generate() ([]Record, error)
+}
+
+type RSSFeedGenerator struct {}
+
+func (g *RSSFeedGenerator) Generate() ([]Record, error) {
+	return nil, nil
 }

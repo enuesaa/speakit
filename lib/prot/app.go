@@ -2,21 +2,19 @@ package prot
 
 type Record struct {
 	Text string
+	Voice []byte
 	Meta map[string]string
 }
-type Voice struct {
-	Record Record
-	Mp3 []byte
+
+type App struct {
+	generator Generator
+	transformers []Transformer
 }
 
-type App struct {}
+func (a *App) Transform(transformer Transformer) {
+	a.transformers = append(a.transformers, transformer)
+}
 
-func (a *App) Generate(g Generator) AppTransform {
-	return a
-}
-func (a *App) Transform(t Transformer) AppTransformSpeak {
-	return a
-}
-func (a *App) Speak(s Speaker) *App {
-	return a
+func (a *App) Speak(speaker Speaker) error {
+	return nil
 }
