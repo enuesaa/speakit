@@ -1,9 +1,6 @@
 package sonosctl
 
-import (
-	"net/http"
-	"time"
-)
+import "net/http"
 
 func New() (Sonos, error) {
 	sonos := Sonos{}
@@ -20,8 +17,6 @@ func New() (Sonos, error) {
 		return sonos, err
 	}
 	sonos.localIpAddr = localIpAddr
-
-	time.Sleep(2 * time.Second)
 
 	return sonos, nil
 }

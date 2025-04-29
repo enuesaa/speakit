@@ -11,6 +11,7 @@ type Record struct {
 type App struct {
 	generator Generator
 	transformers []Transformer
+	speaker Speaker
 }
 
 func (a *App) Transform(transformer Transformer) {
@@ -18,22 +19,37 @@ func (a *App) Transform(transformer Transformer) {
 }
 
 func (a *App) Speak(speaker Speaker) error {
-	for _, t := range a.transformers {
-		if err := t.Start(); err != nil {
-			return err
-		}
+	a.speaker = speaker
+	if err := a.Start(); err != nil {
+		return err
 	}
 
 	records, err := a.generator.Generate()
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%+v", records)
+	fmt.Printf("len: %d\n", len(records))
 
-	for _, record := range records {
+	for i, record := range records {
+		fmt.Printf("record: %d\n", i)
 		if err := a.transformRecord(&record); err != nil {
 			return err
 		}
+		if err := a.speaker.Next(record); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (a *App) Start() error {
+	for _, t := range a.transformers {
+		if err := t.Start(); err != nil {
+			return err
+		}
+	}
+	if err := a.speaker.Start(); err != nil {
+		return err
 	}
 	return nil
 }
