@@ -1,9 +1,6 @@
 package prot
 
-import (
-	"fmt"
-	"time"
-)
+import "time"
 
 type Record struct {
 	Text string
@@ -50,26 +47,31 @@ func (a *App) Run() error {
 	if err := a.Start(); err != nil {
 		return err
 	}
-	records, err := a.generator.Generate()
-	if err != nil {
-		return err
-	}
-	fmt.Printf("len: %d\n", len(records))
 
-	for i, record := range records {
-		fmt.Printf("record: %d\n", i)
+	var occured error
+	for {
+		record, err := a.generator.Generate()
+		if err != nil {
+			occured = err
+			break
+		}
 		if err := a.transformRecord(&record); err != nil {
-			return err
+			occured = err
+			break
 		}
 		if err := a.speaker.Speak(record); err != nil {
-			return err
+			occured = err
+			break
 		}
 		time.Sleep(5 * time.Second)
 	}
-	return nil
+	return occured
 }
 
 func (a *App) Start() error {
+	if err := a.generator.StartUp(); err != nil {
+		return err
+	}
 	for _, t := range a.transformers {
 		if err := t.StartUp(); err != nil {
 			return err
@@ -94,7 +96,3 @@ func (a *App) transformRecord(record *Record) error {
 	}
 	return nil
 }
-
-// func (a *App) Next() {}
-// func (a *App) Stop() {}
-// func (a *App) Close() {}
