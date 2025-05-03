@@ -5,7 +5,6 @@ import (
 	"io"
 	"time"
 
-	"github.com/gopxl/beep"
 	"github.com/gopxl/beep/mp3"
 	"github.com/gopxl/beep/speaker"
 )
@@ -14,11 +13,11 @@ type BeepSpeaker struct {
 	Storage map[string][]byte
 }
 
-func (g *BeepSpeaker) Start() error {
+func (g *BeepSpeaker) StartUp() error {
 	return nil
 }
 
-func (g *BeepSpeaker) Next(record Record) error {
+func (g *BeepSpeaker) Speak(record Record) error {
 	reader := bytes.NewBuffer(record.Voice)
 	readcloser := io.NopCloser(reader)
 
@@ -28,10 +27,8 @@ func (g *BeepSpeaker) Next(record Record) error {
 	}
 	defer streamer.Close()
 
-	speedy := beep.ResampleRatio(4, 1.2, streamer)
-
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
-	speaker.Play(speedy)
+	speaker.Play(streamer)
 
 	return nil
 }

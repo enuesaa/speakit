@@ -38,7 +38,7 @@ func (a *App) Speak(speaker Speaker) error {
 		if err := a.transformRecord(&record); err != nil {
 			return err
 		}
-		if err := a.speaker.Next(record); err != nil {
+		if err := a.speaker.Speak(record); err != nil {
 			return err
 		}
 		time.Sleep(5 * time.Second)
@@ -48,11 +48,11 @@ func (a *App) Speak(speaker Speaker) error {
 
 func (a *App) Start() error {
 	for _, t := range a.transformers {
-		if err := t.Start(); err != nil {
+		if err := t.StartUp(); err != nil {
 			return err
 		}
 	}
-	if err := a.speaker.Start(); err != nil {
+	if err := a.speaker.StartUp(); err != nil {
 		return err
 	}
 	return nil

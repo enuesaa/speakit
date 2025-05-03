@@ -15,7 +15,7 @@ type SonosSpeaker struct {
 	Storage map[string][]byte
 }
 
-func (g *SonosSpeaker) Start() error {
+func (g *SonosSpeaker) StartUp() error {
 	sonos, err := sonosctl.New()
 	if err != nil {
 		return err

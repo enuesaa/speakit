@@ -1,8 +1,9 @@
 package prot
 
-type Speaker interface {
+type Controller interface {
 	StartUp() error
-	Speak(Record) error
+	Prev() error
+	Next() error
 	Stop() error
 	Close() error
 }

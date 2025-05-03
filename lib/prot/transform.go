@@ -8,7 +8,7 @@ import (
 )
 
 type Transformer interface {
-	Start() error
+	StartUp() error
 	Transform(record *Record) error
 	Close() error
 }
@@ -19,7 +19,7 @@ type TTSTransformer struct {
 	client *openai.Client
 }
 
-func (g *TTSTransformer) Start() error {
+func (g *TTSTransformer) StartUp() error {
 	g.client = openai.NewClient(g.OpenAIKey)
 
 	return nil
