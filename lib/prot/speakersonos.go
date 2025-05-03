@@ -9,13 +9,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type Speaker interface {
-	Start() error
-	Next(Record) error
-	Stop() error
-	Close() error
-}
-
 type SonosSpeaker struct {
 	sonos sonosctl.Sonos
 

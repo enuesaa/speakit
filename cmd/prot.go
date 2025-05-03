@@ -27,7 +27,7 @@ func NewProtCmd() *cobra.Command {
 				OpenAIKey: openaiKey,
 			})
 
-			return app.Speak(&prot.SonosSpeaker{})
+			return app.Speak(&prot.BeepSpeaker{})
 		},
 	}
 	return cmd
