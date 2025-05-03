@@ -28,6 +28,7 @@ func (e *Eightbit) Start() error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("find: ", devpath)
 
 	dev, err := evdev.Open(devpath.Path)
 	if err != nil {
@@ -52,6 +53,12 @@ func (e *Eightbit) find() (*evdev.InputPath, error) {
 }
 
 func (e *Eightbit) listen(dev *evdev.InputDevice) error {
+	devname, err := dev.Name()
+	if err != nil {
+		return err
+	}
+	fmt.Println("listen: ", devname)
+
 	for {
 		event, err := dev.ReadOne()
 		if err != nil {
