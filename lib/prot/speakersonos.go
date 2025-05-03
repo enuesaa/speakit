@@ -3,6 +3,7 @@ package prot
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/enuesaa/speakit/lib/sonosctl"
 	"github.com/google/uuid"
@@ -42,18 +43,18 @@ func (g *SonosSpeaker) serve() error {
 	return http.ListenAndServe(":3000", router)
 }
 
-func (g *SonosSpeaker) Next(record Record) error {
+func (g *SonosSpeaker) Next(record Record) (time.Duration, error) {
 	filename := fmt.Sprintf("%s.mp3", uuid.NewString())
 	g.Storage[filename] = record.Voice
 
 	url := fmt.Sprintf("http://%s/storage/%s", g.sonos.GetReceiverHost(), filename)
 	if _, err := g.sonos.SetUri(url); err != nil {
-		return err
+		return 0, err
 	}
 	if _, err := g.sonos.Play(); err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	return 0, nil
 }
 
 func (g *SonosSpeaker) Stop() error {

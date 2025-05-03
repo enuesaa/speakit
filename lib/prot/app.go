@@ -1,6 +1,9 @@
 package prot
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type Record struct {
 	Text string
@@ -59,11 +62,13 @@ func (a *App) Run() error {
 			occured = err
 			break
 		}
-		if err := a.speaker.Speak(record); err != nil {
+		duration, err := a.speaker.Speak(record)
+		if err != nil {
 			occured = err
 			break
 		}
-		time.Sleep(5 * time.Second)
+		fmt.Println(duration)
+		time.Sleep(duration)
 	}
 	return occured
 }
