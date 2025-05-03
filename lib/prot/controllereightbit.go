@@ -19,6 +19,9 @@ func (c *EightbitController) StartUp(app *App) error {
 		fmt.Printf("clicked: %s\n", kc)
 	})
 
+	if err := c.eightbit.Start(); err != nil {
+		return err
+	}
 	return nil
 }
 
