@@ -14,6 +14,7 @@ type Record struct {
 type App struct {
 	generator Generator
 	transformers []Transformer
+	controllers []Controller
 	speaker Speaker
 }
 
@@ -25,8 +26,24 @@ func (a *App) Transform(transformer Transformer) {
 	a.transformers = append(a.transformers, transformer)
 }
 
+func (a *App) Controller(controller Controller) {
+	a.controllers = append(a.controllers, controller)
+}
+
 func (a *App) Speak(speaker Speaker) {
 	a.speaker = speaker
+}
+
+func (a *App) Prev() error {
+	return nil
+}
+
+func (a *App) Next() error {
+	return nil
+}
+
+func (a *App) Stop() error {
+	return nil
 }
 
 func (a *App) Run() error {
@@ -55,6 +72,11 @@ func (a *App) Run() error {
 func (a *App) Start() error {
 	for _, t := range a.transformers {
 		if err := t.StartUp(); err != nil {
+			return err
+		}
+	}
+	for _, c := range a.controllers {
+		if err := c.StartUp(a); err != nil {
 			return err
 		}
 	}

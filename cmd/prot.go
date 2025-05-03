@@ -28,6 +28,8 @@ func NewProtCmd() *cobra.Command {
 			})
 			app.Speak(&prot.BeepSpeaker{})
 
+			app.Controller(&prot.SampleController{})
+
 			return app.Run()
 		},
 	}
