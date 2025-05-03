@@ -1,6 +1,6 @@
 package prot
 
-func New(g Generator) *App {
+func GenerateFrom(g Generator) *App {
 	return &App{
 		generator: g,
 	}

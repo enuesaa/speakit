@@ -17,16 +17,22 @@ type App struct {
 	speaker Speaker
 }
 
+func (a *App) Generate(generator Generator) {
+	a.generator = generator
+}
+
 func (a *App) Transform(transformer Transformer) {
 	a.transformers = append(a.transformers, transformer)
 }
 
-func (a *App) Speak(speaker Speaker) error {
+func (a *App) Speak(speaker Speaker) {
 	a.speaker = speaker
+}
+
+func (a *App) Run() error {
 	if err := a.Start(); err != nil {
 		return err
 	}
-
 	records, err := a.generator.Generate()
 	if err != nil {
 		return err

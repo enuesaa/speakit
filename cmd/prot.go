@@ -19,15 +19,16 @@ func NewProtCmd() *cobra.Command {
 				return fmt.Errorf("err")
 			}
 
-			app := prot.New(&prot.RSSFeedGenerator{
+			app := prot.GenerateFrom(&prot.RSSFeedGenerator{
 				Feed: feed,
 				Count: 1,
 			})
 			app.Transform(&prot.TTSTransformer{
 				OpenAIKey: openaiKey,
 			})
+			app.Speak(&prot.BeepSpeaker{})
 
-			return app.Speak(&prot.BeepSpeaker{})
+			return app.Run()
 		},
 	}
 	return cmd
