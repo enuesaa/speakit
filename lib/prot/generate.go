@@ -3,8 +3,7 @@ package prot
 import (
 	"fmt"
 
-	"github.com/enuesaa/speakit/pkg/repository"
-	"github.com/enuesaa/speakit/pkg/service"
+	"github.com/mmcdole/gofeed"
 )
 
 type Generator interface {
@@ -20,8 +19,8 @@ type RSSFeedGenerator struct {
 }
 
 func (g *RSSFeedGenerator) StartUp() error {
-	feedsSrv := service.NewFeedSevice(repository.Repos{})
-	feeds, err := feedsSrv.TryFetch(g.Feed)
+	fp := gofeed.NewParser()
+	feeds, err := fp.ParseURL(g.Feed)
 	if err != nil {
 		return err
 	}

@@ -7,7 +7,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/enuesaa/speakit/lib/aictl"
+	"github.com/enuesaa/speakit/internal/aictl"
 	"github.com/gorilla/mux"
 )
 

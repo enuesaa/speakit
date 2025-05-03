@@ -6,8 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/enuesaa/speakit/pkg/repository"
-	"github.com/enuesaa/speakit/pkg/service"
+	"github.com/mmcdole/gofeed"
 	"github.com/sashabaranov/go-openai"
 )
 
@@ -18,8 +17,8 @@ func Run(openaiApiKey string, rssfeed string) error {
 
 	client := openai.NewClient(openaiApiKey)
 
-	feedsSrv := service.NewFeedSevice(repository.Repos{})
-	realfeed, err := feedsSrv.TryFetch(rssfeed)
+	fp := gofeed.NewParser()
+	realfeed, err := fp.ParseURL(rssfeed)
 	if err != nil {
 		return err
 	}
