@@ -48,7 +48,7 @@ func (g *BeepSpeaker) Speak(record Record) error {
 
 func (g *BeepSpeaker) wait(buffer *beep.Buffer, format beep.Format) {
 	g.stopped = false
-	duration := time.Duration(buffer.Len()) * time.Second / time.Duration(format.SampleRate)
+	duration := time.Duration(buffer.Len()) * time.Second / time.Duration(format.SampleRate) - 2
 	elapsed := time.Duration(0)
 
 	for elapsed < duration {

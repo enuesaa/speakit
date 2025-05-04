@@ -34,6 +34,8 @@ func (a *App) Speak(speaker Speaker) {
 }
 
 func (a *App) Next() error {
+	a.wait = false
+
 	return a.speaker.CancelWait()
 }
 
@@ -62,11 +64,11 @@ func (a *App) Run() error {
 			occured = err
 			break
 		}
+		a.waitIfNeed()
 		if err := a.speaker.Speak(record); err != nil {
 			occured = err
 			break
 		}
-		a.waitIfNeed()
 	}
 	return occured
 }
