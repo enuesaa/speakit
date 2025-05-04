@@ -1,9 +1,10 @@
 package prot
 
 import (
+	"bytes"
 	"context"
 	"fmt"
-	"strings"
+	"text/template"
 
 	"github.com/sashabaranov/go-openai"
 )
@@ -25,7 +26,20 @@ func (g *AITransformer) StartUp() error {
 func (g *AITransformer) Transform(record *Record) error {
 	ctx := context.Background()
 
-	prompt := strings.ReplaceAll(g.PromptTmpl, "{text}", record.Text)
+	tmpl, err := template.New("prompt").Parse(g.PromptTmpl)
+	if err != nil {
+		return err
+	}
+	tmplvars := map[string]any{
+		"text": record.Text,
+		"meta": record.Meta,
+	}
+
+	var buf bytes.Buffer
+	if err = tmpl.Execute(&buf, tmplvars); err != nil {
+		return err
+	}
+	prompt := buf.String()
 
 	res, err := g.client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
 		Model: openai.GPT3Dot5Turbo,

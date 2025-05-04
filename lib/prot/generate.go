@@ -48,7 +48,7 @@ func (g *RSSFeedGenerator) flattenExtensions(extensions ext.Extensions) map[stri
 
 	for namespace, values := range extensions {
 		for property, value := range values {
-			key := fmt.Sprintf("%s:%s", namespace, property)
+			key := fmt.Sprintf("%s_%s", namespace, property)
 			joined := ""
 			for i, ext := range value {
 				if i > 0 {
