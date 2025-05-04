@@ -68,7 +68,11 @@ func (a *App) Run() error {
 			break
 		}
 		fmt.Println(duration)
-		time.Sleep(duration)
+		time.Sleep(1 * time.Second)
+		err = a.speaker.Stop()
+		if err != nil {
+			panic(err)
+		}
 	}
 	return occured
 }

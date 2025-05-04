@@ -21,11 +21,7 @@ func (g *RSSGenerator) StartUp() error {
 		return err
 	}
 
-	for i, item := range feeds.Items {
-		if i > 1 {
-			break
-		}
-
+	for _, item := range feeds.Items {
 		meta := g.flattenExtensions(item.Extensions)
 		meta["link"] = item.Link
 		meta["description"] = item.Description

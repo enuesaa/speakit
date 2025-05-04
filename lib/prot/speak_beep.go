@@ -12,6 +12,8 @@ import (
 
 type BeepSpeaker struct {
 	Storage map[string][]byte
+
+	ctrl    *beep.Ctrl
 }
 
 func (g *BeepSpeaker) StartUp() error {
@@ -34,7 +36,9 @@ func (g *BeepSpeaker) Speak(record Record) (time.Duration, error) {
 	buffer.Append(streamer)
 
 	streamerreal := buffer.Streamer(0, buffer.Len())
-	speaker.Play(streamerreal)
+
+	g.ctrl = &beep.Ctrl{Streamer: streamerreal, Paused: false}
+	speaker.Play(g.ctrl)
 
 	duration := time.Duration(buffer.Len()) * time.Second / time.Duration(format.SampleRate)
 
@@ -42,6 +46,11 @@ func (g *BeepSpeaker) Speak(record Record) (time.Duration, error) {
 }
 
 func (g *BeepSpeaker) Stop() error {
+	if g.ctrl != nil {
+		speaker.Lock()
+		g.ctrl.Paused = true
+		speaker.Unlock()
+	}
 	return nil
 }
 
