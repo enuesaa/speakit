@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mmcdole/gofeed"
+	ext "github.com/mmcdole/gofeed/extensions"
 )
 
 type Generator interface {
@@ -29,11 +30,36 @@ func (g *RSSFeedGenerator) StartUp() error {
 		if i > 1 {
 			break
 		}
+
+		meta := g.flattenExtensions(item.Extensions)
+		meta["link"] = item.Link
+		meta["description"] = item.Description
+
 		g.list = append(g.list, Record{
 			Text: item.Title,
+			Meta: meta,
 		})
 	}
 	return nil
+}
+
+func (g *RSSFeedGenerator) flattenExtensions(extensions ext.Extensions) map[string]string {
+	result := make(map[string]string)
+
+	for namespace, values := range extensions {
+		for property, value := range values {
+			key := fmt.Sprintf("%s:%s", namespace, property)
+			joined := ""
+			for i, ext := range value {
+				if i > 0 {
+					joined += ","
+				}
+				joined += ext.Value
+			}
+			result[key] = joined
+		}
+	}
+	return result
 }
 
 func (g *RSSFeedGenerator) Generate() (Record, error) {
