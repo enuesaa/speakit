@@ -1,7 +1,7 @@
 package prot
 
 type Generator interface {
-	StartUp(app *App) error
+	StartUp(logger Logger) error
 	Generate() (Record, error)
 	Close() error
 }

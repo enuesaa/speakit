@@ -10,7 +10,7 @@ func New() *cobra.Command {
 	}
 	app.AddCommand(SonosCmd)
 	app.AddCommand(NewProtCmd())
-	
+
 	// disable default
 	app.SetHelpCommand(&cobra.Command{Hidden: true})
 	app.CompletionOptions.DisableDefaultCmd = true

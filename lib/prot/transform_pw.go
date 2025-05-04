@@ -5,14 +5,14 @@ import "github.com/playwright-community/playwright-go"
 type PwTransformer struct {
 	TransformFn func(*PwTransformer, *Record) error
 
-	logger Logger
-	pw *playwright.Playwright
-	browser playwright.Browser
-	page playwright.Page
+	logger  Logger
+	Pw      *playwright.Playwright
+	Browser playwright.Browser
+	Page    playwright.Page
 }
 
-func (g *PwTransformer) StartUp(app *App) error {
-	g.logger = app.Logger("pw")
+func (g *PwTransformer) StartUp(logger Logger) error {
+	g.logger = logger
 
 	if err := playwright.Install(); err != nil {
 		return err
@@ -21,19 +21,19 @@ func (g *PwTransformer) StartUp(app *App) error {
 	if err != nil {
 		return err
 	}
-	g.pw = pw
+	g.Pw = pw
 
 	browser, err := pw.Firefox.Launch()
 	if err != nil {
 		return err
 	}
-	g.browser = browser
+	g.Browser = browser
 
 	page, err := browser.NewPage()
 	if err != nil {
 		return err
 	}
-	g.page = page
+	g.Page = page
 
 	return nil
 }
@@ -43,13 +43,13 @@ func (g *PwTransformer) Transform(record *Record) error {
 }
 
 func (g *PwTransformer) Close() error {
-	if g.browser != nil {
-		if err := g.browser.Close(); err != nil {
+	if g.Browser != nil {
+		if err := g.Browser.Close(); err != nil {
 			g.logger.LogE(err)
 		}
 	}
-	if g.pw != nil {
-		if err := g.pw.Stop(); err != nil {
+	if g.Pw != nil {
+		if err := g.Pw.Stop(); err != nil {
 			g.logger.LogE(err)
 		}
 	}

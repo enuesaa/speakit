@@ -1,7 +1,7 @@
 package prot
 
 type Speaker interface {
-	StartUp(app *App) error
+	StartUp(logger Logger) error
 	Speak(Record) error
 	Stop() error
 	Close() error

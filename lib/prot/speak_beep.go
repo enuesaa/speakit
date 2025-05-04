@@ -17,8 +17,8 @@ type BeepSpeaker struct {
 	ctrl   *beep.Ctrl
 }
 
-func (g *BeepSpeaker) StartUp(app *App) error {
-	g.logger = app.Logger("beep")
+func (g *BeepSpeaker) StartUp(logger Logger) error {
+	g.logger = logger
 	return nil
 }
 

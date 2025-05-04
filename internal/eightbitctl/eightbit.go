@@ -37,7 +37,7 @@ func (e *Eightbit) Start() error {
 	go e.listen(dev)
 
 	return nil
-} 
+}
 
 func (e *Eightbit) find() (*evdev.InputPath, error) {
 	devpaths, err := evdev.ListDevicePaths()
@@ -71,7 +71,7 @@ func (e *Eightbit) listen(dev *evdev.InputDevice) error {
 				for _, listener := range e.listeners {
 					listener(value)
 				}
-			}	
+			}
 		}
 		if event.Type == evdev.EV_ABS && event.Code == 0 {
 			value, ok := horizontalmap[int(event.Value)]

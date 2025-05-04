@@ -29,7 +29,6 @@ func (s *Sonos) SetUri(url string) (*http.Response, error) {
 	return s.clinet.Do(req)
 }
 
-
 type SetNextAVTransportURI struct {
 	XMLName         xml.Name `xml:"u:SetNextAVTransportURI"`
 	XmlnsU          string   `xml:"xmlns:u,attr"`
@@ -55,23 +54,23 @@ func (s *Sonos) SetNextURI(url string) (*http.Response, error) {
 }
 
 type AddURIToQueue struct {
-	XMLName                        xml.Name `xml:"u:AddURIToQueue"`
-	XmlnsU                         string   `xml:"xmlns:u,attr"`
-	InstanceID                     string   `xml:"InstanceID"`
-	EnqueuedURI                    string   `xml:"EnqueuedURI"`
-	EnqueuedURIMetaData           string   `xml:"EnqueuedURIMetaData"`
-	DesiredFirstTrackNumberEnqueued int `xml:"DesiredFirstTrackNumberEnqueued"`
-	EnqueueAsNext                 string   `xml:"EnqueueAsNext"`
+	XMLName                         xml.Name `xml:"u:AddURIToQueue"`
+	XmlnsU                          string   `xml:"xmlns:u,attr"`
+	InstanceID                      string   `xml:"InstanceID"`
+	EnqueuedURI                     string   `xml:"EnqueuedURI"`
+	EnqueuedURIMetaData             string   `xml:"EnqueuedURIMetaData"`
+	DesiredFirstTrackNumberEnqueued int      `xml:"DesiredFirstTrackNumberEnqueued"`
+	EnqueueAsNext                   string   `xml:"EnqueueAsNext"`
 }
 
 func (s *Sonos) AddURIToQueue(url string) (*http.Response, error) {
 	body := AddURIToQueue{
-		XmlnsU: "urn:schemas-upnp-org:service:AVTransport:1",
-		InstanceID: "0",
-		EnqueuedURI: url,
-		EnqueuedURIMetaData: "",
+		XmlnsU:                          "urn:schemas-upnp-org:service:AVTransport:1",
+		InstanceID:                      "0",
+		EnqueuedURI:                     url,
+		EnqueuedURIMetaData:             "",
 		DesiredFirstTrackNumberEnqueued: 0,
-		EnqueueAsNext: "1",
+		EnqueueAsNext:                   "1",
 	}
 	req, err := s.post("/MediaRenderer/AVTransport/Control", body)
 	if err != nil {

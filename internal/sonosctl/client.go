@@ -19,7 +19,7 @@ type Envelope struct {
 	XMLName       xml.Name `xml:"s:Envelope"`
 	XmlnsS        string   `xml:"xmlns:s,attr"`
 	EncodingStyle string   `xml:"s:encodingStyle,attr"`
-	Body          Body      `xml:"s:Body"`
+	Body          Body     `xml:"s:Body"`
 }
 
 type Body struct {

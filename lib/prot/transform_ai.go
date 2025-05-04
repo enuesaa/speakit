@@ -16,9 +16,9 @@ type AITransformer struct {
 	client *openai.Client
 }
 
-func (g *AITransformer) StartUp(app *App) error {
+func (g *AITransformer) StartUp(logger Logger) error {
+	g.logger = logger
 	g.client = openai.NewClient(g.OpenAIKey)
-	g.logger = app.Logger("ai")
 
 	return nil
 }

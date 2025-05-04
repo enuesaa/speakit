@@ -12,11 +12,11 @@ type RSSGenerator struct {
 	Feed string
 
 	logger Logger
-	list []Record
+	list   []Record
 }
 
-func (g *RSSGenerator) StartUp(app *App) error {
-	g.logger = app.Logger("rss")
+func (g *RSSGenerator) StartUp(logger Logger) error {
+	g.logger = logger
 
 	fp := gofeed.NewParser()
 	feeds, err := fp.ParseURL(g.Feed)

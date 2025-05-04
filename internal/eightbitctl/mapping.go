@@ -3,14 +3,14 @@ package eightbitctl
 type KeyCode string
 
 const (
-	KeyCodeA  KeyCode = "A"
-	KeyCodeB  KeyCode = "B"
-	KeyCodeX  KeyCode = "X"
-	KeyCodeY  KeyCode = "Y"
-	KeyCodeL  KeyCode = "L"
-	KeyCodeR  KeyCode = "R"
-	KeyCodeL2 KeyCode = "2L"
-	KeyCodeR2 KeyCode = "2R"
+	KeyCodeA     KeyCode = "A"
+	KeyCodeB     KeyCode = "B"
+	KeyCodeX     KeyCode = "X"
+	KeyCodeY     KeyCode = "Y"
+	KeyCodeL     KeyCode = "L"
+	KeyCodeR     KeyCode = "R"
+	KeyCodeL2    KeyCode = "2L"
+	KeyCodeR2    KeyCode = "2R"
 	KeyCodeUP    KeyCode = "UP"
 	KeyCodeDOWN  KeyCode = "DOWN"
 	KeyCodeLEFT  KeyCode = "LEFT"

@@ -1,7 +1,7 @@
 package prot
 
 type Transformer interface {
-	StartUp(app *App) error
+	StartUp(logger Logger) error
 	Transform(record *Record) error
 	Close() error
 }

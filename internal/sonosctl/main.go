@@ -22,8 +22,8 @@ func New() (Sonos, error) {
 }
 
 type Sonos struct {
-	clinet *http.Client
-	ipAddr string
+	clinet      *http.Client
+	ipAddr      string
 	localIpAddr string
 
 	OnMediaControl func()
