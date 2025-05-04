@@ -66,11 +66,11 @@ func (a *App) Run() error {
 }
 
 func (a *App) Start() error {
-	if err := a.generator.StartUp(); err != nil {
+	if err := a.generator.StartUp(a); err != nil {
 		return err
 	}
 	for _, t := range a.transformers {
-		if err := t.StartUp(); err != nil {
+		if err := t.StartUp(a); err != nil {
 			return err
 		}
 	}
@@ -79,7 +79,7 @@ func (a *App) Start() error {
 			return err
 		}
 	}
-	if err := a.speaker.StartUp(); err != nil {
+	if err := a.speaker.StartUp(a); err != nil {
 		return err
 	}
 	return nil
@@ -92,4 +92,8 @@ func (a *App) transformRecord(record *Record) error {
 		}
 	}
 	return nil
+}
+
+func (a *App) Logger(name string) Logger {
+	return Logger{name: name}
 }

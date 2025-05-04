@@ -10,11 +10,13 @@ import (
 type AIVoiceTransformer struct {
 	OpenAIKey string
 
+	logger Logger
 	client *openai.Client
 }
 
-func (g *AIVoiceTransformer) StartUp() error {
+func (g *AIVoiceTransformer) StartUp(app *App) error {
 	g.client = openai.NewClient(g.OpenAIKey)
+	g.logger = app.Logger("aivoice")
 
 	return nil
 }

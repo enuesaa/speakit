@@ -1,24 +1,22 @@
 package prot
 
-import (
-	"fmt"
-
-	"github.com/enuesaa/speakit/internal/eightbitctl"
-)
+import "github.com/enuesaa/speakit/internal/eightbitctl"
 
 type EightbitController struct {
 	app *App
+	logger Logger
 	eightbit eightbitctl.Eightbit
 }
 
 func (c *EightbitController) StartUp(app *App) error {
 	c.app = app
+	c.logger = app.Logger("eightbit")
 	c.eightbit = eightbitctl.New()
 
-	fmt.Println("startup eightbit controller")
+	c.logger.Log("startup")
 
 	c.eightbit.On(func(kc eightbitctl.KeyCode) {
-		fmt.Printf("clicked: %s\n", kc)
+		c.logger.Log("clicked: %s", kc)
 
 		if kc == eightbitctl.KeyCodeA {
 			if err := app.Stop(); err != nil {
@@ -30,8 +28,6 @@ func (c *EightbitController) StartUp(app *App) error {
 	if err := c.eightbit.Start(); err != nil {
 		return err
 	}
-	fmt.Println("startup eightbit controller completed")
-
 	return nil
 }
 

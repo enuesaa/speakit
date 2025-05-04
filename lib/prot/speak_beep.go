@@ -13,10 +13,12 @@ import (
 type BeepSpeaker struct {
 	Storage map[string][]byte
 
-	ctrl    *beep.Ctrl
+	logger Logger
+	ctrl   *beep.Ctrl
 }
 
-func (g *BeepSpeaker) StartUp() error {
+func (g *BeepSpeaker) StartUp(app *App) error {
+	g.logger = app.Logger("beep")
 	return nil
 }
 

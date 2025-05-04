@@ -3,7 +3,6 @@ package prot
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"text/template"
 
 	"github.com/sashabaranov/go-openai"
@@ -13,11 +12,13 @@ type AITransformer struct {
 	OpenAIKey  string
 	PromptTmpl string // include {text}
 
+	logger Logger
 	client *openai.Client
 }
 
-func (g *AITransformer) StartUp() error {
+func (g *AITransformer) StartUp(app *App) error {
 	g.client = openai.NewClient(g.OpenAIKey)
+	g.logger = app.Logger("ai")
 
 	return nil
 }
@@ -52,9 +53,9 @@ func (g *AITransformer) Transform(record *Record) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("before: %s\n", prompt)
+	g.logger.Log("before: %s", prompt)
 	record.Text = res.Choices[0].Message.Content
-	fmt.Printf("ai: %s\n", record.Text)
+	g.logger.Log("ai: %s", record.Text)
 
 	return nil
 }
