@@ -65,6 +65,7 @@ func (a *App) Run() error {
 			break
 		}
 		a.waitIfNeed()
+
 		if err := a.speaker.Speak(record); err != nil {
 			occured = err
 			break
@@ -128,10 +129,18 @@ func (a *App) close() {
 func (a *App) waitIfNeed() {
 	if a.wait {
 		for {
-			time.Sleep(3 * time.Second)
 			if !a.wait {
 				break
 			}
+			time.Sleep(3 * time.Second)
+		}
+	} else {
+		// speaker
+		for {
+			if a.speaker.IsStopped() {
+				break
+			}
+			time.Sleep(3 * time.Second)
 		}
 	}
 }

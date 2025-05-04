@@ -53,7 +53,7 @@ func (g *AITransformer) Transform(record *Record) error {
 	if err != nil {
 		return err
 	}
-	g.logger.Log("before: %s", prompt)
+	g.logger.Log("prompt: %s", prompt)
 	record.Text = res.Choices[0].Message.Content
 	g.logger.Log("ai: %s", record.Text)
 

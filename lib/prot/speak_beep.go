@@ -19,11 +19,14 @@ type BeepSpeaker struct {
 }
 
 func (g *BeepSpeaker) StartUp(logger Logger) error {
+	g.stopped = true
 	g.logger = logger
 	return nil
 }
 
 func (g *BeepSpeaker) Speak(record Record) error {
+	g.stopped = false
+
 	reader := bytes.NewBuffer(record.Voice)
 	readcloser := io.NopCloser(reader)
 
@@ -40,24 +43,12 @@ func (g *BeepSpeaker) Speak(record Record) error {
 	streamerreal := buffer.Streamer(0, buffer.Len())
 
 	g.ctrl = &beep.Ctrl{Streamer: streamerreal, Paused: false}
-	speaker.Play(g.ctrl)
-	g.wait(buffer, format)
+	withCallback := beep.Seq(g.ctrl, beep.Callback(func() {
+		g.stopped = true
+	}))
+	speaker.Play(withCallback)
 
 	return nil
-}
-
-func (g *BeepSpeaker) wait(buffer *beep.Buffer, format beep.Format) {
-	g.stopped = false
-	duration := time.Duration(buffer.Len()) * time.Second / time.Duration(format.SampleRate) - 2
-	elapsed := time.Duration(0)
-
-	for elapsed < duration {
-		if g.stopped {
-			break
-		}
-		time.Sleep(time.Second)
-		elapsed += time.Second
-	}
 }
 
 func (g *BeepSpeaker) CancelWait() error {
@@ -72,4 +63,8 @@ func (g *BeepSpeaker) CancelWait() error {
 
 func (g *BeepSpeaker) Close() error {
 	return nil
+}
+
+func (g *BeepSpeaker) IsStopped() bool {
+	return g.stopped
 }

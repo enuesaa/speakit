@@ -5,4 +5,5 @@ type Speaker interface {
 	Speak(Record) error
 	CancelWait() error
 	Close() error
+	IsStopped() bool
 }
