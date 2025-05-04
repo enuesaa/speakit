@@ -7,7 +7,7 @@ type Record struct {
 }
 
 type App struct {
-	logger Logger
+	logger       Logger
 	generator    Generator
 	transformers []Transformer
 	controllers  []Controller
@@ -44,6 +44,7 @@ func (a *App) Run() error {
 	if err := a.startUp(); err != nil {
 		return err
 	}
+	defer a.close()
 
 	var occured error
 	for {
@@ -74,7 +75,7 @@ func (a *App) transformRecord(record *Record) error {
 }
 
 func (a *App) startUp() error {
-	ilog := func (i any) Logger {
+	ilog := func(i any) Logger {
 		return a.logger.Use(i)
 	}
 
@@ -95,4 +96,23 @@ func (a *App) startUp() error {
 		return err
 	}
 	return nil
+}
+
+func (a *App) close() {
+	if err := a.generator.Close(); err != nil {
+		a.logger.LogE(err)
+	}
+	for _, t := range a.transformers {
+		if err := t.Close(); err != nil {
+			a.logger.LogE(err)
+		}
+	}
+	for _, c := range a.controllers {
+		if err := c.Close(); err != nil {
+			a.logger.LogE(err)
+		}
+	}
+	if err := a.speaker.Close(); err != nil {
+		a.logger.LogE(err)
+	}
 }
