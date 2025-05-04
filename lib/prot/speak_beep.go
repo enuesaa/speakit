@@ -15,6 +15,7 @@ type BeepSpeaker struct {
 
 	logger Logger
 	ctrl   *beep.Ctrl
+	stopped bool
 }
 
 func (g *BeepSpeaker) StartUp(logger Logger) error {
@@ -45,17 +46,27 @@ func (g *BeepSpeaker) Speak(record Record) error {
 	return nil
 }
 
-func (g BeepSpeaker) wait(buffer *beep.Buffer, format beep.Format) {
+func (g *BeepSpeaker) wait(buffer *beep.Buffer, format beep.Format) {
+	g.stopped = false
 	duration := time.Duration(buffer.Len()) * time.Second / time.Duration(format.SampleRate)
-	time.Sleep(duration)
+	elapsed := time.Duration(0)
+
+	for elapsed < duration {
+		if g.stopped {
+			break
+		}
+		time.Sleep(time.Second)
+		elapsed += time.Second
+	}
 }
 
-func (g *BeepSpeaker) Stop() error {
+func (g *BeepSpeaker) CancelWait() error {
 	if g.ctrl != nil {
 		speaker.Lock()
 		g.ctrl.Paused = true
 		speaker.Unlock()
 	}
+	g.stopped = true
 	return nil
 }
 

@@ -1,5 +1,7 @@
 package prot
 
+import "time"
+
 type Record struct {
 	Text  string
 	Voice []byte
@@ -7,6 +9,7 @@ type Record struct {
 }
 
 type App struct {
+	wait         bool
 	logger       Logger
 	generator    Generator
 	transformers []Transformer
@@ -31,11 +34,13 @@ func (a *App) Speak(speaker Speaker) {
 }
 
 func (a *App) Next() error {
-	return nil
+	return a.speaker.CancelWait()
 }
 
 func (a *App) Stop() error {
-	return a.speaker.Stop()
+	a.wait = true
+
+	return a.speaker.CancelWait()
 }
 
 func (a *App) Run() error {
@@ -61,6 +66,7 @@ func (a *App) Run() error {
 			occured = err
 			break
 		}
+		a.waitIfNeed()
 	}
 	return occured
 }
@@ -114,5 +120,16 @@ func (a *App) close() {
 	}
 	if err := a.speaker.Close(); err != nil {
 		a.logger.LogE(err)
+	}
+}
+
+func (a *App) waitIfNeed() {
+	if a.wait {
+		for {
+			time.Sleep(3 * time.Second)
+			if !a.wait {
+				break
+			}
+		}
 	}
 }
