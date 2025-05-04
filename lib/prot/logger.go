@@ -15,3 +15,7 @@ func (l *Logger) Log(format string, v ...any) {
 
 	log.Println(text)
 }
+
+func (l *Logger) LogE(err error) {
+	l.Log("err: %v", err)
+}
