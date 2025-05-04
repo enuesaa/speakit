@@ -1,10 +1,5 @@
 package prot
 
-import (
-	"fmt"
-	"time"
-)
-
 type Record struct {
 	Text string
 	Voice []byte
@@ -43,7 +38,7 @@ func (a *App) Next() error {
 }
 
 func (a *App) Stop() error {
-	return nil
+	return a.speaker.Stop()
 }
 
 func (a *App) Run() error {
@@ -62,16 +57,9 @@ func (a *App) Run() error {
 			occured = err
 			break
 		}
-		duration, err := a.speaker.Speak(record)
-		if err != nil {
+		if err := a.speaker.Speak(record); err != nil {
 			occured = err
 			break
-		}
-		fmt.Println(duration)
-		time.Sleep(1 * time.Second)
-		err = a.speaker.Stop()
-		if err != nil {
-			panic(err)
 		}
 	}
 	return occured

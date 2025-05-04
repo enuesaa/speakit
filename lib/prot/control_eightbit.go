@@ -19,6 +19,12 @@ func (c *EightbitController) StartUp(app *App) error {
 
 	c.eightbit.On(func(kc eightbitctl.KeyCode) {
 		fmt.Printf("clicked: %s\n", kc)
+
+		if kc == eightbitctl.KeyCodeA {
+			if err := app.Stop(); err != nil {
+				panic(err)
+			}
+		}
 	})
 
 	if err := c.eightbit.Start(); err != nil {

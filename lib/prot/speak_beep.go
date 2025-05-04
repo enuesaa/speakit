@@ -20,13 +20,13 @@ func (g *BeepSpeaker) StartUp() error {
 	return nil
 }
 
-func (g *BeepSpeaker) Speak(record Record) (time.Duration, error) {
+func (g *BeepSpeaker) Speak(record Record) error {
 	reader := bytes.NewBuffer(record.Voice)
 	readcloser := io.NopCloser(reader)
 
 	streamer, format, err := mp3.Decode(readcloser)
 	if err != nil {
-		return 0, err
+		return err
 	}
 	defer streamer.Close()
 
@@ -34,15 +34,18 @@ func (g *BeepSpeaker) Speak(record Record) (time.Duration, error) {
 
 	buffer := beep.NewBuffer(format)
 	buffer.Append(streamer)
-
 	streamerreal := buffer.Streamer(0, buffer.Len())
 
 	g.ctrl = &beep.Ctrl{Streamer: streamerreal, Paused: false}
 	speaker.Play(g.ctrl)
+	g.wait(buffer, format)
 
+	return nil
+}
+
+func (g BeepSpeaker) wait(buffer *beep.Buffer, format beep.Format) {
 	duration := time.Duration(buffer.Len()) * time.Second / time.Duration(format.SampleRate)
-
-	return duration, nil
+	time.Sleep(duration)
 }
 
 func (g *BeepSpeaker) Stop() error {
