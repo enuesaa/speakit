@@ -9,7 +9,6 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-
 type AITransformer struct {
 	OpenAIKey  string
 	PromptTmpl string // include {text}

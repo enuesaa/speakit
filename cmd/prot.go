@@ -19,14 +19,14 @@ func NewProtCmd() *cobra.Command {
 				return fmt.Errorf("err")
 			}
 
-			app := prot.GenerateFrom(&prot.RSSFeedGenerator{
+			app := prot.GenerateFrom(&prot.RSSGenerator{
 				Feed: feed,
 			})
 			app.Transform(&prot.AITransformer{
 				OpenAIKey: openaiKey,
 				PromptTmpl: "次の文章を podcast で読み上げるので文面を調整ください. 50文字程度に. ハルシネーションしないで. \ntext: {{.text}}",
 			})
-			app.Transform(&prot.TTSTransformer{
+			app.Transform(&prot.AIVoiceTransformer{
 				OpenAIKey: openaiKey,
 			})
 			app.Speak(&prot.BeepSpeaker{})
