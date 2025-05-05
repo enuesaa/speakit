@@ -15,13 +15,11 @@ type RSSGenerator struct {
 	list   []Record
 }
 
-func (g *RSSGenerator) Init(logger Logger) {
-	logger.Log("aaaa")
+func (g *RSSGenerator) Inject(logger Logger) {
+	g.logger = logger
 }
 
-func (g *RSSGenerator) StartUp(logger Logger) error {
-	g.logger = logger
-
+func (g *RSSGenerator) StartUp() error {
 	fp := gofeed.NewParser()
 	feeds, err := fp.ParseURL(g.Feed)
 	if err != nil {

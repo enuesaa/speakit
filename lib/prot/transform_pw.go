@@ -9,9 +9,11 @@ type PwTransformer struct {
 	Page    playwright.Page
 }
 
-func (g *PwTransformer) StartUp(logger Logger) error {
+func (g *PwTransformer) Inject(logger Logger) {
 	g.Logger = logger
+}
 
+func (g *PwTransformer) StartUp(logger Logger) error {
 	if err := playwright.Install(&playwright.RunOptions{Browsers: []string{"firefox"}}); err != nil {
 		return err
 	}

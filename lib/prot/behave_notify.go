@@ -4,13 +4,13 @@ import "time"
 
 func newNotifyBehavior(speaker Speaker) NotifyBehavior {
 	return NotifyBehavior{
-		wait: false,
+		wait:    false,
 		speaker: speaker,
 	}
 }
 
 type NotifyBehavior struct {
-	wait bool
+	wait    bool
 	speaker Speaker
 }
 

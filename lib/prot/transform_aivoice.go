@@ -14,10 +14,12 @@ type AIVoiceTransformer struct {
 	client *openai.Client
 }
 
-func (g *AIVoiceTransformer) StartUp(logger Logger) error {
+func (g *AIVoiceTransformer) Inject(logger Logger) {
 	g.logger = logger
-	g.client = openai.NewClient(g.OpenAIKey)
+}
 
+func (g *AIVoiceTransformer) StartUp() error {
+	g.client = openai.NewClient(g.OpenAIKey)
 	return nil
 }
 

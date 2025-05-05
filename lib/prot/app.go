@@ -45,10 +45,13 @@ func (a *App) Run() error {
 	a.logger = Logger{}
 	a.notify = newNotifyBehavior(a.speaker)
 
-	if err := a.startUp(); err != nil {
+	if err := a.callInject(); err != nil {
 		return err
 	}
-	defer a.close()
+	if err := a.callStartUp(); err != nil {
+		return err
+	}
+	defer a.callClose()
 
 	var occured error
 	for {
@@ -92,37 +95,17 @@ func (a *App) transformRecord(record *Record) error {
 	return nil
 }
 
-func (a *App) startUp() error {
-	ilog := func(i any) Logger {
-		return a.logger.Use(i)
-	}
-
-	if err := a.generator.StartUp(ilog(a.generator)); err != nil {
-		return err
-	}
-	for _, s := range a.skippers {
-		if err := s.StartUp(ilog(s)); err != nil {
+func (a *App) callStartUp() error {
+	for _, callfn := range a.listCallfns() {
+		if err := callfn.StartUp(); err != nil {
 			return err
 		}
-	}
-	for _, t := range a.transformers {
-		if err := t.StartUp(ilog(t)); err != nil {
-			return err
-		}
-	}
-	for _, c := range a.controllers {
-		if err := c.StartUp(ilog(c)); err != nil {
-			return err
-		}
-	}
-	if err := a.speaker.StartUp(ilog(a.speaker)); err != nil {
-		return err
 	}
 	return nil
 }
 
-func (a *App) listfns() []any {
-	fns := []any{a.generator, a.speaker}
+func (a *App) listCallfns() []Callfn {
+	fns := []Callfn{a.generator}
 	for _, t := range a.transformers {
 		fns = append(fns, t)
 	}
@@ -132,18 +115,19 @@ func (a *App) listfns() []any {
 	for _, s := range a.skippers {
 		fns = append(fns, s)
 	}
+	fns = append(fns, a.speaker)
 	return fns
 }
 
 func (a *App) callInject() error {
-	for _, fn := range a.listfns() {
+	for _, fn := range a.listCallfns() {
 		fn := reflect.ValueOf(fn).MethodByName("Inject")
 		if !fn.IsValid() {
 			return nil
 		}
 		sig := fn.Type()
 		args := make([]reflect.Value, 0)
-	
+
 		for i := range sig.NumIn() {
 			switch sig.In(i) {
 			case reflect.TypeOf(a.logger):
@@ -153,31 +137,15 @@ func (a *App) callInject() error {
 				return fmt.Errorf("unsupported: %v", sig)
 			}
 		}
-		fn.Call(args)	
+		fn.Call(args)
 	}
 	return nil
 }
 
-func (a *App) close() {
-	if err := a.generator.Close(); err != nil {
-		a.logger.LogE(err)
-	}
-	for _, s := range a.skippers {
-		if err := s.Close(); err != nil {
+func (a *App) callClose() {
+	for _, callfn := range a.listCallfns() {
+		if err := callfn.Close(); err != nil {
 			a.logger.LogE(err)
 		}
-	}
-	for _, t := range a.transformers {
-		if err := t.Close(); err != nil {
-			a.logger.LogE(err)
-		}
-	}
-	for _, c := range a.controllers {
-		if err := c.Close(); err != nil {
-			a.logger.LogE(err)
-		}
-	}
-	if err := a.speaker.Close(); err != nil {
-		a.logger.LogE(err)
 	}
 }

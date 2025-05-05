@@ -15,9 +15,11 @@ type UniqueSkipper struct {
 	store  SkipStore
 }
 
-func (s *UniqueSkipper) StartUp(logger Logger) error {
+func (s *UniqueSkipper) Inject(logger Logger) {
 	s.logger = logger
+}
 
+func (s *UniqueSkipper) StartUp() error {
 	if s.StorePath == "" {
 		homedir, err := os.UserHomeDir()
 		if err != nil {

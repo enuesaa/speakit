@@ -8,8 +8,11 @@ type EightbitController struct {
 	eightbit eightbitctl.Eightbit
 }
 
-func (c *EightbitController) StartUp(logger Logger) error {
+func (c *EightbitController) Inject(logger Logger) {
 	c.logger = logger
+}
+
+func (c *EightbitController) StartUp(logger Logger) error {
 	c.eightbit = eightbitctl.New()
 
 	c.eightbit.On(func(kc eightbitctl.KeyCode) {

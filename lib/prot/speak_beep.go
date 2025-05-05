@@ -18,9 +18,12 @@ type BeepSpeaker struct {
 	stopped bool
 }
 
-func (g *BeepSpeaker) StartUp(logger Logger) error {
-	g.stopped = true
+func (g *BeepSpeaker) Inject(logger Logger) {
 	g.logger = logger
+}
+
+func (g *BeepSpeaker) StartUp() error {
+	g.stopped = true
 	return nil
 }
 

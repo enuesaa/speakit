@@ -1,9 +1,8 @@
 package prot
 
 type Speaker interface {
-	StartUp(logger Logger) error
+	Callfn
 	Speak(Record) error
 	CancelWait() error
-	Close() error
 	IsStopped() bool
 }

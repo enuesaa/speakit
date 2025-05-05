@@ -16,10 +16,12 @@ type AITransformer struct {
 	client *openai.Client
 }
 
-func (g *AITransformer) StartUp(logger Logger) error {
+func (g *AITransformer) Inject(logger Logger) {
 	g.logger = logger
-	g.client = openai.NewClient(g.OpenAIKey)
+}
 
+func (g *AITransformer) StartUp(logger Logger) error {
+	g.client = openai.NewClient(g.OpenAIKey)
 	return nil
 }
 

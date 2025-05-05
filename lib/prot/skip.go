@@ -1,7 +1,6 @@
 package prot
 
 type Skipper interface {
-	StartUp(logger Logger) error
+	Callfn
 	ShouldSkip(Record) bool
-	Close() error
 }

@@ -1,7 +1,6 @@
 package prot
 
 type Generator interface {
-	StartUp(logger Logger) error
+	Callfn
 	Generate() (Record, error)
-	Close() error
 }
