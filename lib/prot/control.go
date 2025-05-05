@@ -1,6 +1,6 @@
 package prot
 
 type Controller interface {
-	StartUp(logger Logger, app *App) error
+	StartUp(logger Logger) error
 	Close() error
 }

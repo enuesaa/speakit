@@ -1,6 +1,10 @@
 package prot
 
-import "time"
+import (
+	"fmt"
+	"reflect"
+	"time"
+)
 
 type Record struct {
 	Text  string
@@ -93,6 +97,31 @@ func (a *App) startUp() error {
 		return a.logger.Use(i)
 	}
 
+
+	initfn := reflect.ValueOf(a.generator).MethodByName("Init")
+	if !initfn.IsValid() {
+		return fmt.Errorf("init not found")
+	}
+	methodType := initfn.Type()
+	args := []reflect.Value{}
+
+	for i := range methodType.NumIn() {
+		switch methodType.In(i) {
+		case reflect.TypeOf(a.logger):
+			args = append(args, reflect.ValueOf(a.logger.Use(a.generator)))
+		default:
+		return fmt.Errorf("unsupported type: %v", methodType)
+		}
+    }
+    initfn.Call(args)
+
+	return fmt.Errorf("a")
+
+
+
+
+
+
 	if err := a.generator.StartUp(ilog(a.generator)); err != nil {
 		return err
 	}
@@ -107,7 +136,7 @@ func (a *App) startUp() error {
 		}
 	}
 	for _, c := range a.controllers {
-		if err := c.StartUp(ilog(c), a); err != nil {
+		if err := c.StartUp(ilog(c)); err != nil {
 			return err
 		}
 	}
@@ -158,16 +187,4 @@ func (a *App) waitIfNeed() {
 			time.Sleep(3 * time.Second)
 		}
 	}
-}
-
-func (a *App) ControlNext() error {
-	a.wait = false
-
-	return a.speaker.CancelWait()
-}
-
-func (a *App) ControlStop() error {
-	a.wait = true
-
-	return a.speaker.CancelWait()
 }

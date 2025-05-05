@@ -3,13 +3,12 @@ package prot
 import "github.com/enuesaa/speakit/internal/eightbitctl"
 
 type EightbitController struct {
-	app      *App
+	notify   *NotifyBehavior
 	logger   Logger
 	eightbit eightbitctl.Eightbit
 }
 
-func (c *EightbitController) StartUp(logger Logger, app *App) error {
-	c.app = app
+func (c *EightbitController) StartUp(logger Logger) error {
 	c.logger = logger
 	c.eightbit = eightbitctl.New()
 
@@ -17,12 +16,12 @@ func (c *EightbitController) StartUp(logger Logger, app *App) error {
 		c.logger.Log("clicked: %s", kc)
 
 		if kc == eightbitctl.KeyCodeA {
-			if err := app.ControlNext(); err != nil {
+			if err := c.notify.Next(); err != nil {
 				c.logger.LogE(err)
 			}
 		}
 		if kc == eightbitctl.KeyCodeB {
-			if err := app.ControlStop(); err != nil {
+			if err := c.notify.Stop(); err != nil {
 				c.logger.LogE(err)
 			}
 		}

@@ -15,6 +15,10 @@ type RSSGenerator struct {
 	list   []Record
 }
 
+func (g *RSSGenerator) Init(logger Logger) {
+	logger.Log("aaaa")
+}
+
 func (g *RSSGenerator) StartUp(logger Logger) error {
 	g.logger = logger
 
