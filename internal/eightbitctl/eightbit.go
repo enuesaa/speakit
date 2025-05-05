@@ -3,10 +3,12 @@ package eightbitctl
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/holoplot/go-evdev"
 )
 
+// TODO: make behavior
 func New() *Eightbit {
 	return &Eightbit{
 		listeners: []Listener{},
@@ -21,6 +23,20 @@ type Eightbit struct {
 
 func (e *Eightbit) On(listener func(KeyCode)) {
 	e.listeners = append(e.listeners, listener)
+}
+
+func (e *Eightbit) StartWait() error {
+	var err error
+
+	for range 120 {
+		err = e.Start()
+		if err == nil {
+			fmt.Println("connected")
+			return nil
+		}
+		time.Sleep(1 * time.Second)
+	}
+	return err
 }
 
 func (e *Eightbit) Start() error {

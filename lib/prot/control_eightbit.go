@@ -15,14 +15,13 @@ type EightbitController struct {
 }
 
 func (c *EightbitController) Inject(log *LogBehavior, notify *NotifyBehavior) {
-	c.log = log
+	c.volume = 50
 	c.notify = notify
+	c.log = log
 	c.eightbit = eightbitctl.New()
 }
 
 func (c *EightbitController) StartUp() error {
-	c.volume = 50
-
 	c.eightbit.On(func(kc eightbitctl.KeyCode) {
 		c.log.Info("clicked: %s", kc)
 
@@ -54,11 +53,10 @@ func (c *EightbitController) StartUp() error {
 				c.log.Err(err)
 			}
 		case eightbitctl.KeyCodeL:
-			panic("exit from eightbit controller")
+			c.notify.Exit()
 		}
 	})
-
-	return c.eightbit.Start()
+	return c.eightbit.StartWait()
 }
 
 func (c *EightbitController) applyVolume() error {

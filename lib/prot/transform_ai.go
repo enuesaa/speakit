@@ -18,10 +18,10 @@ type AITransformer struct {
 
 func (g *AITransformer) Inject(log *LogBehavior) {
 	g.log = log
+	g.client = openai.NewClient(g.OpenAIKey)
 }
 
 func (g *AITransformer) StartUp() error {
-	g.client = openai.NewClient(g.OpenAIKey)
 	return nil
 }
 

@@ -12,16 +12,17 @@ type RSSGenerator struct {
 	Feed string
 
 	log  *LogBehavior
+	fp   *gofeed.Parser
 	list []Record
 }
 
 func (g *RSSGenerator) Inject(log *LogBehavior) {
 	g.log = log
+	g.fp = gofeed.NewParser()
 }
 
 func (g *RSSGenerator) StartUp() error {
-	fp := gofeed.NewParser()
-	feeds, err := fp.ParseURL(g.Feed)
+	feeds, err := g.fp.ParseURL(g.Feed)
 	if err != nil {
 		return err
 	}

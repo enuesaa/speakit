@@ -39,6 +39,7 @@ func (g *BeepSpeaker) Speak(record Record) error {
 	}
 	defer streamer.Close()
 
+	// TODO
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 
 	buffer := beep.NewBuffer(format)

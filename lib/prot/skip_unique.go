@@ -31,13 +31,13 @@ func (s *UniqueSkipper) StartUp() error {
 	if err := s.read(); err != nil {
 		return err
 	}
-	s.flush()
+	s.deleteExpiredItems()
 	s.write()
 
 	return nil
 }
 
-func (s *UniqueSkipper) flush() {
+func (s *UniqueSkipper) deleteExpiredItems() {
 	now := int(time.Now().Unix())
 
 	for key, expire := range s.store.Items {

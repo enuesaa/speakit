@@ -24,6 +24,11 @@ func (a *NotifyBehavior) Stop() error {
 	return a.speaker.CancelWait()
 }
 
+func (a *NotifyBehavior) Exit() {
+	// TODO: SIGTERM should trigger similar behavior
+	panic("exit")
+}
+
 func (a *NotifyBehavior) waitIfNeed() {
 	// logical lock
 	if a.wait {

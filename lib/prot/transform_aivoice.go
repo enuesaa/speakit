@@ -16,10 +16,10 @@ type AIVoiceTransformer struct {
 
 func (g *AIVoiceTransformer) Inject(log *LogBehavior) {
 	g.log = log
+	g.client = openai.NewClient(g.OpenAIKey)
 }
 
 func (g *AIVoiceTransformer) StartUp() error {
-	g.client = openai.NewClient(g.OpenAIKey)
 	return nil
 }
 
