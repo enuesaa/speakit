@@ -123,12 +123,12 @@ func (a *App) callInject() error {
 	behaviors[reflect.TypeOf(&PwBehavior{})] = reflect.ValueOf(&PwBehavior{})
 
 	for _, fn := range a.listCallfns() {
-		fn := reflect.ValueOf(fn).MethodByName("Inject")
-		if !fn.IsValid() {
+		fnv := reflect.ValueOf(fn).MethodByName("Inject")
+		if !fnv.IsValid() {
 			return nil
 		}
 		behaviors[reflect.TypeOf(a.log)] = reflect.ValueOf(a.log.Use(fn))
-		sig := fn.Type()
+		sig := fnv.Type()
 		var args []reflect.Value
 
 		for i := range sig.NumIn() {
@@ -138,7 +138,7 @@ func (a *App) callInject() error {
 			}
 			args = append(args, behavior)
 		}
-		fn.Call(args)
+		fnv.Call(args)
 	}
 	return nil
 }
