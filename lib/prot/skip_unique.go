@@ -76,12 +76,13 @@ func (s *UniqueSkipper) ShouldSkip(record Record) bool {
 
 	uniqueValue, ok := record.Meta[s.UniqueField]
 	if !ok {
-		// field does not exist
+		s.logger.Log("unique field does not exist in Record.Meta")
 		return false
 	}
 
 	// already exists
 	if _, ok := s.store.Items[uniqueValue]; ok {
+		s.logger.Log("skip")
 		return true
 	}
 

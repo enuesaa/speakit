@@ -53,6 +53,9 @@ func (a *App) Run() error {
 			occured = err
 			break
 		}
+		if a.shouldSkip(record) {
+			continue
+		}
 		if err := a.transformRecord(&record); err != nil {
 			occured = err
 			break
@@ -65,6 +68,15 @@ func (a *App) Run() error {
 		}
 	}
 	return occured
+}
+
+func (a *App) shouldSkip(record Record) bool {
+	for _, s := range a.skippers {
+		if s.ShouldSkip(record) {
+			return true
+		}
+	}
+	return false
 }
 
 func (a *App) transformRecord(record *Record) error {
@@ -83,6 +95,11 @@ func (a *App) startUp() error {
 
 	if err := a.generator.StartUp(ilog(a.generator)); err != nil {
 		return err
+	}
+	for _, s := range a.skippers {
+		if err := s.StartUp(ilog(s)); err != nil {
+			return err
+		}
 	}
 	for _, t := range a.transformers {
 		if err := t.StartUp(ilog(t)); err != nil {
@@ -103,6 +120,11 @@ func (a *App) startUp() error {
 func (a *App) close() {
 	if err := a.generator.Close(); err != nil {
 		a.logger.LogE(err)
+	}
+	for _, s := range a.skippers {
+		if err := s.Close(); err != nil {
+			a.logger.LogE(err)
+		}
 	}
 	for _, t := range a.transformers {
 		if err := t.Close(); err != nil {
