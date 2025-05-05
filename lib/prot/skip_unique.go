@@ -8,11 +8,11 @@ import (
 )
 
 type UniqueSkipper struct {
-	StorePath string
+	StorePath   string
 	UniqueField string // meta
 
 	logger Logger
-	store SkipStore
+	store  SkipStore
 }
 
 func (s *UniqueSkipper) StartUp(logger Logger) error {
@@ -23,7 +23,7 @@ func (s *UniqueSkipper) StartUp(logger Logger) error {
 		if err != nil {
 			return err
 		}
-		s.StorePath = filepath.Join(homedir, "tmp", "speakitskip.json")	
+		s.StorePath = filepath.Join(homedir, "tmp", "speakitskip.json")
 	}
 	if err := s.read(); err != nil {
 		return err
@@ -97,11 +97,10 @@ func (s *UniqueSkipper) Close() error {
 	return nil
 }
 
-
 type SkipStore struct {
 	Items map[string]int `json:"skipped"`
 }
 type SkipStoreItem struct {
-	Key string `json:"key"`
-	Expire int `json:"expire"` // unix time
+	Key    string `json:"key"`
+	Expire int    `json:"expire"` // unix time
 }

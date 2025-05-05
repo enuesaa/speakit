@@ -13,8 +13,8 @@ import (
 type BeepSpeaker struct {
 	Storage map[string][]byte
 
-	logger Logger
-	ctrl   *beep.Ctrl
+	logger  Logger
+	ctrl    *beep.Ctrl
 	stopped bool
 }
 
