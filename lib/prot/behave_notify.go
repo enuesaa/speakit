@@ -2,8 +2,8 @@ package prot
 
 import "time"
 
-func newNotifyBehavior(speaker Speaker) NotifyBehavior {
-	return NotifyBehavior{
+func newNotifyBehavior(speaker Speaker) *NotifyBehavior {
+	return &NotifyBehavior{
 		wait:    false,
 		speaker: speaker,
 	}

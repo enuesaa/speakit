@@ -3,12 +3,12 @@ package prot
 import "github.com/enuesaa/speakit/internal/eightbitctl"
 
 type EightbitController struct {
-	notify   NotifyBehavior
-	log      LogBehavior
-	eightbit eightbitctl.Eightbit
+	notify   *NotifyBehavior
+	log      *LogBehavior
+	eightbit *eightbitctl.Eightbit
 }
 
-func (c *EightbitController) Inject(log LogBehavior, notify NotifyBehavior) {
+func (c *EightbitController) Inject(log *LogBehavior, notify *NotifyBehavior) {
 	c.log = log
 	c.notify = notify
 }

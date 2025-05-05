@@ -6,8 +6,8 @@ import (
 	"reflect"
 )
 
-func newLogBehavior() LogBehavior {
-	return LogBehavior{
+func newLogBehavior() *LogBehavior {
+	return &LogBehavior{
 		name: "",
 	}
 }
@@ -28,10 +28,10 @@ func (l *LogBehavior) LogE(err error) {
 	l.Log("err: %v", err)
 }
 
-func (l *LogBehavior) Use(i any) LogBehavior {
+func (l *LogBehavior) Use(i any) *LogBehavior {
 	t := reflect.TypeOf(i)
 	if t.Kind() == reflect.Ptr {
 		t = t.Elem()
 	}
-	return LogBehavior{name: t.Name()}
+	return &LogBehavior{name: t.Name()}
 }

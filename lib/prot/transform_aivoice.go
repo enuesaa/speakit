@@ -10,11 +10,11 @@ import (
 type AIVoiceTransformer struct {
 	OpenAIKey string
 
-	log    LogBehavior
+	log    *LogBehavior
 	client *openai.Client
 }
 
-func (g *AIVoiceTransformer) Inject(log LogBehavior) {
+func (g *AIVoiceTransformer) Inject(log *LogBehavior) {
 	g.log = log
 }
 

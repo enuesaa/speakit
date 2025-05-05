@@ -7,8 +7,8 @@ import (
 	"github.com/holoplot/go-evdev"
 )
 
-func New() Eightbit {
-	return Eightbit{
+func New() *Eightbit {
+	return &Eightbit{
 		listeners: []Listener{},
 	}
 }

@@ -11,11 +11,11 @@ import (
 type RSSGenerator struct {
 	Feed string
 
-	log  LogBehavior
+	log  *LogBehavior
 	list []Record
 }
 
-func (g *RSSGenerator) Inject(log LogBehavior) {
+func (g *RSSGenerator) Inject(log *LogBehavior) {
 	g.log = log
 }
 

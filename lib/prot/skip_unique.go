@@ -11,11 +11,11 @@ type UniqueSkipper struct {
 	StorePath   string
 	UniqueField string // meta
 
-	log   LogBehavior
+	log   *LogBehavior
 	store SkipStore
 }
 
-func (s *UniqueSkipper) Inject(log LogBehavior) {
+func (s *UniqueSkipper) Inject(log *LogBehavior) {
 	s.log = log
 }
 

@@ -13,12 +13,12 @@ import (
 type BeepSpeaker struct {
 	Storage map[string][]byte
 
-	log     LogBehavior
+	log     *LogBehavior
 	ctrl    *beep.Ctrl
 	stopped bool
 }
 
-func (g *BeepSpeaker) Inject(log LogBehavior) {
+func (g *BeepSpeaker) Inject(log *LogBehavior) {
 	g.log = log
 }
 

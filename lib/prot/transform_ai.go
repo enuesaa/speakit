@@ -12,15 +12,15 @@ type AITransformer struct {
 	OpenAIKey  string
 	PromptTmpl string // include {text}
 
-	log    LogBehavior
+	log    *LogBehavior
 	client *openai.Client
 }
 
-func (g *AITransformer) Inject(log LogBehavior) {
+func (g *AITransformer) Inject(log *LogBehavior) {
 	g.log = log
 }
 
-func (g *AITransformer) StartUp(log LogBehavior) error {
+func (g *AITransformer) StartUp() error {
 	g.client = openai.NewClient(g.OpenAIKey)
 	return nil
 }
