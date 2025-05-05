@@ -55,9 +55,9 @@ func (g *AITransformer) Transform(record *Record) error {
 	if err != nil {
 		return err
 	}
-	g.log.Log("prompt: %s", prompt)
+	g.log.Info("prompt: %s", prompt)
 	record.Text = res.Choices[0].Message.Content
-	g.log.Log("ai: %s", record.Text)
+	g.log.Info("ai: %s", record.Text)
 
 	return nil
 }

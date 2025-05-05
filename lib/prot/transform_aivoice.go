@@ -30,7 +30,7 @@ func (g *AIVoiceTransformer) Transform(record *Record) error {
 		Model:          openai.TTSModelGPT4oMini,
 		Input:          record.Text,
 		Voice:          openai.VoiceAsh,
-		Speed:          1.7,
+		Speed:          1.3,
 		Instructions:   "穏やかに。ニュースのキャスターのように。抑揚をつけて。めちゃくちゃ早口で",
 		ResponseFormat: openai.SpeechResponseFormatMp3,
 	}

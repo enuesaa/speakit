@@ -22,50 +22,49 @@ func (c *EightbitController) Inject(log *LogBehavior, notify *NotifyBehavior) {
 
 func (c *EightbitController) StartUp() error {
 	c.volume = 50
+
 	c.eightbit.On(func(kc eightbitctl.KeyCode) {
-		c.log.Log("clicked: %s", kc)
+		c.log.Info("clicked: %s", kc)
 
-		if kc == eightbitctl.KeyCodeA {
+		switch kc {
+		case eightbitctl.KeyCodeA:
 			if err := c.notify.Next(); err != nil {
-				c.log.LogE(err)
+				c.log.Err(err)
 			}
-		}
-		if kc == eightbitctl.KeyCodeB {
+		case eightbitctl.KeyCodeB:
 			if err := c.notify.Stop(); err != nil {
-				c.log.LogE(err)
+				c.log.Err(err)
 			}
-		}
-
-		if kc == eightbitctl.KeyCodeUP {
+		case eightbitctl.KeyCodeUP:
 			if c.volume > 100 {
-				c.log.Log("invalid volume value")
+				c.log.Info("invalid volume value")
 				return
 			}
 			c.volume += 10
 			if err := c.applyVolume(); err != nil {
-				c.log.LogE(err)
+				c.log.Err(err)
 			}
-		}
-		if kc == eightbitctl.KeyCodeDOWN {
+		case eightbitctl.KeyCodeDOWN:
 			if c.volume < 0 {
-				c.log.Log("invalid volume value")
+				c.log.Info("invalid volume value")
 				return
 			}
 			c.volume -= 10
 			if err := c.applyVolume(); err != nil {
-				c.log.LogE(err)
+				c.log.Err(err)
 			}
+		case eightbitctl.KeyCodeL:
+			panic("exit from eightbit controller")
 		}
 	})
 
-	if err := c.eightbit.Start(); err != nil {
-		return err
-	}
-	return nil
+	return c.eightbit.Start()
 }
 
 func (c *EightbitController) applyVolume() error {
-	target := fmt.Sprintf("%d%", c.volume)
+	c.log.Info("volume changes to %d%%", c.volume)
+
+	target := fmt.Sprintf("%d%%", c.volume)
 	cmd := exec.Command("amixer", "sset", "PCM", target)
 
 	if _, err := cmd.Output(); err != nil {

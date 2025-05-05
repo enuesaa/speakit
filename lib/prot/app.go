@@ -11,6 +11,13 @@ type Record struct {
 	Meta  map[string]string
 }
 
+func GenerateFrom(g Generator) *App {
+	return &App{
+		generator: g,
+		log: &LogBehavior{},
+	}
+}
+
 type App struct {
 	log          *LogBehavior
 	notify       *NotifyBehavior
@@ -33,7 +40,7 @@ func (a *App) Transform(transformer Transformer) {
 	a.transformers = append(a.transformers, transformer)
 }
 
-func (a *App) Controller(controller Controller) {
+func (a *App) Control(controller Controller) {
 	a.controllers = append(a.controllers, controller)
 }
 
@@ -41,8 +48,13 @@ func (a *App) Speak(speaker Speaker) {
 	a.speaker = speaker
 }
 
-func (a *App) Run() error {
-	a.log = newLogBehavior()
+func (a *App) Run() {
+	if err := a.RunE(); err != nil {
+		a.log.Err(err)
+	}
+}
+
+func (a *App) RunE() error {
 	a.notify = newNotifyBehavior(a.speaker)
 
 	if err := a.callInject(); err != nil {
@@ -53,28 +65,23 @@ func (a *App) Run() error {
 	}
 	defer a.callClose()
 
-	var occured error
 	for {
 		record, err := a.generator.Generate()
 		if err != nil {
-			occured = err
-			break
+			return err
 		}
 		if a.shouldSkip(record) {
 			continue
 		}
 		if err := a.transformRecord(&record); err != nil {
-			occured = err
-			break
+			return err
 		}
 		a.notify.waitIfNeed()
 
 		if err := a.speaker.Speak(record); err != nil {
-			occured = err
-			break
+			return err
 		}
 	}
-	return occured
 }
 
 func (a *App) shouldSkip(record Record) bool {
@@ -148,7 +155,7 @@ func (a *App) callStartUp() error {
 func (a *App) callClose() {
 	for _, callfn := range a.listCallfns() {
 		if err := callfn.Close(); err != nil {
-			a.log.LogE(err)
+			a.log.Err(err)
 		}
 	}
 }

@@ -10,7 +10,7 @@ import (
 )
 
 type UniqueSkipper struct {
-	StorePath   string
+	StorePath string
 
 	log   *LogBehavior
 	store SkipStore
@@ -75,16 +75,16 @@ func (s *UniqueSkipper) write() error {
 func (s *UniqueSkipper) ShouldSkip(record Record) bool {
 	hash := sha256.Sum256([]byte(record.Text))
 	uniqueKey := hex.EncodeToString(hash[:])
-	
+
 	// already exists
 	if _, ok := s.store.Items[uniqueKey]; ok {
-		s.log.Log("skip")
+		s.log.Info("skip")
 		return true
 	}
 	s.store.Items[uniqueKey] = int(time.Now().Unix())
 
 	if err := s.write(); err != nil {
-		s.log.LogE(err)
+		s.log.Err(err)
 	}
 	return false
 }
