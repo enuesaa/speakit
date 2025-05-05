@@ -17,12 +17,12 @@ func (c *EightbitController) StartUp(logger Logger, app *App) error {
 		c.logger.Log("clicked: %s", kc)
 
 		if kc == eightbitctl.KeyCodeA {
-			if err := app.Next(); err != nil {
+			if err := app.ControlNext(); err != nil {
 				c.logger.LogE(err)
 			}
 		}
 		if kc == eightbitctl.KeyCodeB {
-			if err := app.Stop(); err != nil {
+			if err := app.ControlStop(); err != nil {
 				c.logger.LogE(err)
 			}
 		}

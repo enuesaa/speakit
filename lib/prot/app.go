@@ -12,6 +12,7 @@ type App struct {
 	wait         bool
 	logger       Logger
 	generator    Generator
+	skippers     []Skipper
 	transformers []Transformer
 	controllers  []Controller
 	speaker      Speaker
@@ -19,6 +20,10 @@ type App struct {
 
 func (a *App) Generate(generator Generator) {
 	a.generator = generator
+}
+
+func (a *App) Skipper(skipper Skipper) {
+	a.skippers = append(a.skippers, skipper)
 }
 
 func (a *App) Transform(transformer Transformer) {
@@ -31,18 +36,6 @@ func (a *App) Controller(controller Controller) {
 
 func (a *App) Speak(speaker Speaker) {
 	a.speaker = speaker
-}
-
-func (a *App) Next() error {
-	a.wait = false
-
-	return a.speaker.CancelWait()
-}
-
-func (a *App) Stop() error {
-	a.wait = true
-
-	return a.speaker.CancelWait()
 }
 
 func (a *App) Run() error {
@@ -143,4 +136,16 @@ func (a *App) waitIfNeed() {
 			time.Sleep(3 * time.Second)
 		}
 	}
+}
+
+func (a *App) ControlNext() error {
+	a.wait = false
+
+	return a.speaker.CancelWait()
+}
+
+func (a *App) ControlStop() error {
+	a.wait = true
+
+	return a.speaker.CancelWait()
 }
