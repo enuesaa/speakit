@@ -1,11 +1,14 @@
 package prot
 
 import (
+	"fmt"
+	"os/exec"
+
 	"github.com/enuesaa/speakit/internal/eightbitctl"
-	"github.com/itchyny/volume-go"
 )
 
 type EightbitController struct {
+	volume   int
 	notify   *NotifyBehavior
 	log      *LogBehavior
 	eightbit *eightbitctl.Eightbit
@@ -14,11 +17,11 @@ type EightbitController struct {
 func (c *EightbitController) Inject(log *LogBehavior, notify *NotifyBehavior) {
 	c.log = log
 	c.notify = notify
+	c.eightbit = eightbitctl.New()
 }
 
 func (c *EightbitController) StartUp() error {
-	c.eightbit = eightbitctl.New()
-
+	c.volume = 50
 	c.eightbit.On(func(kc eightbitctl.KeyCode) {
 		c.log.Log("clicked: %s", kc)
 
@@ -33,28 +36,39 @@ func (c *EightbitController) StartUp() error {
 			}
 		}
 
-		if kc == eightbitctl.KeyCodeUP || kc == eightbitctl.KeyCodeDOWN {
-			vol, err := volume.GetVolume()
-			if err != nil {
+		if kc == eightbitctl.KeyCodeUP {
+			if c.volume > 100 {
+				c.log.Log("invalid volume value")
+				return
+			}
+			c.volume += 10
+			if err := c.applyVolume(); err != nil {
 				c.log.LogE(err)
+			}
+		}
+		if kc == eightbitctl.KeyCodeDOWN {
+			if c.volume < 0 {
+				c.log.Log("invalid volume value")
 				return
 			}
-			if kc == eightbitctl.KeyCodeUP {
-				vol += 10
-			} else {
-				vol -= 10
+			c.volume -= 10
+			if err := c.applyVolume(); err != nil {
+				c.log.LogE(err)
 			}
-			if 0 <= vol && vol <= 100 {
-				if err := volume.SetVolume(10); err != nil {
-					c.log.LogE(err)
-				}
-				return
-			}
-			c.log.Log("invalid volume value: %d", vol)
 		}
 	})
 
 	if err := c.eightbit.Start(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *EightbitController) applyVolume() error {
+	target := fmt.Sprintf("%d%", c.volume)
+	cmd := exec.Command("amixer", "sset", "PCM", target)
+
+	if _, err := cmd.Output(); err != nil {
 		return err
 	}
 	return nil
