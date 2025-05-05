@@ -25,7 +25,7 @@ func (a *App) Generate(generator Generator) {
 	a.generator = generator
 }
 
-func (a *App) Skipper(skipper Skipper) {
+func (a *App) Skip(skipper Skipper) {
 	a.skippers = append(a.skippers, skipper)
 }
 

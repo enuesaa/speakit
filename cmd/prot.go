@@ -22,9 +22,7 @@ func NewProtCmd() *cobra.Command {
 			app := prot.GenerateFrom(&prot.RSSGenerator{
 				Feed: feed,
 			})
-			app.Skipper(&prot.UniqueSkipper{
-				UniqueField: "link",
-			})
+			app.Skip(&prot.UniqueSkipper{})
 			app.Transform(&prot.AIVoiceTransformer{
 				OpenAIKey: openaiKey,
 			})

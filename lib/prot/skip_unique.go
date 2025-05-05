@@ -1,6 +1,8 @@
 package prot
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -9,7 +11,6 @@ import (
 
 type UniqueSkipper struct {
 	StorePath   string
-	UniqueField string // meta
 
 	log   *LogBehavior
 	store SkipStore
@@ -72,23 +73,16 @@ func (s *UniqueSkipper) write() error {
 }
 
 func (s *UniqueSkipper) ShouldSkip(record Record) bool {
-	if s.UniqueField == "" {
-		return false
-	}
-
-	uniqueValue, ok := record.Meta[s.UniqueField]
-	if !ok {
-		s.log.Log("unique field does not exist in Record.Meta")
-		return false
-	}
-
+	hash := sha256.Sum256([]byte(record.Text))
+	uniqueKey := hex.EncodeToString(hash[:])
+	
 	// already exists
-	if _, ok := s.store.Items[uniqueValue]; ok {
+	if _, ok := s.store.Items[uniqueKey]; ok {
 		s.log.Log("skip")
 		return true
 	}
+	s.store.Items[uniqueKey] = int(time.Now().Unix())
 
-	s.store.Items[uniqueValue] = int(time.Now().Unix())
 	if err := s.write(); err != nil {
 		s.log.LogE(err)
 	}

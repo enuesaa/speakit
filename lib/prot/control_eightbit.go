@@ -1,6 +1,9 @@
 package prot
 
-import "github.com/enuesaa/speakit/internal/eightbitctl"
+import (
+	"github.com/enuesaa/speakit/internal/eightbitctl"
+	"github.com/itchyny/volume-go"
+)
 
 type EightbitController struct {
 	notify   *NotifyBehavior
@@ -28,6 +31,26 @@ func (c *EightbitController) StartUp() error {
 			if err := c.notify.Stop(); err != nil {
 				c.log.LogE(err)
 			}
+		}
+
+		if kc == eightbitctl.KeyCodeUP || kc == eightbitctl.KeyCodeDOWN {
+			vol, err := volume.GetVolume()
+			if err != nil {
+				c.log.LogE(err)
+				return
+			}
+			if kc == eightbitctl.KeyCodeUP {
+				vol += 10
+			} else {
+				vol -= 10
+			}
+			if 0 <= vol && vol <= 100 {
+				if err := volume.SetVolume(10); err != nil {
+					c.log.LogE(err)
+				}
+				return
+			}
+			c.log.Log("invalid volume value: %d", vol)
 		}
 	})
 
