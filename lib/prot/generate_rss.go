@@ -11,12 +11,12 @@ import (
 type RSSGenerator struct {
 	Feed string
 
-	logger Logger
-	list   []Record
+	log  LogBehavior
+	list []Record
 }
 
-func (g *RSSGenerator) Inject(logger Logger) {
-	g.logger = logger
+func (g *RSSGenerator) Inject(log LogBehavior) {
+	g.log = log
 }
 
 func (g *RSSGenerator) StartUp() error {

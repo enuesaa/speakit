@@ -12,7 +12,7 @@ type Record struct {
 }
 
 type App struct {
-	logger       Logger
+	log          LogBehavior
 	notify       NotifyBehavior
 	generator    Generator
 	skippers     []Skipper
@@ -42,7 +42,7 @@ func (a *App) Speak(speaker Speaker) {
 }
 
 func (a *App) Run() error {
-	a.logger = Logger{}
+	a.log = newLogBehavior()
 	a.notify = newNotifyBehavior(a.speaker)
 
 	if err := a.callInject(); err != nil {
@@ -95,15 +95,6 @@ func (a *App) transformRecord(record *Record) error {
 	return nil
 }
 
-func (a *App) callStartUp() error {
-	for _, callfn := range a.listCallfns() {
-		if err := callfn.StartUp(); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 func (a *App) listCallfns() []Callfn {
 	fns := []Callfn{a.generator}
 	for _, t := range a.transformers {
@@ -120,24 +111,36 @@ func (a *App) listCallfns() []Callfn {
 }
 
 func (a *App) callInject() error {
+	behaviors := make(map[reflect.Type]reflect.Value)
+	behaviors[reflect.TypeOf(a.notify)] = reflect.ValueOf(a.notify)
+	behaviors[reflect.TypeOf(&PwTransformer{})] = reflect.ValueOf(&PwTransformer{})
+
 	for _, fn := range a.listCallfns() {
 		fn := reflect.ValueOf(fn).MethodByName("Inject")
 		if !fn.IsValid() {
 			return nil
 		}
+		behaviors[reflect.TypeOf(a.log)] = reflect.ValueOf(a.log.Use(fn))
 		sig := fn.Type()
-		args := make([]reflect.Value, 0)
+		var args []reflect.Value
 
 		for i := range sig.NumIn() {
-			switch sig.In(i) {
-			case reflect.TypeOf(a.logger):
-				logger := a.logger.Use(a.generator)
-				args = append(args, reflect.ValueOf(logger))
-			default:
+			behavior, ok := behaviors[sig.In(i)]
+			if !ok {
 				return fmt.Errorf("unsupported: %v", sig)
 			}
+			args = append(args, behavior)
 		}
 		fn.Call(args)
+	}
+	return nil
+}
+
+func (a *App) callStartUp() error {
+	for _, callfn := range a.listCallfns() {
+		if err := callfn.StartUp(); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -145,7 +148,7 @@ func (a *App) callInject() error {
 func (a *App) callClose() {
 	for _, callfn := range a.listCallfns() {
 		if err := callfn.Close(); err != nil {
-			a.logger.LogE(err)
+			a.log.LogE(err)
 		}
 	}
 }

@@ -6,11 +6,17 @@ import (
 	"reflect"
 )
 
-type Logger struct {
+func newLogBehavior() LogBehavior {
+	return LogBehavior{
+		name: "",
+	}
+}
+
+type LogBehavior struct {
 	name string
 }
 
-func (l *Logger) Log(format string, v ...any) {
+func (l *LogBehavior) Log(format string, v ...any) {
 	text := fmt.Sprintf(format, v...)
 	if l.name != "" {
 		text = fmt.Sprintf("[%s] %s", l.name, text)
@@ -18,14 +24,14 @@ func (l *Logger) Log(format string, v ...any) {
 	log.Println(text)
 }
 
-func (l *Logger) LogE(err error) {
+func (l *LogBehavior) LogE(err error) {
 	l.Log("err: %v", err)
 }
 
-func (l *Logger) Use(i any) Logger {
+func (l *LogBehavior) Use(i any) LogBehavior {
 	t := reflect.TypeOf(i)
 	if t.Kind() == reflect.Ptr {
 		t = t.Elem()
 	}
-	return Logger{name: t.Name()}
+	return LogBehavior{name: t.Name()}
 }

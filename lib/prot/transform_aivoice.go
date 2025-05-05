@@ -10,12 +10,12 @@ import (
 type AIVoiceTransformer struct {
 	OpenAIKey string
 
-	logger Logger
+	log    LogBehavior
 	client *openai.Client
 }
 
-func (g *AIVoiceTransformer) Inject(logger Logger) {
-	g.logger = logger
+func (g *AIVoiceTransformer) Inject(log LogBehavior) {
+	g.log = log
 }
 
 func (g *AIVoiceTransformer) StartUp() error {

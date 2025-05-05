@@ -11,12 +11,12 @@ type UniqueSkipper struct {
 	StorePath   string
 	UniqueField string // meta
 
-	logger Logger
-	store  SkipStore
+	log   LogBehavior
+	store SkipStore
 }
 
-func (s *UniqueSkipper) Inject(logger Logger) {
-	s.logger = logger
+func (s *UniqueSkipper) Inject(log LogBehavior) {
+	s.log = log
 }
 
 func (s *UniqueSkipper) StartUp() error {
@@ -78,19 +78,19 @@ func (s *UniqueSkipper) ShouldSkip(record Record) bool {
 
 	uniqueValue, ok := record.Meta[s.UniqueField]
 	if !ok {
-		s.logger.Log("unique field does not exist in Record.Meta")
+		s.log.Log("unique field does not exist in Record.Meta")
 		return false
 	}
 
 	// already exists
 	if _, ok := s.store.Items[uniqueValue]; ok {
-		s.logger.Log("skip")
+		s.log.Log("skip")
 		return true
 	}
 
 	s.store.Items[uniqueValue] = int(time.Now().Unix())
 	if err := s.write(); err != nil {
-		s.logger.LogE(err)
+		s.log.LogE(err)
 	}
 	return false
 }

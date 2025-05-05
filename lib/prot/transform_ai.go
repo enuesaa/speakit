@@ -12,15 +12,15 @@ type AITransformer struct {
 	OpenAIKey  string
 	PromptTmpl string // include {text}
 
-	logger Logger
+	log    LogBehavior
 	client *openai.Client
 }
 
-func (g *AITransformer) Inject(logger Logger) {
-	g.logger = logger
+func (g *AITransformer) Inject(log LogBehavior) {
+	g.log = log
 }
 
-func (g *AITransformer) StartUp(logger Logger) error {
+func (g *AITransformer) StartUp(log LogBehavior) error {
 	g.client = openai.NewClient(g.OpenAIKey)
 	return nil
 }
@@ -55,9 +55,9 @@ func (g *AITransformer) Transform(record *Record) error {
 	if err != nil {
 		return err
 	}
-	g.logger.Log("prompt: %s", prompt)
+	g.log.Log("prompt: %s", prompt)
 	record.Text = res.Choices[0].Message.Content
-	g.logger.Log("ai: %s", record.Text)
+	g.log.Log("ai: %s", record.Text)
 
 	return nil
 }

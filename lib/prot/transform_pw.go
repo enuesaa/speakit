@@ -3,17 +3,17 @@ package prot
 import "github.com/playwright-community/playwright-go"
 
 type PwTransformer struct {
-	Logger  Logger
-	Pw      *playwright.Playwright
-	Browser playwright.Browser
-	Page    playwright.Page
+	LogBehavior LogBehavior
+	Pw          *playwright.Playwright
+	Browser     playwright.Browser
+	Page        playwright.Page
 }
 
-func (g *PwTransformer) Inject(logger Logger) {
-	g.Logger = logger
+func (g *PwTransformer) Inject(log LogBehavior) {
+	g.LogBehavior = log
 }
 
-func (g *PwTransformer) StartUp(logger Logger) error {
+func (g *PwTransformer) StartUp(log LogBehavior) error {
 	if err := playwright.Install(&playwright.RunOptions{Browsers: []string{"firefox"}}); err != nil {
 		return err
 	}
@@ -45,12 +45,12 @@ func (g *PwTransformer) Transform(record *Record) error {
 func (g *PwTransformer) Close() error {
 	if g.Browser != nil {
 		if err := g.Browser.Close(); err != nil {
-			g.Logger.LogE(err)
+			g.LogBehavior.LogE(err)
 		}
 	}
 	if g.Pw != nil {
 		if err := g.Pw.Stop(); err != nil {
-			g.Logger.LogE(err)
+			g.LogBehavior.LogE(err)
 		}
 	}
 	return nil

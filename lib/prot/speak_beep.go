@@ -13,13 +13,13 @@ import (
 type BeepSpeaker struct {
 	Storage map[string][]byte
 
-	logger  Logger
+	log     LogBehavior
 	ctrl    *beep.Ctrl
 	stopped bool
 }
 
-func (g *BeepSpeaker) Inject(logger Logger) {
-	g.logger = logger
+func (g *BeepSpeaker) Inject(log LogBehavior) {
+	g.log = log
 }
 
 func (g *BeepSpeaker) StartUp() error {
