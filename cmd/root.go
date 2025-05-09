@@ -6,9 +6,8 @@ func New() *cobra.Command {
 	app := &cobra.Command{
 		Use:     "speakit",
 		Short:   "Toy app to read aloud rss feed",
-		Version: "0.0.3",
 	}
-	app.AddCommand(SonosCmd)
+	app.AddCommand(NewSonosCmd())
 	app.AddCommand(NewProtCmd())
 
 	// disable default
