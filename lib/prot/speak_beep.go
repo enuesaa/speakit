@@ -63,6 +63,7 @@ func (g *BeepSpeaker) play(voice []byte) error {
 		g.playing = false
 	}))
 	speaker.Play(withCallback)
+	g.playing = true
 
 	return nil
 }
