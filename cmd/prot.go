@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/enuesaa/speakit/lib/prot"
+	"github.com/enuesaa/speakit/kitprot"
 	"github.com/spf13/cobra"
 )
 
@@ -19,14 +19,14 @@ func NewProtCmd() *cobra.Command {
 				return fmt.Errorf("err")
 			}
 
-			app := prot.GenerateFrom(&prot.RSSGenerator{
+			app := kitprot.GenerateFrom(&kitprot.RSSGenerator{
 				Feed: feed,
 			})
-			app.Skip(&prot.UniqueSkipper{})
-			app.Transform(&prot.AIVoiceTransformer{
+			app.Skip(&kitprot.UniqueSkipper{})
+			app.Transform(&kitprot.AIVoiceTransformer{
 				OpenAIKey: openaiKey,
 			})
-			app.Speak(&prot.BeepSpeaker{})
+			app.Speak(&kitprot.BeepSpeaker{})
 
 			return app.RunE()
 		},

@@ -1,4 +1,4 @@
-package prot
+package kitprot
 
 type Generator interface {
 	Callfn

@@ -1,4 +1,4 @@
-package prot
+package kitprot
 
 import "github.com/playwright-community/playwright-go"
 

@@ -3,11 +3,3 @@
 
 # editor
 .vscode
-
-# app
-*.wav
-# *.mp3
-*.png
-openapi.yaml
-
-tmp

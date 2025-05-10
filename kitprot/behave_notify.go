@@ -1,4 +1,4 @@
-package prot
+package kitprot
 
 import "time"
 
