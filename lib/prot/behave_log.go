@@ -18,12 +18,16 @@ func (l *LogBehavior) log(format string, v ...any) {
 	log.Println(text)
 }
 
-func (l *LogBehavior) Debug(format string, v ...any) {
+func (l *LogBehavior) Info(format string, v ...any) {
 	l.log(format, v...)
 }
 
-func (l *LogBehavior) Info(format string, v ...any) {
-	l.log(format, v...)
+func (l *LogBehavior) Head(format string, v ...any) {
+	text := fmt.Sprintf(format, v...)
+	runes := []rune(text)
+	n := min(20, len(runes))
+	head := string(runes[:n])
+	l.log("%s", head)
 }
 
 func (l *LogBehavior) Err(err error) {

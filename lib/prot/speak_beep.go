@@ -5,18 +5,21 @@ import (
 	"fmt"
 	"io"
 	"time"
+	_ "embed"
 
 	"github.com/gopxl/beep"
 	"github.com/gopxl/beep/mp3"
 	"github.com/gopxl/beep/speaker"
 )
 
+//go:embed assets/connected.mp3
+var assetConnected []byte
+
 type BeepSpeaker struct {
 	Storage map[string][]byte
 
 	log  *LogBehavior
-	ctrl *beep.Ctrl
-	playing bool
+	ctrl *beep.Ctrl // judge is-playing with this value
 }
 
 func (g *BeepSpeaker) Inject(log *LogBehavior) {
@@ -24,8 +27,7 @@ func (g *BeepSpeaker) Inject(log *LogBehavior) {
 }
 
 func (g *BeepSpeaker) StartUp() error {
-	g.playing = false
-	return nil
+	return g.play(assetConnected)
 }
 
 func (g *BeepSpeaker) Speak(record Record) error {
@@ -62,22 +64,21 @@ func (g *BeepSpeaker) play(voice []byte) error {
 	}
 	g.ctrl = &beep.Ctrl{Streamer: bufstreamer, Paused: false}
 	withCallback := beep.Seq(g.ctrl, beep.Callback(func() {
-		g.playing = false
+		g.ctrl = nil
 	}))
 	speaker.Play(withCallback)
-	g.playing = true
 
 	return nil
 }
 
 func (g *BeepSpeaker) wait() error {
 	for {
-		if g.ctrl != nil && g.ctrl.Paused {
-			g.playing = false
-			return fmt.Errorf("end")
-		}
-		if !g.playing {
+		if g.ctrl == nil {
 			break
+		}
+		if g.ctrl.Paused {
+			g.ctrl = nil
+			return fmt.Errorf("end")
 		}
 		time.Sleep(1 * time.Second)
 	}
