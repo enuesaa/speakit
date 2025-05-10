@@ -3,6 +3,7 @@ package prot
 import (
 	"fmt"
 	"reflect"
+	"time"
 )
 
 type Record struct {
@@ -81,6 +82,7 @@ func (a *App) RunE() error {
 		if err := a.speaker.Speak(record); err != nil {
 			return err
 		}
+		time.Sleep(10 * time.Second)
 	}
 }
 

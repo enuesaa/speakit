@@ -20,6 +20,7 @@ type BeepSpeaker struct {
 	log  *LogBehavior
 	ctrl *beep.Ctrl
 	stopped bool
+	queue []Record
 }
 
 func (g *BeepSpeaker) Inject(log *LogBehavior) {
@@ -27,10 +28,40 @@ func (g *BeepSpeaker) Inject(log *LogBehavior) {
 }
 
 func (g *BeepSpeaker) StartUp() error {
-	return g.play(assetConnected)
+	if err := g.play(assetConnected); err != nil {
+		return err
+	}
+	g.queue = make([]Record, 0)
+
+	go g.process()
+
+	return nil
 }
 
 func (g *BeepSpeaker) Speak(record Record) error {
+	g.queue = append(g.queue, record)
+	return nil
+}
+
+func (g *BeepSpeaker) process() {
+	for {
+		if len(g.queue) == 0 {
+			time.Sleep(2 * time.Second)
+			continue
+		}
+		record := g.queue[0]
+		if len(g.queue) > 1 {
+			g.queue = g.queue[1:]
+		} else {
+			g.queue = make([]Record, 0)
+		}
+		if err := g.processRecord(record); err != nil {
+			panic(err)
+		}
+	}
+}
+
+func (g *BeepSpeaker) processRecord(record Record) error {
 	g.stopped = false
 
 	for _, segment := range record.Segments {
@@ -88,7 +119,7 @@ func (g *BeepSpeaker) wait() {
 	panic("wait too long")
 }
 
-func (g *BeepSpeaker) CancelWait() error {
+func (g *BeepSpeaker) Cancel() error {
 	if g.ctrl != nil {
 		speaker.Lock()
 		g.ctrl.Paused = true

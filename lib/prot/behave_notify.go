@@ -16,12 +16,12 @@ type NotifyBehavior struct {
 
 func (a *NotifyBehavior) Next() error {
 	a.wait = false
-	return a.speaker.CancelWait()
+	return a.speaker.Cancel()
 }
 
 func (a *NotifyBehavior) Stop() error {
 	a.wait = true
-	return a.speaker.CancelWait()
+	return a.speaker.Cancel()
 }
 
 func (a *NotifyBehavior) Exit() {
