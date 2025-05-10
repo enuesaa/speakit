@@ -39,14 +39,13 @@ func (g *BeepSpeaker) Speak(record Record) error {
 	}
 	defer streamer.Close()
 
-	// TODO
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 
-	buffer := beep.NewBuffer(format)
-	buffer.Append(streamer)
-	streamerreal := buffer.Streamer(0, buffer.Len())
+	buf := beep.NewBuffer(format)
+	buf.Append(streamer)
+	bufstreamer := buf.Streamer(0, buf.Len())
 
-	g.ctrl = &beep.Ctrl{Streamer: streamerreal, Paused: false}
+	g.ctrl = &beep.Ctrl{Streamer: bufstreamer, Paused: false}
 	withCallback := beep.Seq(g.ctrl, beep.Callback(func() {
 		g.stopped = true
 	}))
