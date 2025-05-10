@@ -24,27 +24,27 @@ func (g *AIVoiceTransformer) StartUp() error {
 }
 
 func (g *AIVoiceTransformer) Transform(record *Record) error {
-	ctx := context.Background()
+	record.Speech = func() ([]byte, error) {
+		ctx := context.Background()
+		request := openai.CreateSpeechRequest{
+			Model:          openai.TTSModelGPT4oMini,
+			Input:          record.Text,
+			Voice:          openai.VoiceAsh,
+			Speed:          1.3,
+			Instructions:   "穏やかに。ニュースのキャスターのように。抑揚をつけて。めちゃくちゃ早口で",
+			ResponseFormat: openai.SpeechResponseFormatMp3,
+		}
+		res, err := g.client.CreateSpeech(ctx, request)
+		if err != nil {
+			return nil, err
+		}
 
-	request := openai.CreateSpeechRequest{
-		Model:          openai.TTSModelGPT4oMini,
-		Input:          record.Text,
-		Voice:          openai.VoiceAsh,
-		Speed:          1.3,
-		Instructions:   "穏やかに。ニュースのキャスターのように。抑揚をつけて。めちゃくちゃ早口で",
-		ResponseFormat: openai.SpeechResponseFormatMp3,
+		buf, err := io.ReadAll(res)
+		if err != nil {
+			return nil, err
+		}
+		return buf, nil
 	}
-	res, err := g.client.CreateSpeech(ctx, request)
-	if err != nil {
-		return err
-	}
-
-	buf, err := io.ReadAll(res)
-	if err != nil {
-		return err
-	}
-	record.Voice = buf
-
 	return nil
 }
 

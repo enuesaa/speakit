@@ -7,7 +7,7 @@ import (
 
 type Record struct {
 	Text  string
-	Voice []byte
+	Speech func() ([]byte, error) // return nil if no text remained.
 	Meta  map[string]string
 }
 

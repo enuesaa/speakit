@@ -15,7 +15,6 @@ type BeepSpeaker struct {
 
 	log     *LogBehavior
 	ctrl    *beep.Ctrl
-	stopped bool
 }
 
 func (g *BeepSpeaker) Inject(log *LogBehavior) {
@@ -23,35 +22,48 @@ func (g *BeepSpeaker) Inject(log *LogBehavior) {
 }
 
 func (g *BeepSpeaker) StartUp() error {
-	g.stopped = true
 	return nil
 }
 
 func (g *BeepSpeaker) Speak(record Record) error {
-	g.stopped = false
+	playing := false
 
-	reader := bytes.NewBuffer(record.Voice)
-	readcloser := io.NopCloser(reader)
+	for {
+		voice, err := record.Speech()
+		if err != nil {
+			return err
+		}
+		if voice == nil {
+			return nil
+		}
+		reader := bytes.NewBuffer(voice)
+		readcloser := io.NopCloser(reader)
 
-	streamer, format, err := mp3.Decode(readcloser)
-	if err != nil {
-		return err
+		streamer, format, err := mp3.Decode(readcloser)
+		if err != nil {
+			return err
+		}
+		defer streamer.Close()
+
+		speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+
+		buf := beep.NewBuffer(format)
+		buf.Append(streamer)
+		bufstreamer := buf.Streamer(0, buf.Len())
+
+		for {
+			if !playing {
+				break
+			}
+			time.Sleep(1 * time.Second)
+		}
+
+		g.ctrl = &beep.Ctrl{Streamer: bufstreamer, Paused: false}
+		withCallback := beep.Seq(g.ctrl, beep.Callback(func() {
+			playing = false
+		}))
+		speaker.Play(withCallback)
 	}
-	defer streamer.Close()
-
-	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
-
-	buf := beep.NewBuffer(format)
-	buf.Append(streamer)
-	bufstreamer := buf.Streamer(0, buf.Len())
-
-	g.ctrl = &beep.Ctrl{Streamer: bufstreamer, Paused: false}
-	withCallback := beep.Seq(g.ctrl, beep.Callback(func() {
-		g.stopped = true
-	}))
-	speaker.Play(withCallback)
-
-	return nil
 }
 
 func (g *BeepSpeaker) CancelWait() error {
@@ -60,7 +72,6 @@ func (g *BeepSpeaker) CancelWait() error {
 		g.ctrl.Paused = true
 		speaker.Unlock()
 	}
-	g.stopped = true
 	return nil
 }
 
@@ -69,5 +80,5 @@ func (g *BeepSpeaker) Close() error {
 }
 
 func (g *BeepSpeaker) IsStopped() bool {
-	return g.stopped
+	return false
 }
