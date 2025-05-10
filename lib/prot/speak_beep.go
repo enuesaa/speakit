@@ -64,10 +64,10 @@ func (g *BeepSpeaker) play(voice []byte) error {
 	buf.Append(streamer)
 	bufstreamer := buf.Streamer(0, buf.Len())
 
+	g.wait()
 	if g.stopped {
 		return nil
 	}
-	g.wait()
 
 	g.ctrl = &beep.Ctrl{Streamer: bufstreamer, Paused: false}
 	withCallback := beep.Seq(g.ctrl, beep.Callback(func() {
@@ -79,20 +79,22 @@ func (g *BeepSpeaker) play(voice []byte) error {
 }
 
 func (g *BeepSpeaker) wait() {
-	for {
+	for range 100 {
 		if g.ctrl == nil {
-			break
+			return
 		}
 		time.Sleep(1 * time.Second)
 	}
+	panic("wait too long")
 }
 
 func (g *BeepSpeaker) CancelWait() error {
 	if g.ctrl != nil {
 		speaker.Lock()
 		g.ctrl.Paused = true
-		g.stopped = true
 		speaker.Unlock()
+		g.stopped = true
+		g.ctrl = nil
 	}
 	return nil
 }
