@@ -2,7 +2,6 @@ package prot
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"time"
 	_ "embed"
@@ -19,7 +18,8 @@ type BeepSpeaker struct {
 	Storage map[string][]byte
 
 	log  *LogBehavior
-	ctrl *beep.Ctrl // judge is-playing with this value
+	ctrl *beep.Ctrl
+	stopped bool
 }
 
 func (g *BeepSpeaker) Inject(log *LogBehavior) {
@@ -31,7 +31,12 @@ func (g *BeepSpeaker) StartUp() error {
 }
 
 func (g *BeepSpeaker) Speak(record Record) error {
+	g.stopped = false
+
 	for _, segment := range record.Segments {
+		if g.stopped {
+			break
+		}
 		voice, err := record.Speech(segment)
 		if err != nil {
 			return err
@@ -59,9 +64,11 @@ func (g *BeepSpeaker) play(voice []byte) error {
 	buf.Append(streamer)
 	bufstreamer := buf.Streamer(0, buf.Len())
 
-	if err := g.wait(); err != nil {
+	if g.stopped {
 		return nil
 	}
+	g.wait()
+
 	g.ctrl = &beep.Ctrl{Streamer: bufstreamer, Paused: false}
 	withCallback := beep.Seq(g.ctrl, beep.Callback(func() {
 		g.ctrl = nil
@@ -71,24 +78,20 @@ func (g *BeepSpeaker) play(voice []byte) error {
 	return nil
 }
 
-func (g *BeepSpeaker) wait() error {
+func (g *BeepSpeaker) wait() {
 	for {
 		if g.ctrl == nil {
 			break
 		}
-		if g.ctrl.Paused {
-			g.ctrl = nil
-			return fmt.Errorf("end")
-		}
 		time.Sleep(1 * time.Second)
 	}
-	return nil
 }
 
 func (g *BeepSpeaker) CancelWait() error {
 	if g.ctrl != nil {
 		speaker.Lock()
 		g.ctrl.Paused = true
+		g.stopped = true
 		speaker.Unlock()
 	}
 	return nil
