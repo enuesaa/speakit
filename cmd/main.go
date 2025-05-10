@@ -1,8 +1,8 @@
-package cmd
+package main
 
 import "github.com/spf13/cobra"
 
-func New() *cobra.Command {
+func main() {
 	app := &cobra.Command{
 		Use:   "speakit",
 		Short: "Toy app to read aloud rss feed",
@@ -19,5 +19,7 @@ func New() *cobra.Command {
 	app.PersistentFlags().BoolP("help", "", false, "Show help information")
 	app.PersistentFlags().BoolP("version", "", false, "Show version")
 
-	return app
+	if err := app.Execute(); err != nil {
+		panic(err)
+	}
 }
