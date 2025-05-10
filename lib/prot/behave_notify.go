@@ -37,6 +37,5 @@ func (a *NotifyBehavior) waitIfNeed() {
 			}
 			time.Sleep(3 * time.Second)
 		}
-		return
 	}
 }

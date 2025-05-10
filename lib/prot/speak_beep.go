@@ -2,6 +2,7 @@ package prot
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"time"
 
@@ -56,8 +57,9 @@ func (g *BeepSpeaker) play(voice []byte) error {
 	buf.Append(streamer)
 	bufstreamer := buf.Streamer(0, buf.Len())
 
-	g.wait()
-
+	if err := g.wait(); err != nil {
+		return nil
+	}
 	g.ctrl = &beep.Ctrl{Streamer: bufstreamer, Paused: false}
 	withCallback := beep.Seq(g.ctrl, beep.Callback(func() {
 		g.playing = false
@@ -68,18 +70,25 @@ func (g *BeepSpeaker) play(voice []byte) error {
 	return nil
 }
 
-func (g *BeepSpeaker) wait() {
+func (g *BeepSpeaker) wait() error {
 	for {
+		if g.ctrl.Paused {
+			g.playing = false
+			return fmt.Errorf("end")
+		}
 		if !g.playing {
 			break
 		}
 		time.Sleep(1 * time.Second)
 	}
+	return nil
 }
 
 func (g *BeepSpeaker) CancelWait() error {
 	if g.ctrl != nil {
 		speaker.Lock()
+			g.playing = false
+
 		g.ctrl.Paused = true
 		speaker.Unlock()
 	}

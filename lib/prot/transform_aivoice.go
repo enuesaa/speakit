@@ -29,6 +29,7 @@ func (g *AIVoiceTransformer) Transform(record *Record) error {
 }
 
 func (g *AIVoiceTransformer) speech(segment string) ([]byte, error) {
+	g.log.Info("speech: %s", segment)
 	ctx := context.Background()
 	request := openai.CreateSpeechRequest{
 		Model:          openai.TTSModelGPT4oMini,
@@ -47,6 +48,8 @@ func (g *AIVoiceTransformer) speech(segment string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	g.log.Info("speech end")
+
 	return buf, nil
 }
 

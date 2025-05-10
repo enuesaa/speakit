@@ -67,6 +67,8 @@ func (g *RSSGenerator) Generate() (Record, error) {
 		} else {
 			g.list = []Record{}
 		}
+		g.log.Info("generate: %s", first.Segments[0])
+
 		return first, nil
 	}
 	return Record{}, fmt.Errorf("final")
