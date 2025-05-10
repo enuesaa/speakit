@@ -72,7 +72,7 @@ func (g *BeepSpeaker) play(voice []byte) error {
 
 func (g *BeepSpeaker) wait() error {
 	for {
-		if g.ctrl.Paused {
+		if g.ctrl != nil && g.ctrl.Paused {
 			g.playing = false
 			return fmt.Errorf("end")
 		}
@@ -87,8 +87,6 @@ func (g *BeepSpeaker) wait() error {
 func (g *BeepSpeaker) CancelWait() error {
 	if g.ctrl != nil {
 		speaker.Lock()
-			g.playing = false
-
 		g.ctrl.Paused = true
 		speaker.Unlock()
 	}
