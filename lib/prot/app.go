@@ -6,15 +6,15 @@ import (
 )
 
 type Record struct {
-	Text  string
-	Speech func() ([]byte, error) // return nil if no text remained.
-	Meta  map[string]string
+	Segments []string
+	Speech   func(segmnet string) ([]byte, error)
+	Meta     map[string]string
 }
 
 func GenerateFrom(g Generator) *App {
 	return &App{
 		generator: g,
-		log: &LogBehavior{},
+		log:       &LogBehavior{},
 	}
 }
 

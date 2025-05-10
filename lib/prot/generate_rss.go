@@ -33,8 +33,8 @@ func (g *RSSGenerator) StartUp() error {
 		meta["description"] = item.Description
 
 		g.list = append(g.list, Record{
-			Text: item.Title,
-			Meta: meta,
+			Segments: []string{item.Title},
+			Meta:     meta,
 		})
 	}
 	return nil

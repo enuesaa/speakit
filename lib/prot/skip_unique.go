@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -73,7 +74,8 @@ func (s *UniqueSkipper) write() error {
 }
 
 func (s *UniqueSkipper) ShouldSkip(record Record) bool {
-	hash := sha256.Sum256([]byte(record.Text))
+	text := strings.Join(record.Segments, "")
+	hash := sha256.Sum256([]byte(text))
 	uniqueKey := hex.EncodeToString(hash[:])
 
 	// already exists

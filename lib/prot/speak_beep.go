@@ -13,8 +13,9 @@ import (
 type BeepSpeaker struct {
 	Storage map[string][]byte
 
-	log     *LogBehavior
-	ctrl    *beep.Ctrl
+	log  *LogBehavior
+	ctrl *beep.Ctrl
+	playing bool
 }
 
 func (g *BeepSpeaker) Inject(log *LogBehavior) {
@@ -22,47 +23,56 @@ func (g *BeepSpeaker) Inject(log *LogBehavior) {
 }
 
 func (g *BeepSpeaker) StartUp() error {
+	g.playing = false
 	return nil
 }
 
 func (g *BeepSpeaker) Speak(record Record) error {
-	playing := false
+	for _, segment := range record.Segments {
+		voice, err := record.Speech(segment)
+		if err != nil {
+			return err
+		}
+		if err := g.play(voice); err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
+func (g *BeepSpeaker) play(voice []byte) error {
+	reader := bytes.NewBuffer(voice)
+	readcloser := io.NopCloser(reader)
+
+	streamer, format, err := mp3.Decode(readcloser)
+	if err != nil {
+		return err
+	}
+	defer streamer.Close()
+
+	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+
+	buf := beep.NewBuffer(format)
+	buf.Append(streamer)
+	bufstreamer := buf.Streamer(0, buf.Len())
+
+	g.wait()
+
+	g.ctrl = &beep.Ctrl{Streamer: bufstreamer, Paused: false}
+	withCallback := beep.Seq(g.ctrl, beep.Callback(func() {
+		g.playing = false
+	}))
+	speaker.Play(withCallback)
+
+	return nil
+}
+
+func (g *BeepSpeaker) wait() {
 	for {
-		voice, err := record.Speech()
-		if err != nil {
-			return err
+		if !g.playing {
+			break
 		}
-		if voice == nil {
-			return nil
-		}
-		reader := bytes.NewBuffer(voice)
-		readcloser := io.NopCloser(reader)
-
-		streamer, format, err := mp3.Decode(readcloser)
-		if err != nil {
-			return err
-		}
-		defer streamer.Close()
-
-		speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
-
-		buf := beep.NewBuffer(format)
-		buf.Append(streamer)
-		bufstreamer := buf.Streamer(0, buf.Len())
-
-		for {
-			if !playing {
-				break
-			}
-			time.Sleep(1 * time.Second)
-		}
-
-		g.ctrl = &beep.Ctrl{Streamer: bufstreamer, Paused: false}
-		withCallback := beep.Seq(g.ctrl, beep.Callback(func() {
-			playing = false
-		}))
-		speaker.Play(withCallback)
+		time.Sleep(1 * time.Second)
 	}
 }
 
@@ -79,6 +89,3 @@ func (g *BeepSpeaker) Close() error {
 	return nil
 }
 
-func (g *BeepSpeaker) IsStopped() bool {
-	return false
-}

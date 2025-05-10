@@ -4,8 +4,8 @@ import "github.com/spf13/cobra"
 
 func New() *cobra.Command {
 	app := &cobra.Command{
-		Use:     "speakit",
-		Short:   "Toy app to read aloud rss feed",
+		Use:   "speakit",
+		Short: "Toy app to read aloud rss feed",
 	}
 	app.AddCommand(NewSonosCmd())
 	app.AddCommand(NewProtCmd())

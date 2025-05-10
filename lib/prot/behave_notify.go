@@ -30,7 +30,6 @@ func (a *NotifyBehavior) Exit() {
 }
 
 func (a *NotifyBehavior) waitIfNeed() {
-	// logical lock
 	if a.wait {
 		for {
 			if !a.wait {
@@ -39,13 +38,5 @@ func (a *NotifyBehavior) waitIfNeed() {
 			time.Sleep(3 * time.Second)
 		}
 		return
-	}
-
-	// check speaker status
-	for {
-		if a.speaker.IsStopped() {
-			break
-		}
-		time.Sleep(3 * time.Second)
 	}
 }
